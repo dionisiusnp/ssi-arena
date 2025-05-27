@@ -2,11 +2,8 @@
 <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
     <!-- Sidebar - Brand -->
-    <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
-        <div class="sidebar-brand-icon rotate-n-15">
-            <i class="fas fa-laugh-wink"></i>
-        </div>
-        <div class="sidebar-brand-text mx-3">SB Admin <sup>2</sup></div>
+    <a class="sidebar-brand d-flex align-items-center justify-content-center" href="#!">
+        <div class="sidebar-brand-text mx-3">SSI Academy</div>
     </a>
 
     <!-- Divider -->
@@ -14,7 +11,7 @@
 
     <!-- Heading -->
     <div class="sidebar-heading">
-        Pengaturan Permainan
+        Gamifikasi
     </div>
 
     <!-- Nav Item - Charts -->
@@ -43,7 +40,7 @@
 
     <!-- Heading -->
     <div class="sidebar-heading">
-        Pengaturan Kegiatan
+        Kegiatan
     </div>
 
     <!-- Nav Item - Tables -->
@@ -77,7 +74,7 @@
 
     <!-- Sidebar Message -->
     <div class="sidebar-card d-none d-lg-flex">
-        <a class="btn btn-success btn-sm" href="#!" target="_blank">Landing Page</a>
+        <a class="btn btn-secondary btn-sm" href="#!" target="_blank">Landing Page</a>
     </div>
 
 </ul>
