@@ -1,5 +1,5 @@
 <!-- Sidebar -->
-<ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+<ul class="navbar-nav bg-gradient-danger sidebar sidebar-dark accordion" id="accordionSidebar">
 
     <!-- Sidebar - Brand -->
     <a class="sidebar-brand d-flex align-items-center justify-content-center" href="#!">
@@ -11,28 +11,28 @@
 
     <!-- Heading -->
     <div class="sidebar-heading">
-        Gamifikasi
+        Kegiatan
     </div>
+
+    <!-- Nav Item - Tables -->
+    <li class="nav-item active">
+        <a class="nav-link" href="#!">
+            <i class="fas fa-fw fa-calendar"></i>
+            <span>Acara</span></a>
+    </li>
 
     <!-- Nav Item - Charts -->
     <li class="nav-item">
-        <a class="nav-link" href="charts.html">
-            <i class="fas fa-fw fa-chart-area"></i>
-            <span>Periode</span></a>
+        <a class="nav-link" href="#!">
+            <i class="fas fa-fw fa-link"></i>
+            <span>Rute Materi</span></a>
     </li>
 
     <!-- Nav Item - Tables -->
     <li class="nav-item">
-        <a class="nav-link" href="tables.html">
-            <i class="fas fa-fw fa-table"></i>
-            <span>Tantangan</span></a>
-    </li>
-
-    <!-- Nav Item - Tables -->
-    <li class="nav-item">
-        <a class="nav-link" href="tables.html">
-            <i class="fas fa-fw fa-table"></i>
-            <span>Peringkat</span></a>
+        <a class="nav-link" href="#!">
+            <i class="fas fa-fw fa-book"></i>
+            <span>Materi</span></a>
     </li>
 
     <!-- Divider -->
@@ -40,28 +40,28 @@
 
     <!-- Heading -->
     <div class="sidebar-heading">
-        Kegiatan
+        Gamifikasi
     </div>
-
-    <!-- Nav Item - Tables -->
-    <li class="nav-item">
-        <a class="nav-link" href="tables.html">
-            <i class="fas fa-fw fa-table"></i>
-            <span>Acara</span></a>
-    </li>
 
     <!-- Nav Item - Charts -->
     <li class="nav-item">
-        <a class="nav-link" href="charts.html">
-            <i class="fas fa-fw fa-chart-area"></i>
-            <span>Rute Materi</span></a>
+        <a class="nav-link" href="#!">
+            <i class="fas fa-fw fa-clock"></i>
+            <span>Periode</span></a>
     </li>
 
     <!-- Nav Item - Tables -->
     <li class="nav-item">
-        <a class="nav-link" href="tables.html">
-            <i class="fas fa-fw fa-table"></i>
-            <span>Materi</span></a>
+        <a class="nav-link" href="#!">
+            <i class="fas fa-fw fa-file-code"></i>
+            <span>Tantangan</span></a>
+    </li>
+
+    <!-- Nav Item - Tables -->
+    <li class="nav-item">
+        <a class="nav-link" href="">
+            <i class="fas fa-fw fa-trophy"></i>
+            <span>Peringkat</span></a>
     </li>
 
     <!-- Divider -->
@@ -74,7 +74,7 @@
 
     <!-- Sidebar Message -->
     <div class="sidebar-card d-none d-lg-flex">
-        <a class="btn btn-secondary btn-sm" href="#!" target="_blank">Landing Page</a>
+        <a class="btn btn-warning btn-sm" href="#!" target="_blank">Landing Page</a>
     </div>
 
 </ul>
