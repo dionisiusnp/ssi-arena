@@ -3,10 +3,10 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Season;
+use App\Models\UserBadge;
 use Illuminate\Http\Request;
 
-class SeasonController extends Controller
+class UserBadgeController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -35,7 +35,7 @@ class SeasonController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Season $season)
+    public function show(UserBadge $userBadge)
     {
         //
     }
@@ -43,7 +43,7 @@ class SeasonController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Season $season)
+    public function edit(UserBadge $userBadge)
     {
         //
     }
@@ -51,7 +51,7 @@ class SeasonController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Season $season)
+    public function update(Request $request, UserBadge $userBadge)
     {
         //
     }
@@ -59,7 +59,7 @@ class SeasonController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Season $season)
+    public function destroy(UserBadge $userBadge)
     {
         //
     }

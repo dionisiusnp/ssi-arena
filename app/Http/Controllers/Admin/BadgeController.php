@@ -3,10 +3,10 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Ranking;
+use App\Models\Badge;
 use Illuminate\Http\Request;
 
-class RankingController extends Controller
+class BadgeController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -35,7 +35,7 @@ class RankingController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Ranking $ranking)
+    public function show(Badge $badge)
     {
         //
     }
@@ -43,7 +43,7 @@ class RankingController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Ranking $ranking)
+    public function edit(Badge $badge)
     {
         //
     }
@@ -51,7 +51,7 @@ class RankingController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Ranking $ranking)
+    public function update(Request $request, Badge $badge)
     {
         //
     }
@@ -59,7 +59,7 @@ class RankingController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Ranking $ranking)
+    public function destroy(Badge $badge)
     {
         //
     }
