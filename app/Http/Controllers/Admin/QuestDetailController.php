@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\QuestDetail;
 use App\Services\QuestDetailService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class QuestDetailController extends Controller
 {
@@ -18,9 +19,15 @@ class QuestDetailController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $auth = Auth::user();
+        $filters = [
+            'search' => $request->query('q') ?? null,
+            'is_active' => $request->query('is_active') ?? null,
+        ];
+        $data = $this->questDetailService->paginate($filters);
+        return view('admin.detail-tantangan.index', compact('data'));
     }
 
     /**
@@ -28,7 +35,7 @@ class QuestDetailController extends Controller
      */
     public function create()
     {
-        //
+        return view('admin.detail-tantangan.create');
     }
 
     /**
@@ -36,7 +43,20 @@ class QuestDetailController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        try {
+            $auth = Auth::user();
+            $data = $this->questDetailService->store($request->toArray(), $auth);
+            return response()->json([
+                'success' => true,
+                'message' => 'Data berhasil dibuat',
+                'data'    => $data,
+            ]);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'error' => true,
+                'message' => $th->getMessage(),
+            ], 500);
+        }
     }
 
     /**
@@ -50,24 +70,57 @@ class QuestDetailController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(QuestDetail $questDetail)
+    public function edit(QuestDetail $quest_detail)
     {
-        //
+        return view('admin.detail-tantangan.edit', compact('quest_level'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, QuestDetail $questDetail)
+    public function update(Request $request, QuestDetail $quest_detail)
     {
-        //
+        try {
+            $auth = Auth::user();
+            $data = $this->questDetailService->update($request->toArray(), $auth, $quest_detail);
+            return response()->json([
+                'success' => true,
+                'message' => 'Data berhasil diubah',
+                'data'    => $data,
+            ]);
+        } catch (\Throwable $th) {
+            throw new \ErrorException($th->getMessage());
+        }
+    }
+
+    public function toggleStatus(QuestDetail $quest_detail)
+    {
+        try {
+            $auth = Auth::user();
+            $data = $this->questDetailService->isActive($auth, $quest_detail);
+            return response()->json([
+                'success' => true,
+                'message' => 'Data berhasil diubah',
+                'data'    => $data,
+            ]);
+        } catch (\Throwable $th) {
+            throw new \ErrorException($th->getMessage());
+        }
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(QuestDetail $questDetail)
+    public function destroy(QuestDetail $quest_detail)
     {
-        //
+        try {
+            $this->questDetailService->destroy($quest_detail);
+            return response()->json([
+                'success' => true,
+                'message' => 'Data berhasil dihapus',
+            ]);
+        } catch (\Throwable $th) {
+            throw new \ErrorException($th->getMessage());
+        }
     }
 }

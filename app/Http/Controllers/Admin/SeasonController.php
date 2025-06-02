@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Season;
 use App\Services\SeasonService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class SeasonController extends Controller
 {
@@ -18,9 +19,14 @@ class SeasonController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $auth = Auth::user();
+        $filters = [
+            'search' => $request->query('q') ?? null,
+        ];
+        $data = $this->seasonService->paginate($filters);
+        return view('admin.musim.index', compact('data'));
     }
 
     /**
@@ -28,7 +34,7 @@ class SeasonController extends Controller
      */
     public function create()
     {
-        //
+        return view('admin.musim.create');
     }
 
     /**
@@ -36,7 +42,20 @@ class SeasonController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        try {
+            $auth = Auth::user();
+            $data = $this->seasonService->store($request->toArray(), $auth);
+            return response()->json([
+                'success' => true,
+                'message' => 'Data berhasil dibuat',
+                'data'    => $data,
+            ]);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'error' => true,
+                'message' => $th->getMessage(),
+            ], 500);
+        }
     }
 
     /**
@@ -52,7 +71,7 @@ class SeasonController extends Controller
      */
     public function edit(Season $season)
     {
-        //
+        return view('admin.musim.edit', compact('season'));
     }
 
     /**
@@ -60,7 +79,17 @@ class SeasonController extends Controller
      */
     public function update(Request $request, Season $season)
     {
-        //
+        try {
+            $auth = Auth::user();
+            $data = $this->seasonService->update($request->toArray(), $auth, $season);
+            return response()->json([
+                'success' => true,
+                'message' => 'Data berhasil diubah',
+                'data'    => $data,
+            ]);
+        } catch (\Throwable $th) {
+            throw new \ErrorException($th->getMessage());
+        }
     }
 
     /**
@@ -68,6 +97,14 @@ class SeasonController extends Controller
      */
     public function destroy(Season $season)
     {
-        //
+        try {
+            $this->seasonService->destroy($season);
+            return response()->json([
+                'success' => true,
+                'message' => 'Data berhasil dihapus',
+            ]);
+        } catch (\Throwable $th) {
+            throw new \ErrorException($th->getMessage());
+        }
     }
 }
