@@ -4,10 +4,17 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Season;
+use App\Services\SeasonService;
 use Illuminate\Http\Request;
 
 class SeasonController extends Controller
 {
+    public $seasonService;
+
+    public function __construct(SeasonService $seasonService)
+    {
+        $this->seasonService = $seasonService;
+    }
     /**
      * Display a listing of the resource.
      */

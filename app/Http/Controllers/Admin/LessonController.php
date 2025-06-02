@@ -4,10 +4,17 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Lesson;
+use App\Services\LessonService;
 use Illuminate\Http\Request;
 
 class LessonController extends Controller
 {
+    public $lessonService;
+
+    public function __construct(LessonService $lessonService)
+    {
+        $this->lessonService = $lessonService;
+    }
     /**
      * Display a listing of the resource.
      */

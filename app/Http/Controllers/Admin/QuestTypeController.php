@@ -4,10 +4,17 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\QuestType;
+use App\Services\QuestTypeService;
 use Illuminate\Http\Request;
 
 class QuestTypeController extends Controller
 {
+    public $questTypeService;
+
+    public function __construct(QuestTypeService $questTypeService)
+    {
+        $this->questTypeService = $questTypeService;
+    }
     /**
      * Display a listing of the resource.
      */

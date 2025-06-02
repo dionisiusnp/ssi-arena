@@ -4,10 +4,17 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Activity;
+use App\Services\ActivityService;
 use Illuminate\Http\Request;
 
 class ActivityController extends Controller
 {
+    public $activityService;
+
+    public function __construct(ActivityService $activityService)
+    {
+        $this->activityService = $activityService;
+    }
     /**
      * Display a listing of the resource.
      */

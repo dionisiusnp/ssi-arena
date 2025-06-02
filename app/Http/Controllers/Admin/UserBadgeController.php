@@ -4,10 +4,17 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\UserBadge;
+use App\Services\UserBadgeService;
 use Illuminate\Http\Request;
 
 class UserBadgeController extends Controller
 {
+    public $userBadgeService;
+
+    public function __construct(UserBadgeService $userBadgeService)
+    {
+        $this->userBadgeService = $userBadgeService;
+    }
     /**
      * Display a listing of the resource.
      */

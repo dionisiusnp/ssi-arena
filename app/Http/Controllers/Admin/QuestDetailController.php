@@ -4,10 +4,17 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\QuestDetail;
+use App\Services\QuestDetailService;
 use Illuminate\Http\Request;
 
 class QuestDetailController extends Controller
 {
+    public $questDetailService;
+
+    public function __construct(QuestDetailService $questDetailService)
+    {
+        $this->questDetailService = $questDetailService;
+    }
     /**
      * Display a listing of the resource.
      */

@@ -4,10 +4,17 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\QuestRequirement;
+use App\Services\QuestRequirementService;
 use Illuminate\Http\Request;
 
 class QuestRequirementController extends Controller
 {
+    public $questRequirementService;
+
+    public function __construct(QuestRequirementService $questRequirementService)
+    {
+        $this->questRequirementService = $questRequirementService;
+    }
     /**
      * Display a listing of the resource.
      */

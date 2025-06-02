@@ -4,10 +4,17 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Topic;
+use App\Services\TopicService;
 use Illuminate\Http\Request;
 
 class TopicController extends Controller
 {
+    public $topicService;
+
+    public function __construct(TopicService $topicService)
+    {
+        $this->topicService = $topicService;
+    }
     /**
      * Display a listing of the resource.
      */

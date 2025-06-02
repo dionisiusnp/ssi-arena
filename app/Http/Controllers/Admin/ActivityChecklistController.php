@@ -4,10 +4,17 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\ActivityChecklist;
+use App\Services\ActivityChecklistService;
 use Illuminate\Http\Request;
 
 class ActivityChecklistController extends Controller
 {
+    public $activityChecklistService;
+
+    public function __construct(ActivityChecklistService $activityChecklistService)
+    {
+        $this->activityChecklistService = $activityChecklistService;
+    }
     /**
      * Display a listing of the resource.
      */

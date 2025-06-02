@@ -4,10 +4,17 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\QuestLevel;
+use App\Services\QuestLevelService;
 use Illuminate\Http\Request;
 
 class QuestLevelController extends Controller
 {
+    public $questLevelService;
+
+    public function __construct(QuestLevelService $questLevelService)
+    {
+        $this->questLevelService = $questLevelService;
+    }
     /**
      * Display a listing of the resource.
      */

@@ -4,10 +4,17 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Roadmap;
+use App\Services\RoadmapService;
 use Illuminate\Http\Request;
 
 class RoadmapController extends Controller
 {
+    public $roadmapService;
+
+    public function __construct(RoadmapService $roadmapService)
+    {
+        $this->roadmapService = $roadmapService;
+    }
     /**
      * Display a listing of the resource.
      */
