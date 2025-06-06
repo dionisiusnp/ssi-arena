@@ -27,7 +27,7 @@
                 </div>
 
                 <div class="mt-4">
-                    <a href="{{ route('season.index') }}" class="btn btn-secondary">Kembali</a>
+                    <a href="{{ route('season.index',['tab' => 'quest-types']) }}" class="btn btn-secondary">Kembali</a>
                     <button type="submit" class="btn btn-success">Simpan</button>
                 </div>
             </form>
@@ -93,7 +93,7 @@
                             timer: 2000,
                             showConfirmButton: false
                         }).then(() => {
-                            window.location.href = "{{ route('season.index') }}";
+                            window.location.href = "{{ route('season.index',['tab' => 'quest-types']) }}";
                         });
                     } else {
                         Swal.fire('Error', data.message || 'Terjadi kesalahan', 'error');

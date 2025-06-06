@@ -24,10 +24,10 @@ class QuestDetailController extends Controller
         $auth = Auth::user();
         $filters = [
             'search' => $request->query('q') ?? null,
-            'is_active' => $request->query('is_active') ?? null,
+            'is_editable' => $request->query('is_editable') ?? null,
         ];
-        $data = $this->questDetailService->paginate($filters);
-        return view('admin.detail-tantangan.index', compact('data'));
+        $questDetails = $this->questDetailService->paginate($filters);
+        return view('admin.tantangan.index', compact('questDetails'));
     }
 
     /**
@@ -35,7 +35,7 @@ class QuestDetailController extends Controller
      */
     public function create()
     {
-        return view('admin.detail-tantangan.create');
+        return view('admin.tantangan.create');
     }
 
     /**
@@ -45,7 +45,9 @@ class QuestDetailController extends Controller
     {
         try {
             $auth = Auth::user();
-            $data = $this->questDetailService->store($request->toArray(), $auth);
+            $reqs = $request->requirements;
+            unset($request->requirements);
+            $data = $this->questDetailService->store($request->toArray(), $reqs, $auth);
             return response()->json([
                 'success' => true,
                 'message' => 'Data berhasil dibuat',
@@ -72,7 +74,7 @@ class QuestDetailController extends Controller
      */
     public function edit(QuestDetail $quest_detail)
     {
-        return view('admin.detail-tantangan.edit', compact('quest_level'));
+        return view('admin.tantangan.edit', compact('quest_detail'));
     }
 
     /**
@@ -82,7 +84,9 @@ class QuestDetailController extends Controller
     {
         try {
             $auth = Auth::user();
-            $data = $this->questDetailService->update($request->toArray(), $auth, $quest_detail);
+            $reqs = $request->requirements;
+            unset($request->requirements);
+            $data = $this->questDetailService->update($request->toArray(),$reqs, $auth, $quest_detail);
             return response()->json([
                 'success' => true,
                 'message' => 'Data berhasil diubah',
@@ -97,7 +101,7 @@ class QuestDetailController extends Controller
     {
         try {
             $auth = Auth::user();
-            $data = $this->questDetailService->isActive($auth, $quest_detail);
+            $data = $this->questDetailService->isEditable($auth, $quest_detail);
             return response()->json([
                 'success' => true,
                 'message' => 'Data berhasil diubah',

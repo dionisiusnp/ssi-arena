@@ -61,8 +61,8 @@
     </li>
 
     <!-- Nav Item - Tables -->
-    <li class="nav-item">
-        <a class="nav-link" href="#!">
+    <li class="nav-item {{ request()->routeIs('quest-detail.index') ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('quest-detail.index') }}">
             <i class="fas fa-fw fa-file-code"></i>
             <span>Tantangan</span></a>
     </li>

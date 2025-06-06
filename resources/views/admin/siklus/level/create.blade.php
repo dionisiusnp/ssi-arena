@@ -1,10 +1,10 @@
 @extends('layouts.admin.app')
 
-@section('title', 'Tambah Quest Level')
+@section('title', 'Tambah Level Tantangan')
 
 @section('content')
 <div class="container-fluid">
-    <h1 class="h3 mb-3 text-gray-800">Tambah Quest Level</h1>
+    <h1 class="h3 mb-3 text-gray-800">Tambah Level Tantangan</h1>
 
     <div class="card shadow">
         <div class="card-body">
@@ -27,7 +27,7 @@
                 </div>
 
                 <div class="mt-4">
-                    <a href="{{ route('quest-level.index') }}" class="btn btn-secondary">Kembali</a>
+                    <a href="{{ route('season.index',['tab' => 'quest-levels']) }}" class="btn btn-secondary">Kembali</a>
                     <button type="submit" class="btn btn-success">Simpan</button>
                 </div>
             </form>
@@ -84,7 +84,7 @@
                             timer: 2000,
                             showConfirmButton: false
                         }).then(() => {
-                            window.location.href = "{{ route('quest-level.index') }}";
+                            window.location.href = "{{ route('season.index',['tab' => 'quest-levels']) }}";
                         });
                     } else {
                         Swal.fire('Error', data.message || 'Terjadi kesalahan', 'error');

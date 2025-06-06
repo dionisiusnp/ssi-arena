@@ -21,13 +21,7 @@ class QuestLevelController extends Controller
      */
     public function index(Request $request)
     {
-        $auth = Auth::user();
-        $filters = [
-            'search' => $request->query('q') ?? null,
-            'is_active' => $request->query('is_active') ?? null,
-        ];
-        $data = $this->questLevelService->paginate($filters);
-        return view('admin.level-tantangan.index', compact('data'));
+        // 
     }
 
     /**
@@ -35,7 +29,7 @@ class QuestLevelController extends Controller
      */
     public function create()
     {
-        return view('admin.level-tantangan.create');
+        return view('admin.siklus.level.create');
     }
 
     /**
@@ -72,7 +66,7 @@ class QuestLevelController extends Controller
      */
     public function edit(QuestLevel $quest_level)
     {
-        return view('admin.level-tantangan.edit', compact('quest_level'));
+        return view('admin.siklus.level.edit', compact('quest_level'));
     }
 
     /**

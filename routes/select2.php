@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\Admin\Select2Controller;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Select2Controller;
 
-// Route::get('/produk-jasa/select2', [Select2Controller::class, 'select2ProdukJasa'])->name('produk-jasa.select2');
+Route::get('/season/select2', [Select2Controller::class, 'select2Season'])->name('season.select2');
+Route::get('/type/select2', [Select2Controller::class, 'select2Type'])->name('quest-type.select2');
+Route::get('/level/select2', [Select2Controller::class, 'select2Level'])->name('quest-level.select2');

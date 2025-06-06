@@ -11,12 +11,14 @@ use Illuminate\Support\Facades\DB;
 class QuestDetailService
 {
     protected Model $model;
+    public $questRequirementService;
     /**
      * Create a new class instance.
      */
-    public function __construct(QuestDetail $questDetail)
+    public function __construct(QuestDetail $questDetail, QuestRequirementService $questRequirementService)
     {
         $this->model = $questDetail;
+        $this->questRequirementService = $questRequirementService;
     }
 
     public function model()
@@ -55,11 +57,17 @@ class QuestDetailService
             ->paginate($perPage);
     }
 
-    public function store(array $data, $auth)
+    public function store(array $data, array $reqs, $auth)
     {
         try {
             $data['changed_by'] = $auth->id;
-            return $this->model->create($data);
+            $qd = $this->model->create($data);
+            if (!empty($reqs)) {
+                foreach($reqs as $item){
+                    $this->questRequirementService->store($item['description'], $qd->id, $auth);
+                }
+            }
+            return $qd;
         } catch (\Throwable $th) {
             throw new \ErrorException($th->getMessage());
         }
@@ -70,18 +78,29 @@ class QuestDetailService
         return $this->model->find($id);
     }
 
-    public function update(array $data, $auth, QuestDetail $questDetail)
+    public function update(array $data, array $reqs, $auth, QuestDetail $questDetail)
     {
         try {
             $data['changed_by'] = $auth->id;
-            $questDetail->update($data);
-            return $questDetail;
+            $qd = $questDetail->update($data);
+            
+            $existingRequirements = $this->questRequirementService->byQuestDetail($questDetail->id);
+            if ($existingRequirements->isNotEmpty()) {
+                $existingRequirements->each->delete(); // kalau return collection
+            }
+            
+            if (!empty($reqs)) {
+                foreach($reqs as $item){
+                    $this->questRequirementService->store($item['description'], $questDetail->id, $auth);
+                }
+            }
+            return $qd;
         } catch (\Throwable $th) {
             throw new \ErrorException($th->getMessage());
         }
     }
 
-    public function isActive($auth, QuestDetail $questDetail): bool
+    public function isEditable($auth, QuestDetail $questDetail): bool
     {
         try {
             $questDetail->is_editable = !$questDetail->is_editable;

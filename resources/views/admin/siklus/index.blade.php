@@ -14,7 +14,7 @@
         <a href="{{ route('quest-type.create') }}" class="btn btn-success btn-create d-none" data-tab="quest-types">
             <i class="fas fa-plus"></i> Tambah Tipe Tantangan
         </a>
-        <a href="" class="btn btn-success btn-create d-none" data-tab="quest-levels">
+        <a href="{{ route('quest-level.create') }}" class="btn btn-success btn-create d-none" data-tab="quest-levels">
             <i class="fas fa-plus"></i> Tambah Level Tantangan
         </a>
     </div>
@@ -105,7 +105,7 @@
                         </tr>
                         @empty
                         <tr>
-                            <td colspan="5" class="text-center">Data belum tersedia.</td>
+                            <td colspan="4" class="text-center">Data belum tersedia.</td>
                         </tr>
                         @endforelse
                     </tbody>
@@ -121,7 +121,6 @@
                     <thead>
                         <tr>
                             <th>Nama</th>
-                            <th>Deskripsi</th>
                             <th>Status</th>
                             <th>Diubah Oleh</th>
                             <th>Aksi</th>
@@ -131,12 +130,11 @@
                         @forelse ($questLevels as $item)
                         <tr>
                             <td>{{ $item->name }}</td>
-                            <td>{{ $item->description }}</td>
                             <td>{{ $item->is_active ? 'Aktif' : 'Nonaktif' }}</td>
-                            <td>{{ $item->changer->name ?? '-' }}</td>
+                            <td>{{ $item->lastChanger->name ?? '-' }}</td>
                             <td>
-                                <a href="{{ route('quest-levels.edit', $item->id) }}" class="btn btn-sm btn-warning">Edit</a>
-                                <form action="{{ route('quest-levels.destroy', $item->id) }}" method="POST" class="d-inline form-delete">
+                                <a href="{{ route('quest-level.edit', $item->id) }}" class="btn btn-sm btn-warning">Edit</a>
+                                <form action="{{ route('quest-level.destroy', $item->id) }}" method="POST" class="d-inline form-delete">
                                     @csrf
                                     @method('DELETE')
                                     <button type="button" class="btn btn-sm btn-danger btn-delete" data-name="{{ $item->name }}">Hapus</button>
@@ -145,7 +143,7 @@
                         </tr>
                         @empty
                         <tr>
-                            <td colspan="5" class="text-center">Data belum tersedia.</td>
+                            <td colspan="4" class="text-center">Data belum tersedia.</td>
                         </tr>
                         @endforelse
                     </tbody>

@@ -1,14 +1,14 @@
 @extends('layouts.admin.app')
 
-@section('title', 'Edit Quest Level')
+@section('title', 'Edit Level Tantangan')
 
 @section('content')
 <div class="container-fluid">
-    <h1 class="h3 mb-3 text-gray-800">Edit Quest Level</h1>
+    <h1 class="h3 mb-3 text-gray-800">Edit Level Tantangan</h1>
 
     <div class="card shadow">
         <div class="card-body">
-            <form id="questLevelForm" action="{{ route('quest-level.update', $questLevel->id) }}" method="POST">
+            <form id="questLevelForm" action="{{ route('quest-level.update', $quest_level->id) }}" method="POST">
                 @csrf
                 @method('PUT')
 
@@ -16,19 +16,19 @@
                     <label for="name">Nama Level</label>
                     <input type="text" name="name" id="name"
                         class="form-control @error('name') is-invalid @enderror"
-                        value="{{ old('name', $questLevel->name) }}" required>
+                        value="{{ old('name', $quest_level->name) }}" required>
                     @error('name') <div class="invalid-feedback">{{ $message }}</div> @enderror
                 </div>
 
                 <div class="form-group">
                     <label for="description">Deskripsi</label>
                     <textarea name="description" id="description"
-                        class="form-control summernote @error('description') is-invalid @enderror">{{ old('description', $questLevel->description) }}</textarea>
+                        class="form-control summernote @error('description') is-invalid @enderror">{{ old('description', $quest_level->description) }}</textarea>
                     @error('description') <div class="invalid-feedback">{{ $message }}</div> @enderror
                 </div>
 
                 <div class="mt-4">
-                    <a href="{{ route('quest-level.index') }}" class="btn btn-secondary">Kembali</a>
+                    <a href="{{ route('season.index',['tab' => 'quest-levels']) }}" class="btn btn-secondary">Kembali</a>
                     <button type="submit" class="btn btn-success">Simpan</button>
                 </div>
             </form>
@@ -86,7 +86,7 @@
                             timer: 2000,
                             showConfirmButton: false
                         }).then(() => {
-                            window.location.href = "{{ route('quest-level.index') }}";
+                            window.location.href = "{{ route('season.index',['tab' => 'quest-levels']) }}";
                         });
                     } else {
                         Swal.fire('Error', data.message || 'Terjadi kesalahan', 'error');
