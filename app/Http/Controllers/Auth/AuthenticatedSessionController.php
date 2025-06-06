@@ -7,6 +7,7 @@ use App\Http\Requests\Auth\LoginRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 
 class AuthenticatedSessionController extends Controller
@@ -16,7 +17,7 @@ class AuthenticatedSessionController extends Controller
      */
     public function create(): View
     {
-        return view('auth.login');
+        return view('welcome');
     }
 
     /**
@@ -25,10 +26,22 @@ class AuthenticatedSessionController extends Controller
     public function store(LoginRequest $request): RedirectResponse
     {
         $request->authenticate();
+        $user = Auth::user();
+        
+        if ($user->is_member === false) {
+            Auth::logout();
+            return redirect()->back()->withErrors([
+                'email' => 'Akun ini tidak diperbolehkan login.',
+            ]);
+        }
 
         $request->session()->regenerate();
 
-        return redirect()->intended(route('dashboard', absolute: false));
+        if (is_null($user->is_member)) {
+            return redirect()->intended(route('admin-panel', absolute: false));
+        } else {
+            return redirect()->intended(route('member', absolute: false));
+        }
     }
 
     /**

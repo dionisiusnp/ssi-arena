@@ -21,13 +21,7 @@ class QuestTypeController extends Controller
      */
     public function index(Request $request)
     {
-        $auth = Auth::user();
-        $filters = [
-            'search' => $request->query('q') ?? null,
-            'is_active' => $request->query('is_active') ?? null,
-        ];
-        $data = $this->questTypeService->paginate($filters);
-        return view('admin.tipe-tantangan.index', compact('data'));
+        //
     }
 
     /**
@@ -35,7 +29,7 @@ class QuestTypeController extends Controller
      */
     public function create()
     {
-        return view('admin.tipe-tantangan.create');
+        return view('admin.siklus.tipe.create');
     }
 
     /**
@@ -72,7 +66,7 @@ class QuestTypeController extends Controller
      */
     public function edit(QuestType $quest_type)
     {
-        return view('admin.tipe-tantangan.edit', compact('quest_type'));
+        return view('admin.siklus.tipe.edit', compact('quest_type'));
     }
 
     /**

@@ -4,17 +4,21 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Season;
+use App\Services\QuestLevelService;
+use App\Services\QuestTypeService;
 use App\Services\SeasonService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class SeasonController extends Controller
 {
-    public $seasonService;
+    public $seasonService, $questTypeService, $questLevelService;
 
-    public function __construct(SeasonService $seasonService)
+    public function __construct(SeasonService $seasonService, QuestTypeService $questTypeService, QuestLevelService $questLevelService)
     {
         $this->seasonService = $seasonService;
+        $this->questTypeService = $questTypeService;
+        $this->questLevelService = $questLevelService;
     }
     /**
      * Display a listing of the resource.
@@ -25,8 +29,10 @@ class SeasonController extends Controller
         $filters = [
             'search' => $request->query('q') ?? null,
         ];
-        $data = $this->seasonService->paginate($filters);
-        return view('admin.musim.index', compact('data'));
+        $seasons = $this->seasonService->paginate($filters);
+        $questTypes = $this->questTypeService->paginate($filters);
+        $questLevels = $this->questLevelService->paginate($filters);
+        return view('admin.siklus.index', compact('seasons','questTypes','questLevels'));
     }
 
     /**
@@ -34,7 +40,7 @@ class SeasonController extends Controller
      */
     public function create()
     {
-        return view('admin.musim.create');
+        return view('admin.siklus.musim.create');
     }
 
     /**
@@ -71,7 +77,7 @@ class SeasonController extends Controller
      */
     public function edit(Season $season)
     {
-        return view('admin.musim.edit', compact('season'));
+        return view('admin.siklus.musim.edit', compact('season'));
     }
 
     /**

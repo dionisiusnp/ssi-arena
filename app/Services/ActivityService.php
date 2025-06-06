@@ -68,7 +68,7 @@ class ActivityService
     public function isActive($auth, Activity $activity): bool
     {
         try {
-            $activity->is_active = !$activity->is_active;
+            $activity->status = !$activity->status;
             $activity->changed_by = $auth->id ?? null;
             $activity->save();
             return true;

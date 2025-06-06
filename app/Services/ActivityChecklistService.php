@@ -65,7 +65,7 @@ class ActivityChecklistService
     public function isActive($auth, ActivityChecklist $activityChecklist): bool
     {
         try {
-            $activityChecklist->is_active = !$activityChecklist->is_active;
+            $activityChecklist->status = !$activityChecklist->status;
             $activityChecklist->changed_by = $auth->id ?? null;
             $activityChecklist->save();
             return true;

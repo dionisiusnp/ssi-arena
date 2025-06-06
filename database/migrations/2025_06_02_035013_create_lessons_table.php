@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('topic_id')->nullable()->constrained('topics');
             $table->string('title');
             $table->text('description')->nullable();
+            $table->text('code')->nullable();
             $table->integer('sequence')->default(0);
             $table->boolean('is_published')->default(true);
             $table->foreignId('changed_by')->nullable()->constrained('users');

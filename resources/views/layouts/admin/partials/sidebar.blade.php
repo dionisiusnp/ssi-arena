@@ -7,6 +7,16 @@
     </a>
 
     <!-- Divider -->
+    <hr class="sidebar-divider my-0">
+
+    <!-- Nav Item - Tables -->
+    <li class="nav-item">
+        <a class="nav-link" href="#!">
+            <i class="fas fa-fw fa-home"></i>
+            <span>Dashboard</span></a>
+    </li>
+
+    <!-- Divider -->
     <hr class="sidebar-divider">
 
     <!-- Heading -->
@@ -14,18 +24,18 @@
         Kegiatan
     </div>
 
-    <!-- Nav Item - Tables -->
-    <li class="nav-item active">
-        <a class="nav-link" href="#!">
-            <i class="fas fa-fw fa-calendar"></i>
-            <span>Acara</span></a>
-    </li>
-
     <!-- Nav Item - Charts -->
     <li class="nav-item">
         <a class="nav-link" href="#!">
             <i class="fas fa-fw fa-link"></i>
-            <span>Rute Materi</span></a>
+            <span>Rute</span></a>
+    </li>
+
+    <!-- Nav Item - Tables -->
+    <li class="nav-item">
+        <a class="nav-link" href="#!">
+            <i class="fas fa-fw fa-bookmark"></i>
+            <span>Topik</span></a>
     </li>
 
     <!-- Nav Item - Tables -->
@@ -44,10 +54,10 @@
     </div>
 
     <!-- Nav Item - Charts -->
-    <li class="nav-item">
-        <a class="nav-link" href="#!">
+    <li class="nav-item {{ request()->routeIs('season.index') ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('season.index') }}">
             <i class="fas fa-fw fa-clock"></i>
-            <span>Periode</span></a>
+            <span>Siklus</span></a>
     </li>
 
     <!-- Nav Item - Tables -->
@@ -55,13 +65,6 @@
         <a class="nav-link" href="#!">
             <i class="fas fa-fw fa-file-code"></i>
             <span>Tantangan</span></a>
-    </li>
-
-    <!-- Nav Item - Tables -->
-    <li class="nav-item">
-        <a class="nav-link" href="">
-            <i class="fas fa-fw fa-trophy"></i>
-            <span>Peringkat</span></a>
     </li>
 
     <!-- Divider -->
@@ -74,7 +77,7 @@
 
     <!-- Sidebar Message -->
     <div class="sidebar-card d-none d-lg-flex">
-        <a class="btn btn-warning btn-sm" href="#!" target="_blank">Landing Page</a>
+        <a class="btn btn-warning btn-sm" href="{{ route('member') }}" target="_blank">Landing Page</a>
     </div>
 
 </ul>

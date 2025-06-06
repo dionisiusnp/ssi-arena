@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Activity;
 use App\Services\ActivityService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ActivityController extends Controller
 {
@@ -18,9 +19,14 @@ class ActivityController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $auth = Auth::user();
+        $filters = [
+            'search' => $request->query('q') ?? null,
+        ];
+        $data = $this->activityService->paginate($filters);
+        return view('admin.aktivitas.index', compact('data'));
     }
 
     /**
@@ -28,7 +34,7 @@ class ActivityController extends Controller
      */
     public function create()
     {
-        //
+        return view('admin.aktivitas.create');
     }
 
     /**
@@ -36,7 +42,20 @@ class ActivityController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        try {
+            $auth = Auth::user();
+            $data = $this->activityService->store($request->toArray(), $auth);
+            return response()->json([
+                'success' => true,
+                'message' => 'Data berhasil dibuat',
+                'data'    => $data,
+            ]);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'error' => true,
+                'message' => $th->getMessage(),
+            ], 500);
+        }
     }
 
     /**
@@ -52,7 +71,7 @@ class ActivityController extends Controller
      */
     public function edit(Activity $activity)
     {
-        //
+        return view('admin.aktivitas.edit', compact('activity'));
     }
 
     /**
@@ -60,7 +79,32 @@ class ActivityController extends Controller
      */
     public function update(Request $request, Activity $activity)
     {
-        //
+        try {
+            $auth = Auth::user();
+            $data = $this->activityService->update($request->toArray(), $auth, $activity);
+            return response()->json([
+                'success' => true,
+                'message' => 'Data berhasil diubah',
+                'data'    => $data,
+            ]);
+        } catch (\Throwable $th) {
+            throw new \ErrorException($th->getMessage());
+        }
+    }
+
+    public function toggleStatus(Activity $activity)
+    {
+        try {
+            $auth = Auth::user();
+            $data = $this->activityService->isActive($auth, $activity);
+            return response()->json([
+                'success' => true,
+                'message' => 'Data berhasil diubah',
+                'data'    => $data,
+            ]);
+        } catch (\Throwable $th) {
+            throw new \ErrorException($th->getMessage());
+        }
     }
 
     /**
@@ -68,6 +112,14 @@ class ActivityController extends Controller
      */
     public function destroy(Activity $activity)
     {
-        //
+        try {
+            $this->activityService->destroy($activity);
+            return response()->json([
+                'success' => true,
+                'message' => 'Data berhasil dihapus',
+            ]);
+        } catch (\Throwable $th) {
+            throw new \ErrorException($th->getMessage());
+        }
     }
 }
