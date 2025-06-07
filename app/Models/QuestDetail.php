@@ -37,15 +37,15 @@ class QuestDetail extends Model
     }
 
     public function season() {
-        return $this->belongsTo(Season::class);
+        return $this->belongsTo(Season::class,'season_id');
     }
 
     public function questType() {
-        return $this->belongsTo(QuestType::class);
+        return $this->belongsTo(QuestType::class,'quest_type_id');
     }
 
     public function questLevel() {
-        return $this->belongsTo(QuestLevel::class);
+        return $this->belongsTo(QuestLevel::class,'quest_level_id');
     }
 
     public function requirements() {

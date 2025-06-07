@@ -96,7 +96,7 @@ class ActivityController extends Controller
     {
         try {
             $auth = Auth::user();
-            $data = $this->activityService->isActive($auth, $activity);
+            $data = $this->activityService->isClear($auth, $activity);
             return response()->json([
                 'success' => true,
                 'message' => 'Data berhasil diubah',

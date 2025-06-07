@@ -35,4 +35,9 @@ class QuestRequirement extends Model
     {
         return $this->belongsTo(User::class,'changed_by');
     }
+
+    public function detail()
+    {
+        return $this->belongsTo(QuestDetail::class,'quest_detail_id');
+    }
 }
