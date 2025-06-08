@@ -28,16 +28,21 @@ class AuthenticatedSessionController extends Controller
         $request->authenticate();
         $user = Auth::user();
         
-        if ($user->is_member === false) {
+        // true || null || true = admin
+        // true || true || true = pengajar
+        // true || true || false = member
+        // true || false || false = bootcamp
+
+        if ($user->is_active = 0) {
             Auth::logout();
             return redirect()->back()->withErrors([
-                'email' => 'Akun ini tidak diperbolehkan login.',
+                'email' => 'Akun ini tidak memiliki akses, silahkan hubungi admin.',
             ]);
         }
 
         $request->session()->regenerate();
 
-        if (is_null($user->is_member)) {
+        if ($user->is_lecturer = 1) {
             return redirect()->intended(route('admin-panel', absolute: false));
         } else {
             return redirect()->intended(route('member', absolute: false));

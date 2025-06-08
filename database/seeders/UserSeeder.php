@@ -32,6 +32,8 @@ class UserSeeder extends Seeder
                 'email' => 'gm@gmail.com',
                 'password' => Hash::make('admingame'),
                 'is_member' => null,
+                'is_lecturer' => true,
+                'is_active' => true,
             ],
             [
                 'id' => 2,
@@ -39,6 +41,17 @@ class UserSeeder extends Seeder
                 'email' => 'member@gmail.com',
                 'password' => Hash::make('membergame'),
                 'is_member' => true,
+                'is_lecturer' => false,
+                'is_active' => true,
+            ],
+            [
+                'id' => 3,
+                'name' => 'Pengajar',
+                'email' => 'mentor@gmail.com',
+                'password' => Hash::make('mentorgame'),
+                'is_member' => true,
+                'is_lecturer' => true,
+                'is_active' => true,
             ],
         ];
         return $user;

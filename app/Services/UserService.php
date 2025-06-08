@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 class UserService
 {
@@ -42,15 +43,25 @@ class UserService
     {
         $search = $filter['search'] ?? null;
         $isMember = isset($filter['is_member']) ? (filter_var($filter['is_member'], FILTER_VALIDATE_BOOLEAN) ? 1 : 0) : null;
+        $isLecturer = isset($filter['is_lecturer']) ? (filter_var($filter['is_lecturer'], FILTER_VALIDATE_BOOLEAN) ? 1 : 0) : null;
+        $isActive = isset($filter['is_active']) ? (filter_var($filter['is_active'], FILTER_VALIDATE_BOOLEAN) ? 1 : 0) : null;
+
         return $this->model
-            ->when($search, function ($query) use ($search) {
-                $query->where(function ($q) use ($search) {
+            ->when($search, fn($query) =>
+                $query->where(fn($q) =>
                     $q->where('name', 'LIKE', "%{$search}%")
-                    ->orWhere('email', 'LIKE', "%{$search}%");
-                });
-            })
-            ->when(isset($isMember), fn($query) => $query->where('is_member', $isMember))
-            ->orderByDesc('is_member')
+                )
+            )
+            ->when(!is_null($isMember), fn($query) =>
+                $query->where('is_member', $isMember)
+            )
+            ->when(!is_null($isLecturer), fn($query) =>
+                $query->where('is_lecturer', $isLecturer)
+            )
+            ->when(!is_null($isActive), fn($query) =>
+                $query->where('is_active', $isActive)
+            )
+            ->withCount('activities')
             ->orderBy('name')
             ->paginate($perPage);
     }
@@ -58,6 +69,7 @@ class UserService
     public function store(array $data)
     {
         try {
+            $data['password'] = Hash::make($data['password']);
             return $this->model->create($data);
         } catch (\Throwable $th) {
             throw new \ErrorException($th->getMessage());
@@ -69,7 +81,7 @@ class UserService
         return $this->model->find($id);
     }
 
-    public function update(array $data, $auth, User $user)
+    public function update(array $data, User $user)
     {
         try {
             $user->update($data);
@@ -79,10 +91,10 @@ class UserService
         }
     }
 
-    public function isActive($auth, User $user): bool
+    public function isActive(User $user): bool
     {
         try {
-            $user->is_member = !$user->is_member;
+            $user->is_active = !$user->is_active;
             $user->save();
             return true;
         } catch (\Throwable $th) {

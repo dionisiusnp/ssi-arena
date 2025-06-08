@@ -3,6 +3,8 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -21,7 +23,10 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'nim',
         'is_member',
+        'is_lecturer',
+        'is_active',
     ];
 
     /**
@@ -45,5 +50,24 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function getCreatedAtFormattedAttribute(): string
+    {
+        return Carbon::parse($this->attributes['created_at'])
+            ->locale('id')
+            ->translatedFormat("d F Y");
+    }
+
+    public function getUpdatedAtFormattedAttribute(): string
+    {
+        return Carbon::parse($this->attributes['updated_at'])
+            ->locale('id')
+            ->translatedFormat("d F Y");
+    }
+
+    public function activities()
+    {
+        return $this->hasMany(Activity::class, 'claimed_by');
     }
 }

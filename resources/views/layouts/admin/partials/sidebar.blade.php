@@ -68,10 +68,10 @@
     </li>
 
     <!-- Nav Item - Tables -->
-    <li class="nav-item {{ request()->routeIs('activity.index') ? 'active' : '' }}">
-        <a class="nav-link" href="{{ route('quest-detail.index') }}">
-            <i class="fas fa-fw fa-file-code"></i>
-            <span>Tantangan</span></a>
+    <li class="nav-item {{ request()->routeIs('user.index') ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('user.index') }}">
+            <i class="fas fa-fw fa-trophy"></i>
+            <span>Pemain</span></a>
     </li>
 
     <!-- Divider -->
@@ -84,7 +84,7 @@
 
     <!-- Sidebar Message -->
     <div class="sidebar-card d-none d-lg-flex">
-        <a class="btn btn-warning btn-sm" href="{{ route('member') }}" target="_blank">Landing Page</a>
+        <a class="btn btn-secondary btn-sm" href="{{ route('member') }}" target="_blank">Landing Page</a>
     </div>
 
 </ul>

@@ -23,10 +23,10 @@ class ActivityController extends Controller
     {
         $auth = Auth::user();
         $filters = [
-            'search' => $request->query('q') ?? null,
+            'claimed_by' => $request->query('claimed_by') ?? null,
         ];
         $data = $this->activityService->paginate($filters);
-        return view('admin.aktivitas.index', compact('data'));
+        return view('admin.pemain.aktivitas.index', compact('data'));
     }
 
     /**
@@ -34,7 +34,7 @@ class ActivityController extends Controller
      */
     public function create()
     {
-        return view('admin.aktivitas.create');
+        return view('admin.pemain.aktivitas.create');
     }
 
     /**
@@ -71,7 +71,7 @@ class ActivityController extends Controller
      */
     public function edit(Activity $activity)
     {
-        return view('admin.aktivitas.edit', compact('activity'));
+        return view('admin.pemain.aktivitas.edit', compact('activity'));
     }
 
     /**

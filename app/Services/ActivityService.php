@@ -10,14 +10,15 @@ use Illuminate\Pagination\LengthAwarePaginator;
 class ActivityService
 {
     protected Model $model;
-    public $activityChecklistService;
+    public $activityChecklistService, $userService;
     /**
      * Create a new class instance.
      */
-    public function __construct(Activity $activity, ActivityChecklistService $activityChecklistService)
+    public function __construct(Activity $activity, ActivityChecklistService $activityChecklistService, UserService $userService)
     {
         $this->model = $activity;
         $this->activityChecklistService = $activityChecklistService;
+        $this->userService = $userService;
     }
 
     public function model()
@@ -27,16 +28,11 @@ class ActivityService
 
     public function paginate(array $filter = [], int $perPage = 10): LengthAwarePaginator
     {
-        $search = $filter['search'] ?? null;
-        $status = isset($filter['status']) ? (filter_var($filter['status'], FILTER_VALIDATE_BOOLEAN) ? 1 : 0) : null;
+        $playerId = $filter['claimed_by'];
+        $isClear = isset($filter['status']) ? (filter_var($filter['status'], FILTER_VALIDATE_BOOLEAN) ? 1 : 0) : null;
         return $this->model
-            // ->when($search, function ($query) use ($search) {
-            //     $query->where(function ($q) use ($search) {
-            //         $q->where('title', 'LIKE', "%{$search}%")
-            //         ->orWhere('description', 'LIKE', "%{$search}%");
-            //     });
-            // })
-            ->when(isset($status), fn($query) => $query->where('status', $status))
+            ->when('claimed_by', '=', $playerId)
+            ->when(isset($isClear), fn($query) => $query->where('status', $isClear))
             ->orderByDesc('created_at')
             ->paginate($perPage);
     }
