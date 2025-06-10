@@ -59,11 +59,12 @@
                             <th>Misi</th>
                             <th>Poin</th>
                             <th>Status</th>
+                            <th>Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
                         @forelse($data as $index => $activity)
-                        <tr data-toggle="collapse" data-target="#checklist-{{ $activity->id }}" class="clickable" style="cursor:pointer;">
+                        <tr>
                             <td>{{ $data->firstItem() + $index }}.</td>
                             <td>{{ $activity->detail->season->name ?? '-' }}</td>
                             <td><span class="badge badge-secondary">{{ $activity->detail->questType->name ?? '-' }}</span></td>
@@ -71,38 +72,10 @@
                             <td>{{ $activity->detail->name ?? '-' }}</td>
                             <td>{{ $activity->detail->point + ($activity->detail->point * $activity->detail->point_multiple) }}</td>
                             <td><span class="badge badge-{{ $activity->status ? 'success' : 'secondary' }}">{{ $activity->status ? 'Selesai' : 'Belum' }}</span></td>
-                        </tr>
-                        <tr class="collapse bg-light" id="checklist-{{ $activity->id }}">
-                            <td colspan="6">
-                                <strong>Daftar Tugas:</strong>
-                                @if($activity->checklists->count())
-                                <ul class="mb-0">
-                                    @foreach($activity->checklists as $checklist)
-                                    <li class="d-flex justify-content-between align-items-center">
-                                        <span>{{ $checklist->questRequirement->description ?? '-' }}</span>
-                                        <div>
-                                            @if ($checklist->status == 1)
-                                            <form action="" method="POST" style="display:inline;">
-                                                @csrf
-                                                @method('PATCH')
-                                                <button type="submit" class="btn btn-sm btn-danger">
-                                                    Batalkan
-                                                </button>
-                                            </form>
-                                            @endif
-                                            @if($checklist->status)
-                                                <span class="badge badge-success mr-2">Selesai</span>
-                                            @else
-                                                <span class="badge badge-secondary mr-2">Belum</span>
-                                            @endif
-                                        </div>
-                                    </li>
-                                    <hr class="my-2">
-                                    @endforeach
-                                </ul>
-                                @else
-                                <em>Tidak ada checklist.</em>
-                                @endif
+                            <td>
+                                <a href="{{ route('activity.show', $activity->id) }}?claimed_by={{ request('claimed_by') }}&season_id={{ request('season_id') }}&search={{ request('search') }}" class="btn btn-sm btn-danger">
+                                    Daftar Tugas
+                                </a>
                             </td>
                         </tr>
                         @empty
@@ -122,19 +95,3 @@
     </div>
 </div>
 @endsection
-
-@push('styles')
-<style>
-    .clickable:hover {
-        background-color: #f8f9fa;
-    }
-</style>
-@endpush
-
-@push('scripts')
-<script>
-    $(document).on('click', '.btn-action, form button', function(e) {
-        e.stopPropagation();
-    });
-</script>
-@endpush

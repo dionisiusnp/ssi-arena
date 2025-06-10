@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Activity;
-use App\Models\Season;
 use App\Services\ActivityService;
 use App\Services\SeasonService;
 use App\Services\UserService;
@@ -87,7 +86,16 @@ class ActivityController extends Controller
      */
     public function show(Activity $activity)
     {
-        //
+        // Jika perlu, eager load relasi
+        $activity->load(['detail.season', 'detail.questType', 'detail.questLevel', 'checklists.questRequirement']);
+
+        return view('admin.pemain.aktivitas.detail', [
+            'activity' => $activity,
+            'user' => $activity->claimedBy, // jika relasi ada
+            'claimed_by' => request('claimed_by'),
+            'season_id' => request('season_id'),
+            'search' => request('search'),
+        ]);
     }
 
     /**

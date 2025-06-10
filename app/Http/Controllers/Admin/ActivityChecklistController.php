@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\ActivityChecklist;
 use App\Services\ActivityChecklistService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ActivityChecklistController extends Controller
 {
@@ -61,6 +62,29 @@ class ActivityChecklistController extends Controller
     public function update(Request $request, ActivityChecklist $activityChecklist)
     {
         //
+    }
+
+    public function toggleStatus(Request $request, ActivityChecklist $activity_checklist)
+    {
+        try {
+            $auth = Auth::user();
+            $this->activityChecklistService->isClear($auth, $activity_checklist);
+
+            // Ambil parameter jika tidak null
+            $query = array_filter([
+                'claimed_by' => $request->query('claimed_by'),
+                'season_id'  => $request->query('season_id'),
+                'search'     => $request->query('search'),
+            ]);
+
+            return redirect()
+                ->route('activity.show', [
+                    'activity' => $activity_checklist->activity_id,
+                ] + $query)
+                ->with('success', 'Status checklist berhasil diubah.');
+        } catch (\Throwable $th) {
+            return back()->withErrors(['error' => $th->getMessage()]);
+        }
     }
 
     /**

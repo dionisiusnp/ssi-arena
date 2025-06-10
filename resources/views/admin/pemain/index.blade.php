@@ -72,7 +72,7 @@
                         </p>
 
                         <p class="card-text mb-1"><strong>NIM:</strong> {{ $user->nim ?? '-' }}</p>
-                        <p class="card-text mb-1"><strong>Total Aktivitas:</strong> {{ $user->activities_count }}</p>
+                        <p class="card-text mb-1"><strong>Total Misi:</strong> {{ $user->activities_count }}</p>
                         <p class="card-text mt-2"><strong>Dibuat:</strong> {{ $user->created_at_formatted }}</p>
 
                         <div class="dropdown position-absolute" style="top: 10px; right: 10px;">

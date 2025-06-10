@@ -9,12 +9,14 @@ use Illuminate\Pagination\LengthAwarePaginator;
 class ActivityChecklistService
 {
     protected Model $model;
+    public $activityService;
     /**
      * Create a new class instance.
      */
-    public function __construct(ActivityChecklist $activityChecklist)
+    public function __construct(ActivityChecklist $activityChecklist, ActivityService $activityService)
     {
         $this->model = $activityChecklist;
+        $this->activityService = $activityService;
     }
 
     public function model()
@@ -73,6 +75,10 @@ class ActivityChecklistService
     public function isClear($auth, ActivityChecklist $activityChecklist): bool
     {
         try {
+            $activity = $this->activityService->model()->find($activityChecklist->activity_id);
+            $activity->update([
+                'status' => false,
+            ]);
             $activityChecklist->status = !$activityChecklist->status;
             $activityChecklist->changed_by = $auth->id ?? null;
             $activityChecklist->save();

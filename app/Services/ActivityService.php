@@ -3,22 +3,18 @@
 namespace App\Services;
 
 use App\Models\Activity;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\LengthAwarePaginator;
 
 class ActivityService
 {
     protected Model $model;
-    public $activityChecklistService, $userService;
     /**
      * Create a new class instance.
      */
-    public function __construct(Activity $activity, ActivityChecklistService $activityChecklistService, UserService $userService)
+    public function __construct(Activity $activity)
     {
         $this->model = $activity;
-        $this->activityChecklistService = $activityChecklistService;
-        $this->userService = $userService;
     }
 
     public function model()

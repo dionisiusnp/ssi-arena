@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\ActivityChecklistController;
 use App\Http\Controllers\Admin\ActivityController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\QuestDetailController;
@@ -27,6 +28,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/user/{user}/status',[UserController::class,'toggleStatus'])->name('user.status');
     Route::resource('user', UserController::class);
     Route::resource('activity', ActivityController::class);
+    Route::get('/activity-checklist/{activity_checklist}/status', [ActivityChecklistController::class, 'toggleStatus'])->name('activity-checklist.status');
+
 
     Route::get('/member',[MemberDashboardController::class,'index'])->name('member');
 });
