@@ -49,7 +49,7 @@ class ActivityController extends Controller
         $totalSelesai = $taskClear->sum(fn($activity) => $activity->detail->point + ($activity->detail->point * $activity->detail->point_multiple));
         $totalBelum   = $taskUnclear->sum(fn($activity) => $activity->detail->point + ($activity->detail->point * $activity->detail->point_multiple));
 
-        return view('admin.pemain.aktivitas.index', compact('data', 'user', 'seasons', 'totalSelesai', 'totalBelum'));
+        return view('admin.pemain.misi.index', compact('data', 'user', 'seasons', 'totalSelesai', 'totalBelum'));
     }
 
     /**
@@ -57,7 +57,7 @@ class ActivityController extends Controller
      */
     public function create()
     {
-        return view('admin.pemain.aktivitas.create');
+        // 
     }
 
     /**
@@ -89,9 +89,9 @@ class ActivityController extends Controller
         // Jika perlu, eager load relasi
         $activity->load(['detail.season', 'detail.questType', 'detail.questLevel', 'checklists.questRequirement']);
 
-        return view('admin.pemain.aktivitas.detail', [
+        return view('admin.pemain.misi.detail', [
             'activity' => $activity,
-            'user' => $activity->claimedBy, // jika relasi ada
+            'user' => $activity->claimedBy,
             'claimed_by' => request('claimed_by'),
             'season_id' => request('season_id'),
             'search' => request('search'),
@@ -103,7 +103,7 @@ class ActivityController extends Controller
      */
     public function edit(Activity $activity)
     {
-        return view('admin.pemain.aktivitas.edit', compact('activity'));
+        // 
     }
 
     /**
