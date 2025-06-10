@@ -33,7 +33,7 @@ class AuthenticatedSessionController extends Controller
         // true || true || false = member
         // true || false || false = bootcamp
 
-        if ($user->is_active = 0) {
+        if ($user->is_active == 0) {
             Auth::logout();
             return redirect()->back()->withErrors([
                 'email' => 'Akun ini tidak memiliki akses, silahkan hubungi admin.',
@@ -42,7 +42,7 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        if ($user->is_lecturer = 1) {
+        if ($user->is_lecturer == 1) {
             return redirect()->intended(route('admin-panel', absolute: false));
         } else {
             return redirect()->intended(route('member', absolute: false));

@@ -46,4 +46,8 @@ class Activity extends Model
     public function detail() {
         return $this->belongsTo(QuestDetail::class,'quest_detail_id');
     }
+
+    public function checklists() {
+        return $this->hasMany(ActivityChecklist::class);
+    }
 }

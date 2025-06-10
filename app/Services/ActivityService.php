@@ -28,11 +28,20 @@ class ActivityService
 
     public function paginate(array $filter = [], int $perPage = 10): LengthAwarePaginator
     {
-        $playerId = $filter['claimed_by'];
-        $isClear = isset($filter['status']) ? (filter_var($filter['status'], FILTER_VALIDATE_BOOLEAN) ? 1 : 0) : null;
+        $playerId  = $filter['claimed_by'] ?? null;
+        $seasonId  = $filter['season_id'] ?? null;
+        $search    = $filter['search'] ?? null;
+
         return $this->model
-            ->when('claimed_by', '=', $playerId)
-            ->when(isset($isClear), fn($query) => $query->where('status', $isClear))
+            ->with([
+                'checklists.questRequirement',
+                'detail.season',
+                'detail.questType',
+                'detail.questLevel',
+            ])
+            ->when($playerId, fn($q) => $q->where('claimed_by', $playerId))
+            ->when($seasonId, fn($q) => $q->whereHas('detail', fn($q) => $q->where('season_id', $seasonId)))
+            ->when($search, fn($q) => $q->whereHas('detail', fn($q) => $q->where('name', 'like', '%' . $search . '%')))
             ->orderByDesc('created_at')
             ->paginate($perPage);
     }

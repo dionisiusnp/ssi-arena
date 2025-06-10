@@ -21,7 +21,7 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->integer('minimum_level')->default(1);
             $table->integer('point')->default(0);
-            $table->decimal('point_multiple', 2, 2)->default(0);
+            $table->decimal('point_multiple', 4, 2)->default(0);
             $table->decimal('point_total', 19, 2)->default(0);
             $table->boolean('is_editable')->default(true);
             $table->foreignId('changed_by')->nullable()->constrained('users');

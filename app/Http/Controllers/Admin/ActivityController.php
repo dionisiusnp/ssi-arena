@@ -4,29 +4,53 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Activity;
+use App\Models\Season;
 use App\Services\ActivityService;
+use App\Services\SeasonService;
+use App\Services\UserService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class ActivityController extends Controller
 {
-    public $activityService;
+    public $activityService, $seasonService, $userService;
 
-    public function __construct(ActivityService $activityService)
+    public function __construct(ActivityService $activityService, SeasonService $seasonService, UserService $userService)
     {
         $this->activityService = $activityService;
+        $this->seasonService = $seasonService;
+        $this->userService = $userService;
     }
     /**
      * Display a listing of the resource.
      */
     public function index(Request $request)
     {
-        $auth = Auth::user();
         $filters = [
-            'claimed_by' => $request->query('claimed_by') ?? null,
+            'claimed_by' => $request->query('claimed_by'),
+            'season_id'  => $request->query('season_id'),
+            'search'     => $request->query('search'),
         ];
+
         $data = $this->activityService->paginate($filters);
-        return view('admin.pemain.aktivitas.index', compact('data'));
+        $seasons = $this->seasonService->model()->all();
+        $user = $this->userService->model()->find($filters['claimed_by']);
+
+        $baseQuery = $this->activityService->model()->with('detail')
+            ->when($filters['claimed_by'], fn($q) => $q->where('claimed_by', $filters['claimed_by']))
+            ->when($filters['season_id'], function ($q) use ($filters) {
+                $q->whereHas('detail', function ($q2) use ($filters) {
+                    $q2->where('season_id', $filters['season_id']);
+                });
+            });
+
+        $taskClear   = (clone $baseQuery)->where('status', true)->get();
+        $taskUnclear = (clone $baseQuery)->where('status', false)->get();
+
+        $totalSelesai = $taskClear->sum(fn($activity) => $activity->detail->point + ($activity->detail->point * $activity->detail->point_multiple));
+        $totalBelum   = $taskUnclear->sum(fn($activity) => $activity->detail->point + ($activity->detail->point * $activity->detail->point_multiple));
+
+        return view('admin.pemain.aktivitas.index', compact('data', 'user', 'seasons', 'totalSelesai', 'totalBelum'));
     }
 
     /**

@@ -80,15 +80,12 @@
                                 Aksi
                             </button>
                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton{{ $user->id }}">
-                                <a class="dropdown-item" href="{{ route('activity.show', ['activity' => $user->id]) }}">
-                                    <i class="fas fa-bolt text-danger mr-1"></i> Tantangan
-                                </a>
-                                <a class="dropdown-item" href="{{ route('user.show', $user->id) }}">
-                                    <i class="fas fa-info-circle text-danger mr-1"></i> Detail
+                                <a class="dropdown-item" href="{{ route('activity.index', ['claimed_by' => $user->id]) }}">
+                                    <i class="fas fa-trophy text-danger mr-1"></i> Poin
                                 </a>
                                 @if ($user->id > 1)
                                     <a class="dropdown-item" href="{{ route('user.edit', $user->id) }}">
-                                        <i class="fas fa-edit text-danger mr-1"></i> Edit
+                                        <i class="fas fa-edit text-danger mr-1"></i> Ubah
                                     </a>
                                     <a class="dropdown-item" href="{{ route('user.status', $user->id) }}">
                                         <i class="fas fa-user text-danger mr-1"></i> {{ $user->is_active ? 'Non Aktifkan' : 'Aktifkan' }}
