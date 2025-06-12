@@ -76,7 +76,7 @@
                         <p class="card-text mt-2"><strong>Dibuat:</strong> {{ $user->created_at_formatted }}</p>
 
                         <div class="dropdown position-absolute" style="top: 10px; right: 10px;">
-                            <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" id="dropdownMenuButton{{ $user->id }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <button class="btn btn-sm btn-outline-danger dropdown-toggle" type="button" id="dropdownMenuButton{{ $user->id }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 Aksi
                             </button>
                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton{{ $user->id }}">
@@ -105,9 +105,6 @@
 
     {{-- Pagination --}}
     <div class="d-flex justify-content-between align-items-center mt-4">
-        <div>
-            <small>Menampilkan {{ $data->firstItem() }} - {{ $data->lastItem() }} dari {{ $data->total() }} pemain</small>
-        </div>
         <div>
             {{ $data->withQueryString()->onEachSide(1)->links('pagination::bootstrap-4') }}
         </div>

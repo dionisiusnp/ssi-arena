@@ -27,7 +27,8 @@ class CreateUserRequest extends FormRequest
             'nim' => ['nullable', 'string', 'max:50', 'unique:users,nim'],
             'password' => ['required', 'string', 'min:6', 'confirmed'],
             'is_member' => ['nullable', 'boolean'],
-            'is_lecturer' => ['required', 'boolean'],
+            'is_lecturer' => ['nullable', 'boolean'],
+            'is_active' => ['nullable', 'boolean'],
         ];
     }
 }

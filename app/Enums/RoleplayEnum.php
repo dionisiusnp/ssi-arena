@@ -2,18 +2,20 @@
 
 namespace App\Enums;
 
-enum VisibilityEnum: string
+enum RoleplayEnum: string
 {
-    case DRAFT = 'draft';
-    case PUBLISHED = 'published';
-    case SHARED = 'shared';
+    case FULLSTACK = 'fullstack';
+    case BACKEND = 'backend';
+    case FRONTEND = 'frontend';
+    case DEVOPS = 'devops';
 
     public function label(): string
     {
         return match($this) {
-            self::DRAFT => 'Draft',
-            self::PUBLISHED => 'Published',
-            self::SHARED => 'Shared',
+            self::FULLSTACK => 'Fullstack',
+            self::BACKEND => 'Backend',
+            self::FRONTEND => 'Frontend',
+            self::DEVOPS => 'Devops',
         };
     }
 

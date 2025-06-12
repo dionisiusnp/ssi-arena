@@ -26,23 +26,16 @@
 
     <!-- Nav Item - Charts -->
     <li class="nav-item">
-        <a class="nav-link" href="#!">
-            <i class="fas fa-fw fa-link"></i>
-            <span>Rute</span></a>
+        <a class="nav-link" href="">
+            <i class="fas fa-fw fa-calendar"></i>
+            <span>Acara</span></a>
     </li>
 
-    <!-- Nav Item - Tables -->
-    <li class="nav-item">
-        <a class="nav-link" href="#!">
-            <i class="fas fa-fw fa-bookmark"></i>
-            <span>Topik</span></a>
-    </li>
-
-    <!-- Nav Item - Tables -->
-    <li class="nav-item">
-        <a class="nav-link" href="#!">
+    <!-- Nav Item - Charts -->
+    <li class="nav-item {{ request()->routeIs('roadmap.index') ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('roadmap.index') }}">
             <i class="fas fa-fw fa-book"></i>
-            <span>Materi</span></a>
+            <span>Kurikulum</span></a>
     </li>
 
     <!-- Divider -->
