@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Roadmap;
 use App\Services\RoadmapService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class RoadmapController extends Controller
 {
@@ -18,9 +19,16 @@ class RoadmapController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request) 
     {
-        //
+        $auth = Auth::user();
+        $filters = [
+            'search' => $request->query('q') ?? null,
+            'role' => $request->query('role') ?? null,
+            'visibility' => $request->query('visibility') ?? null,
+        ];
+        $data = $this->roadmapService->paginate($filters);
+        return view('admin.rute.index', compact('data'));
     }
 
     /**
@@ -28,7 +36,7 @@ class RoadmapController extends Controller
      */
     public function create()
     {
-        //
+        return view('admin.rute.create');
     }
 
     /**
@@ -36,7 +44,20 @@ class RoadmapController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        try {
+            $auth = Auth::user();
+            $data = $this->roadmapService->store($request->toArray(), $auth);
+            return response()->json([
+                'success' => true,
+                'message' => 'Data berhasil dibuat',
+                'data'    => $data,
+            ]);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'error' => true,
+                'message' => $th->getMessage(),
+            ], 500);
+        }
     }
 
     /**
@@ -52,7 +73,7 @@ class RoadmapController extends Controller
      */
     public function edit(Roadmap $roadmap)
     {
-        //
+        return view('admin.rute.edit', compact('roadmap'));
     }
 
     /**
@@ -60,7 +81,17 @@ class RoadmapController extends Controller
      */
     public function update(Request $request, Roadmap $roadmap)
     {
-        //
+        try {
+            $auth = Auth::user();
+            $data = $this->roadmapService->update($request->toArray(), $auth, $roadmap);
+            return response()->json([
+                'success' => true,
+                'message' => 'Data berhasil diubah',
+                'data'    => $data,
+            ]);
+        } catch (\Throwable $th) {
+            throw new \ErrorException($th->getMessage());
+        }
     }
 
     /**

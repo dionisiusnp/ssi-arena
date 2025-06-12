@@ -12,6 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
+            $table->boolean('current_level')->default(1);
+            $table->decimal('current_point', 6,2)->default(0);
             $table->boolean('nim')->nullable();
             $table->boolean('is_member')->nullable();
             $table->boolean('is_lecturer')->default(false);
@@ -26,6 +28,8 @@ return new class extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             $table->dropColumn([
+                'current_level',
+                'current_point',
                 'nim',
                 'is_member',
                 'is_lecturer',

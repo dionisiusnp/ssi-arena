@@ -14,11 +14,14 @@ return new class extends Migration
         Schema::create('lessons', function (Blueprint $table) {
             $table->id();
             $table->foreignId('topic_id')->nullable()->constrained('topics');
-            $table->string('title');
-            $table->text('description')->nullable();
-            $table->text('code')->nullable();
+            $table->string('language')->nullable();
+            $table->string('name');
+            $table->string('type_input'); // terminal, code_editor, link_video, text
+            $table->text('content_input')->nullable();
+            $table->string('type_output'); // terminal, code_editor, link_video, text
+            $table->text('content_output')->nullable();
             $table->integer('sequence')->default(0);
-            $table->boolean('is_published')->default(true);
+            $table->string('visibility')->nullable(); //shared, draft, published
             $table->foreignId('changed_by')->nullable()->constrained('users');
             $table->timestamps();
             $table->softDeletes();

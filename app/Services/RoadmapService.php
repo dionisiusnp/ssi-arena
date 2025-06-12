@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Enums\VisibilityEnum;
 use App\Models\Roadmap;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -28,9 +29,8 @@ class RoadmapService
     {
         $data = $this->model->select([
                 DB::raw('roadmaps.id as id'),
-                DB::raw('roadmaps.title as text'),
+                DB::raw('roadmaps.name as text'),
             ])
-            ->where('roadmaps.is_published', true)
             ->when(count($filters), function ($q) use ($filters) {
                 $q->where($filters);
             })
@@ -41,17 +41,14 @@ class RoadmapService
     public function paginate(array $filter = [], int $perPage = 10): LengthAwarePaginator
     {
         $search = $filter['search'] ?? null;
-        $isPublished = isset($filter['is_published']) ? (filter_var($filter['is_published'], FILTER_VALIDATE_BOOLEAN) ? 1 : 0) : null;
         return $this->model
             ->when($search, function ($query) use ($search) {
                 $query->where(function ($q) use ($search) {
-                    $q->where('title', 'LIKE', "%{$search}%")
+                    $q->where('name', 'LIKE', "%{$search}%")
                     ->orWhere('description', 'LIKE', "%{$search}%");
                 });
             })
-            ->when(isset($isPublished), fn($query) => $query->where('is_published', $isPublished))
-            ->orderByDesc('is_published')
-            ->orderBy('title')
+            ->orderByDesc('created_at')
             ->paginate($perPage);
     }
 
@@ -76,18 +73,6 @@ class RoadmapService
             $data['changed_by'] = $auth->id;
             $roadmap->update($data);
             return $roadmap;
-        } catch (\Throwable $th) {
-            throw new \ErrorException($th->getMessage());
-        }
-    }
-
-    public function isActive($auth, Roadmap $roadmap): bool
-    {
-        try {
-            $roadmap->is_published = !$roadmap->is_published;
-            $roadmap->changed_by = $auth->id ?? null;
-            $roadmap->save();
-            return true;
         } catch (\Throwable $th) {
             throw new \ErrorException($th->getMessage());
         }

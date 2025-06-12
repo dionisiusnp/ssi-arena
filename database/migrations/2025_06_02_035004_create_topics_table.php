@@ -14,10 +14,10 @@ return new class extends Migration
         Schema::create('topics', function (Blueprint $table) {
             $table->id();
             $table->foreignId('roadmap_id')->nullable()->constrained('roadmaps');
-            $table->string('title');
+            $table->string('name');
             $table->text('description')->nullable();
             $table->integer('sequence')->default(0);
-            $table->boolean('is_published')->default(true);
+            $table->string('visibility')->nullable(); //shared, draft, published
             $table->foreignId('changed_by')->nullable()->constrained('users');
             $table->timestamps();
             $table->softDeletes();

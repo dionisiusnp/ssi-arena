@@ -28,9 +28,8 @@ class LessonService
     {
         $data = $this->model->select([
                 DB::raw('lessons.id as id'),
-                DB::raw('lessons.title as text'),
+                DB::raw('lessons.name as text'),
             ])
-            ->where('lessons.is_published', true)
             ->when(count($filters), function ($q) use ($filters) {
                 $q->where($filters);
             })
@@ -41,17 +40,14 @@ class LessonService
     public function paginate(array $filter = [], int $perPage = 10): LengthAwarePaginator
     {
         $search = $filter['search'] ?? null;
-        $isPublished = isset($filter['is_published']) ? (filter_var($filter['is_published'], FILTER_VALIDATE_BOOLEAN) ? 1 : 0) : null;
         return $this->model
             ->when($search, function ($query) use ($search) {
                 $query->where(function ($q) use ($search) {
-                    $q->where('title', 'LIKE', "%{$search}%")
+                    $q->where('name', 'LIKE', "%{$search}%")
                     ->orWhere('description', 'LIKE', "%{$search}%");
                 });
             })
-            ->when(isset($isPublished), fn($query) => $query->where('is_published', $isPublished))
-            ->orderByDesc('is_published')
-            ->orderBy('title')
+            ->orderBy('sequence')
             ->paginate($perPage);
     }
 
@@ -76,18 +72,6 @@ class LessonService
             $data['changed_by'] = $auth->id;
             $lesson->update($data);
             return $lesson;
-        } catch (\Throwable $th) {
-            throw new \ErrorException($th->getMessage());
-        }
-    }
-
-    public function isActive($auth, Lesson $lesson): bool
-    {
-        try {
-            $lesson->is_active = !$lesson->is_active;
-            $lesson->changed_by = $auth->id ?? null;
-            $lesson->save();
-            return true;
         } catch (\Throwable $th) {
             throw new \ErrorException($th->getMessage());
         }

@@ -28,9 +28,8 @@ class TopicService
     {
         $data = $this->model->select([
                 DB::raw('topics.id as id'),
-                DB::raw('topics.title as text'),
+                DB::raw('topics.name as text'),
             ])
-            ->where('roadmaps.is_published', true)
             ->when(count($filters), function ($q) use ($filters) {
                 $q->where($filters);
             })
@@ -41,16 +40,13 @@ class TopicService
     public function paginate(array $filter = [], int $perPage = 10): LengthAwarePaginator
     {
         $search = $filter['search'] ?? null;
-        $isPublished = isset($filter['is_published']) ? (filter_var($filter['is_published'], FILTER_VALIDATE_BOOLEAN) ? 1 : 0) : null;
         return $this->model
             ->when($search, function ($query) use ($search) {
                 $query->where(function ($q) use ($search) {
-                    $q->where('title', 'LIKE', "%{$search}%")
+                    $q->where('name', 'LIKE', "%{$search}%")
                     ->orWhere('description', 'LIKE', "%{$search}%");
                 });
             })
-            ->when(isset($isPublished), fn($query) => $query->where('is_published', $isPublished))
-            ->orderByDesc('is_published')
             ->orderBy('sequence')
             ->paginate($perPage);
     }
@@ -76,18 +72,6 @@ class TopicService
             $data['changed_by'] = $auth->id;
             $topic->update($data);
             return $topic;
-        } catch (\Throwable $th) {
-            throw new \ErrorException($th->getMessage());
-        }
-    }
-
-    public function isActive($auth, Topic $topic): bool
-    {
-        try {
-            $topic->is_published = !$topic->is_published;
-            $topic->changed_by = $auth->id ?? null;
-            $topic->save();
-            return true;
         } catch (\Throwable $th) {
             throw new \ErrorException($th->getMessage());
         }

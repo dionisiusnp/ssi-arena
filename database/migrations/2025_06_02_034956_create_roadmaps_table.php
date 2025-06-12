@@ -13,9 +13,10 @@ return new class extends Migration
     {
         Schema::create('roadmaps', function (Blueprint $table) {
             $table->id();
-            $table->string('title');
+            $table->string('role')->nullable(); //fullstack, back end, front end, devops
+            $table->string('name');
             $table->text('description')->nullable();
-            $table->boolean('is_published')->default(true);
+            $table->string('visibility')->nullable(); //shared, draft, published
             $table->foreignId('changed_by')->nullable()->constrained('users');
             $table->timestamps();
             $table->softDeletes();
