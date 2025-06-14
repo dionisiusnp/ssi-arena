@@ -11,9 +11,9 @@ enum VisibilityEnum: string
     public function label(): string
     {
         return match($this) {
-            self::DRAFT => 'Draft',
-            self::PUBLISHED => 'Published',
-            self::SHARED => 'Shared',
+            self::DRAFT => 'Draf',
+            self::PUBLISHED => 'Member',
+            self::SHARED => 'Umum',
         };
     }
 

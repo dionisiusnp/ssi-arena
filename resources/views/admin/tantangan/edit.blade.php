@@ -1,10 +1,10 @@
 @extends('layouts.admin.app')
 
-@section('title', 'Edit Quest Detail')
+@section('title', 'Ubah Tantangan')
 
 @section('content')
 <div class="container-fluid">
-    <h1 class="h3 mb-3 text-gray-800">Edit Quest Detail</h1>
+    <h1 class="h3 mb-3 text-gray-800">Ubah Tantangan</h1>
 
     <div class="card shadow">
         <div class="card-body">

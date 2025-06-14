@@ -2,7 +2,6 @@
 
 namespace App\Services;
 
-use App\Enums\VisibilityEnum;
 use App\Models\Roadmap;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -12,12 +11,14 @@ use Illuminate\Support\Facades\DB;
 class RoadmapService
 {
     protected Model $model;
+    public $topicService;
     /**
      * Create a new class instance.
      */
-    public function __construct(Roadmap $roadmap)
+    public function __construct(Roadmap $roadmap, TopicService $topicService)
     {
         $this->model = $roadmap;
+        $this->topicService = $topicService;
     }
 
     public function model()
@@ -41,23 +42,50 @@ class RoadmapService
     public function paginate(array $filter = [], int $perPage = 10): LengthAwarePaginator
     {
         $search = $filter['search'] ?? null;
+        $role = $filter['role'] ?? null;
+        $visibility = $filter['visibility'] ?? null;
+
         return $this->model
             ->when($search, function ($query) use ($search) {
                 $query->where(function ($q) use ($search) {
                     $q->where('name', 'LIKE', "%{$search}%")
-                    ->orWhere('description', 'LIKE', "%{$search}%");
+                        ->orWhere('description', 'LIKE', "%{$search}%");
                 });
             })
+            ->when($role, function ($query) use ($role) {
+                $query->where('role', $role);
+            })
+            ->when($visibility, function ($query) use ($visibility) {
+                $query->where('visibility', $visibility);
+            })
+            ->withCount('topics')
             ->orderByDesc('created_at')
             ->paginate($perPage);
     }
 
-    public function store(array $data, $auth)
+    public function store(array $data, array $topics, $auth)
     {
+        DB::beginTransaction();
         try {
             $data['changed_by'] = $auth->id;
-            return $this->model->create($data);
+            $roadmap = $this->model->create($data);
+
+            if (!empty($topics)) {
+                $i = 1;
+                foreach ($topics as $topic) {
+                    $this->topicService->model()->create([
+                        'roadmap_id' => $roadmap->id,
+                        'name' => $topic['name'],
+                        'description' => $topic['description'],
+                        'sequence' => $i++,
+                        'changed_by' => $auth->id,
+                    ]);
+                }
+            }
+            DB::commit();
+            return $roadmap;
         } catch (\Throwable $th) {
+            DB::rollBack();
             throw new \ErrorException($th->getMessage());
         }
     }
@@ -67,13 +95,34 @@ class RoadmapService
         return $this->model->find($id);
     }
 
-    public function update(array $data, $auth, Roadmap $roadmap)
+    public function update(array $data, array $topics, $auth, Roadmap $roadmap)
     {
+        DB::beginTransaction();
         try {
             $data['changed_by'] = $auth->id;
-            $roadmap->update($data);
-            return $roadmap;
+            $rm = $roadmap->update($data);
+
+            if (!empty($topics)) {
+                $existingTopics = $this->topicService->byRoadmap($roadmap->id);
+                if ($existingTopics->isNotEmpty()) {
+                    $existingTopics->each->delete();
+                }
+            
+                $i = 1;
+                foreach ($topics as $topic) {
+                    $this->topicService->model()->create([
+                        'roadmap_id' => $roadmap->id,
+                        'name' => $topic['name'],
+                        'description' => $topic['description'],
+                        'sequence' => $i++,
+                        'changed_by' => $auth->id,
+                    ]);
+                }
+            }
+            DB::commit();
+            return $rm;
         } catch (\Throwable $th) {
+            DB::rollBack();
             throw new \ErrorException($th->getMessage());
         }
     }

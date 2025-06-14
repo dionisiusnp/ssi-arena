@@ -8,14 +8,16 @@ enum RoleplayEnum: string
     case BACKEND = 'backend';
     case FRONTEND = 'frontend';
     case DEVOPS = 'devops';
+    case MOBILE = 'mobile';
 
     public function label(): string
     {
         return match($this) {
-            self::FULLSTACK => 'Fullstack',
-            self::BACKEND => 'Backend',
-            self::FRONTEND => 'Frontend',
-            self::DEVOPS => 'Devops',
+            self::FULLSTACK => 'FullStack',
+            self::BACKEND => 'BackEnd',
+            self::FRONTEND => 'FrontEnd',
+            self::DEVOPS => 'DevOps',
+            self::MOBILE => 'Mobile',
         };
     }
 

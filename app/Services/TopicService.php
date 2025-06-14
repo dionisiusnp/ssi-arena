@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Enums\VisibilityEnum;
 use App\Models\Topic;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -51,9 +52,19 @@ class TopicService
             ->paginate($perPage);
     }
 
+    public function byRoadmap($roadmapId)
+    {
+        try {
+            return $this->model->where('roadmap_id','=',$roadmapId)->get();
+        } catch (\Throwable $th) {
+            throw new \ErrorException($th->getMessage());
+        }
+    }
+
     public function store(array $data, $auth)
     {
         try {
+            $data['visibility'] = VisibilityEnum::DRAFT->value;
             $data['changed_by'] = $auth->id;
             return $this->model->create($data);
         } catch (\Throwable $th) {

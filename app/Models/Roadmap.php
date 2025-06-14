@@ -15,20 +15,14 @@ class Roadmap extends Model
     {
         return Carbon::parse($this->attributes['created_at'])
             ->locale('id')
-            ->translatedFormat("d F Y") . "<br>" .
-            Carbon::parse($this->attributes['created_at'])
-            ->locale('id')
-            ->translatedFormat("H:i");
+            ->translatedFormat("d F Y H:i");
     }
 
     public function getUpdatedAtFormattedAttribute(): string
     {
         return Carbon::parse($this->attributes['updated_at'])
             ->locale('id')
-            ->translatedFormat("d F Y") . "<br>" .
-            Carbon::parse($this->attributes['updated_at'])
-            ->locale('id')
-            ->translatedFormat("H:i");
+            ->translatedFormat("d F Y H:i");
     }
 
     public function lastChanger()
@@ -38,6 +32,6 @@ class Roadmap extends Model
 
     public function topics()
     {
-        return $this->hasMany(Topic::class, 'roadmap_id');
+        return $this->hasMany(Topic::class,'roadmap_id');
     }
 }

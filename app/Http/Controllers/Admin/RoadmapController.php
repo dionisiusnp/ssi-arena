@@ -46,7 +46,9 @@ class RoadmapController extends Controller
     {
         try {
             $auth = Auth::user();
-            $data = $this->roadmapService->store($request->toArray(), $auth);
+            $tops = $request->topics ?? [];
+            unset($request->topics);
+            $data = $this->roadmapService->store($request->toArray(), $tops,$auth);
             return response()->json([
                 'success' => true,
                 'message' => 'Data berhasil dibuat',
@@ -83,7 +85,9 @@ class RoadmapController extends Controller
     {
         try {
             $auth = Auth::user();
-            $data = $this->roadmapService->update($request->toArray(), $auth, $roadmap);
+            $tops = $request->topics ?? [];
+            unset($request->topics);
+            $data = $this->roadmapService->update($request->toArray(), $tops,$auth, $roadmap);
             return response()->json([
                 'success' => true,
                 'message' => 'Data berhasil diubah',

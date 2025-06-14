@@ -36,6 +36,10 @@ class Topic extends Model
         return $this->belongsTo(User::class,'changed_by');
     }
 
+    public function roadmap()
+    {
+        return $this->belongsTo(Roadmap::class, 'roadmap_id');
+    }
     public function lessons()
     {
         return $this->hasMany(Lesson::class, 'topic_id');

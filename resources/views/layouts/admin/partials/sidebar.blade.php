@@ -35,7 +35,7 @@
     <li class="nav-item {{ request()->routeIs('roadmap.index') ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('roadmap.index') }}">
             <i class="fas fa-fw fa-book"></i>
-            <span>Kurikulum</span></a>
+            <span>Materi</span></a>
     </li>
 
     <!-- Divider -->
