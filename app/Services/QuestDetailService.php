@@ -84,12 +84,12 @@ class QuestDetailService
             $data['changed_by'] = $auth->id;
             $qd = $questDetail->update($data);
             
-            $existingRequirements = $this->questRequirementService->byQuestDetail($questDetail->id);
-            if ($existingRequirements->isNotEmpty()) {
-                $existingRequirements->each->delete(); // kalau return collection
-            }
-            
             if (!empty($reqs)) {
+                $existingRequirements = $this->questRequirementService->byQuestDetail($questDetail->id);
+                if ($existingRequirements->isNotEmpty()) {
+                    $existingRequirements->each->delete(); // kalau return collection
+                }
+
                 foreach($reqs as $item){
                     $this->questRequirementService->store($item['description'], $questDetail->id, $auth);
                 }

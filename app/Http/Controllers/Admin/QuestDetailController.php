@@ -45,7 +45,7 @@ class QuestDetailController extends Controller
     {
         try {
             $auth = Auth::user();
-            $reqs = $request->requirements;
+            $reqs = $request->requirements ?? [];
             unset($request->requirements);
             $data = $this->questDetailService->store($request->toArray(), $reqs, $auth);
             return response()->json([
@@ -84,7 +84,7 @@ class QuestDetailController extends Controller
     {
         try {
             $auth = Auth::user();
-            $reqs = $request->requirements;
+            $reqs = $request->requirements ?? [];
             unset($request->requirements);
             $data = $this->questDetailService->update($request->toArray(),$reqs, $auth, $quest_detail);
             return response()->json([
