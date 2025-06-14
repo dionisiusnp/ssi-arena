@@ -41,13 +41,23 @@ class TopicService
     public function paginate(array $filter = [], int $perPage = 10): LengthAwarePaginator
     {
         $search = $filter['search'] ?? null;
+        $roadmapId = $filter['roadmap_id'] ?? null;
+        $visibility = $filter['visibility'] ?? null;
+
         return $this->model
+            ->when($roadmapId, function ($query) use ($roadmapId) {
+                $query->where('roadmap_id', $roadmapId);
+            })
             ->when($search, function ($query) use ($search) {
                 $query->where(function ($q) use ($search) {
                     $q->where('name', 'LIKE', "%{$search}%")
                     ->orWhere('description', 'LIKE', "%{$search}%");
                 });
             })
+            ->when($visibility, function ($query) use ($visibility) {
+                $query->where('visibility', $visibility);
+            })
+            ->withCount('lessons')
             ->orderBy('sequence')
             ->paginate($perPage);
     }

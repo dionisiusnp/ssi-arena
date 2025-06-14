@@ -53,6 +53,35 @@
             <div class="col-md-4 mb-4">
                 <div class="card shadow h-100 position-relative">
                     <div class="card-body text-center">
+                        {{-- Roadmap Info --}}
+                        <h5 class="card-title"><strong>{{ $roadmap->name }}</strong> <span class="badge badge-secondary">{{ $roadmap->topics_count }} Topik</span></h5>
+                        <p class="card-text mb-1">
+                            Kategori: <strong>{{ strtoupper($roadmap->role) ?? '-' }}</strong>
+                        </p>
+                        <p class="card-text mb-1">
+                            Diubah: <strong>{{ $roadmap->lastChanger->name }}</strong>
+                        </p>
+                        <p class="card-text">
+                            Dibuat: <strong>{!! $roadmap->created_at_formatted !!}</strong>
+                        </p>
+
+                        {{-- Dropdown Aksi --}}
+                        <div class="dropdown position-absolute" style="top: 10px; right: 10px;">
+                            <button class="btn btn-sm btn-outline-danger dropdown-toggle" type="button"
+                                id="dropdownMenuButton{{ $roadmap->id }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Aksi
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton{{ $roadmap->id }}">
+                                <a class="dropdown-item" href="{{ route('topic.index') }}?roadmap_id={{ $roadmap->id }}">
+                                    <i class="fas fa-trophy text-danger mr-1"></i> Topik
+                                </a>
+                                @if ($roadmap->visibility == \App\Enums\VisibilityEnum::DRAFT->value)
+                                    <a class="dropdown-item" href="{{ route('roadmap.edit', $roadmap->id) }}">
+                                        <i class="fas fa-edit text-danger mr-1"></i> Ubah
+                                    </a>
+                                @endif
+                            </div>
+                        </div>
 
                         {{-- Visibility Buttons --}}
                         <div class="mb-3">
@@ -75,40 +104,6 @@
                                         </button>
                                     </form>
                                 @endforeach
-                            </div>
-                        </div>
-
-                        {{-- Roadmap Info --}}
-                        <h5 class="card-title">{{ $roadmap->name }}</h5>
-                        <p class="card-text mb-1">
-                            <strong>Kategori:</strong>
-                            <span class="badge badge-secondary">{{ strtoupper($roadmap->role) ?? '-' }}</span>
-                        </p>
-                        <p class="card-text mb-1">
-                            <strong>Topik:</strong> {{ $roadmap->topics_count }}
-                        </p>
-                        <p class="card-text mb-1">
-                            <strong>Diubah:</strong> {{ $roadmap->lastChanger->name }}
-                        </p>
-                        <p class="card-text">
-                            <strong>Dibuat:</strong> {!! $roadmap->created_at_formatted !!}
-                        </p>
-
-                        {{-- Dropdown Aksi --}}
-                        <div class="dropdown position-absolute" style="top: 10px; right: 10px;">
-                            <button class="btn btn-sm btn-outline-danger dropdown-toggle" type="button"
-                                id="dropdownMenuButton{{ $roadmap->id }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                Aksi
-                            </button>
-                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton{{ $roadmap->id }}">
-                                <a class="dropdown-item" href="{{ route('topic.index', ['roadmap' => $roadmap->id]) }}">
-                                    <i class="fas fa-trophy text-danger mr-1"></i> Topik
-                                </a>
-                                @if ($roadmap->visibility == \App\Enums\VisibilityEnum::DRAFT->value)
-                                    <a class="dropdown-item" href="{{ route('roadmap.edit', $roadmap->id) }}">
-                                        <i class="fas fa-edit text-danger mr-1"></i> Ubah
-                                    </a>
-                                @endif
                             </div>
                         </div>
 

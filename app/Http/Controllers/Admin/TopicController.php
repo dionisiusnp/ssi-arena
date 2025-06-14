@@ -4,17 +4,19 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Topic;
+use App\Services\RoadmapService;
 use App\Services\TopicService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class TopicController extends Controller
 {
-    public $topicService;
+    public $topicService, $roadmapService;
 
-    public function __construct(TopicService $topicService)
+    public function __construct(TopicService $topicService, RoadmapService $roadmapService)
     {
         $this->topicService = $topicService;
+        $this->roadmapService = $roadmapService;
     }
     /**
      * Display a listing of the resource.
@@ -23,11 +25,13 @@ class TopicController extends Controller
     {
         $auth = Auth::user();
         $filters = [
+            'roadmap_id' => $request->query('roadmap_id') ?? null,
             'search' => $request->query('q') ?? null,
             'visibility' => $request->query('visibility') ?? null,
         ];
+        $roadmap = $this->roadmapService->model()->find($filters['roadmap_id']);
         $data = $this->topicService->paginate($filters);
-        return view('admin.rute.topik.index', compact('data'));
+        return view('admin.materi.topik.index', compact('data', 'roadmap'));
     }
 
     /**
@@ -35,7 +39,7 @@ class TopicController extends Controller
      */
     public function create()
     {
-        return view('admin.rute.topik.create');
+        // 
     }
 
     /**
@@ -72,7 +76,7 @@ class TopicController extends Controller
      */
     public function edit(Topic $topic)
     {
-        return view('admin.rute.topik.edit', compact('topic'));
+        return view('admin.materi.topik.edit', compact('topic'));
     }
 
     /**

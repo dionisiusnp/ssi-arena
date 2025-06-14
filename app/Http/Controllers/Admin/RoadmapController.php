@@ -28,7 +28,7 @@ class RoadmapController extends Controller
             'visibility' => $request->query('visibility') ?? null,
         ];
         $data = $this->roadmapService->paginate($filters);
-        return view('admin.rute.index', compact('data'));
+        return view('admin.materi.index', compact('data'));
     }
 
     /**
@@ -36,7 +36,7 @@ class RoadmapController extends Controller
      */
     public function create()
     {
-        return view('admin.rute.create');
+        return view('admin.materi.create');
     }
 
     /**
@@ -75,7 +75,7 @@ class RoadmapController extends Controller
      */
     public function edit(Roadmap $roadmap)
     {
-        return view('admin.rute.edit', compact('roadmap'));
+        return view('admin.materi.edit', compact('roadmap'));
     }
 
     /**

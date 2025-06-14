@@ -3,11 +3,13 @@
 use App\Http\Controllers\Admin\ActivityChecklistController;
 use App\Http\Controllers\Admin\ActivityController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
+use App\Http\Controllers\Admin\LessonController;
 use App\Http\Controllers\Admin\QuestDetailController;
 use App\Http\Controllers\Admin\QuestLevelController;
 use App\Http\Controllers\Admin\QuestTypeController;
 use App\Http\Controllers\Admin\RoadmapController;
 use App\Http\Controllers\Admin\SeasonController;
+use App\Http\Controllers\Admin\TopicController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Member\DashboardController as MemberDashboardController;
 use Illuminate\Support\Facades\Route;
@@ -22,8 +24,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/admin-panel',[AdminDashboardController::class,'index'])->name('admin-panel');
 
     Route::resource('roadmap', RoadmapController::class);
-    Route::resource('topic', RoadmapController::class);
-    Route::resource('lesson', RoadmapController::class);
+    Route::resource('topic', TopicController::class);
+    Route::get('/lesson/edit',[LessonController::class,'edit'])->name('lesson.edit');
+    Route::resource('lesson', LessonController::class)->except('edit');
 
     Route::resource('season', SeasonController::class);
     Route::resource('quest-type', QuestTypeController::class);

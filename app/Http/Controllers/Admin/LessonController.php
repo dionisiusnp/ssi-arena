@@ -5,30 +5,47 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Lesson;
 use App\Services\LessonService;
+use App\Services\TopicService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class LessonController extends Controller
 {
-    public $lessonService;
+    public $lessonService, $topicService;
 
-    public function __construct(LessonService $lessonService)
+    public function __construct(LessonService $lessonService, TopicService $topicService)
     {
         $this->lessonService = $lessonService;
+        $this->topicService = $topicService;
     }
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $auth = Auth::user();
+        $filters = [
+            'topic_id' => $request->query('topic_id') ?? null,
+            'search' => $request->query('q') ?? null,
+            'visibility' => $request->query('visibility') ?? null,
+        ];
+        $topic = $this->topicService->model()->find($filters['topic_id']);
+        $data = $this->lessonService->paginate($filters);
+        return view('admin.rute.panduan.index', compact('data', 'topic'));
     }
 
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(Request $request)
     {
-        //
+        $auth = Auth::user();
+        $params = [
+            'roadmap_id' => $request->query('roadmap_id') ?? null,
+            'topic_id' => $request->query('topic_id') ?? null,
+        ];
+        $lessons = $this->lessonService->byTopic($params['topic_id']);
+        return view('admin.rute.panduan.create', compact('lessons'));
     }
 
     /**
@@ -36,7 +53,20 @@ class LessonController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        try {
+            $auth = Auth::user();
+            $data = $this->lessonService->store($request->toArray(), $auth);
+            return response()->json([
+                'success' => true,
+                'message' => 'Data berhasil dibuat',
+                'data'    => $data,
+            ]);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'error' => true,
+                'message' => $th->getMessage(),
+            ], 500);
+        }
     }
 
     /**
@@ -50,9 +80,15 @@ class LessonController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Lesson $lesson)
+    public function edit(Request $request)
     {
-        //
+        $auth = Auth::user();
+        $params = [
+            'roadmap_id' => $request->query('roadmap_id') ?? null,
+            'topic_id' => $request->query('topic_id') ?? null,
+        ];
+        $lessons = $this->lessonService->byTopic($params['topic_id']);
+        return view('admin.rute.panduan.edit', compact('lessons'));
     }
 
     /**
@@ -60,7 +96,17 @@ class LessonController extends Controller
      */
     public function update(Request $request, Lesson $lesson)
     {
-        //
+        try {
+            $auth = Auth::user();
+            $data = $this->lessonService->update($request->toArray(), $auth, $lesson);
+            return response()->json([
+                'success' => true,
+                'message' => 'Data berhasil diubah',
+                'data'    => $data,
+            ]);
+        } catch (\Throwable $th) {
+            throw new \ErrorException($th->getMessage());
+        }
     }
 
     /**

@@ -16,9 +16,9 @@ return new class extends Migration
             $table->foreignId('topic_id')->nullable()->constrained('topics');
             $table->string('language')->nullable();
             $table->string('name');
-            $table->string('type_input'); // terminal, code_editor, link_video, text
+            $table->string('type_input'); // terminal, editor, link, text
             $table->text('content_input')->nullable();
-            $table->string('type_output'); // terminal, code_editor, link_video, text
+            $table->string('type_output'); // terminal, editor, link, text
             $table->text('content_output')->nullable();
             $table->integer('sequence')->default(0);
             $table->string('visibility')->nullable(); //shared, draft, published

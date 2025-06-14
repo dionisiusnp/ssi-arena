@@ -75,6 +75,7 @@ class RoadmapService
                 foreach ($topics as $topic) {
                     $this->topicService->model()->create([
                         'roadmap_id' => $roadmap->id,
+                        'visibility' => $roadmap->visibility,
                         'name' => $topic['name'],
                         'description' => $topic['description'],
                         'sequence' => $i++,
@@ -98,29 +99,41 @@ class RoadmapService
     public function update(array $data, array $topics, $auth, Roadmap $roadmap)
     {
         DB::beginTransaction();
+
         try {
             $data['changed_by'] = $auth->id;
-            $rm = $roadmap->update($data);
+            $roadmap->update($data);
 
-            if (!empty($topics)) {
-                $existingTopics = $this->topicService->byRoadmap($roadmap->id);
+            $existingTopics = $this->topicService->byRoadmap($roadmap->id);
+
+            if (empty($topics)) {
+                if ($existingTopics->isNotEmpty()) {
+                    foreach ($existingTopics as $topic) {
+                        $topic->update([
+                            'visibility' => $roadmap->visibility,
+                            'changed_by' => $auth->id,
+                        ]);
+                    }
+                }
+            } else {
                 if ($existingTopics->isNotEmpty()) {
                     $existingTopics->each->delete();
                 }
-            
-                $i = 1;
-                foreach ($topics as $topic) {
+
+                foreach ($topics as $i => $topic) {
                     $this->topicService->model()->create([
                         'roadmap_id' => $roadmap->id,
+                        'visibility' => $roadmap->visibility,
                         'name' => $topic['name'],
                         'description' => $topic['description'],
-                        'sequence' => $i++,
+                        'sequence' => $i + 1,
                         'changed_by' => $auth->id,
                     ]);
                 }
             }
+
             DB::commit();
-            return $rm;
+            return $roadmap;
         } catch (\Throwable $th) {
             DB::rollBack();
             throw new \ErrorException($th->getMessage());

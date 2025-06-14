@@ -11,12 +11,14 @@ use Illuminate\Support\Facades\DB;
 class LessonService
 {
     protected Model $model;
+    public $topicService;
     /**
      * Create a new class instance.
      */
-    public function __construct(Lesson $lesson)
+    public function __construct(Lesson $lesson, TopicService $topicService)
     {
         $this->model = $lesson;
+        $this->topicService = $topicService;
     }
 
     public function model()
@@ -40,23 +42,65 @@ class LessonService
     public function paginate(array $filter = [], int $perPage = 10): LengthAwarePaginator
     {
         $search = $filter['search'] ?? null;
+        $topicId = $filter['topic_id'] ?? null;
+        $visibility = $filter['visibility'] ?? null;
+
         return $this->model
+            ->when($topicId, function ($query) use ($topicId) {
+                $query->where('topic_id', $topicId);
+            })
             ->when($search, function ($query) use ($search) {
                 $query->where(function ($q) use ($search) {
                     $q->where('name', 'LIKE', "%{$search}%")
                     ->orWhere('description', 'LIKE', "%{$search}%");
                 });
             })
+            ->when($visibility, function ($query) use ($visibility) {
+                $query->where('visibility', $visibility);
+            })
             ->orderBy('sequence')
             ->paginate($perPage);
     }
 
-    public function store(array $data, $auth)
+    public function byTopic($topicId)
     {
         try {
-            $data['changed_by'] = $auth->id;
-            return $this->model->create($data);
+            return $this->model->where('topic_id','=',$topicId)->get();
         } catch (\Throwable $th) {
+            throw new \ErrorException($th->getMessage());
+        }
+    }
+
+    public function store(array $data, $auth)
+    {
+        DB::beginTransaction();
+        try {
+            $topic = $this->topicService->model()->find($data['topic_id']);
+
+            if (!empty($data['lessons'])) {
+                $topic->lessons()->delete();
+                $i = 1;
+                foreach ($data['lessons'] as $lesson) {
+                    $this->model()->create([
+                        'topic_id' => $data['topic_id'],
+                        'language' => $data['language'],
+                        'visibility'=> $topic->visibility,
+                        'name' => $lesson['name'],
+                        'type_input' => $lesson['type_input'],
+                        'content_input' => $lesson['content_input'],
+                        'type_output' => $lesson['type_output'],
+                        'content_output' => $lesson['content_output'],
+                        'sequence' => $i++,
+                        'changed_by' => $auth->id,
+                    ]);
+                }
+            }
+
+            DB::commit();
+            return true;
+
+        } catch (\Throwable $th) {
+            DB::rollBack();
             throw new \ErrorException($th->getMessage());
         }
     }
