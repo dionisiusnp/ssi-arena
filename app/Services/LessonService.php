@@ -71,6 +71,11 @@ class LessonService
         }
     }
 
+    public function languageByTopic($topicId)
+    {
+        return $this->model->where('topic_id','=',$topicId)->pluck('language')->first();
+    }
+
     public function store(array $data, $auth)
     {
         DB::beginTransaction();

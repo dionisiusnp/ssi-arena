@@ -61,6 +61,7 @@ class QuestDetailService
     {
         try {
             $data['changed_by'] = $auth->id;
+            $data['point_total'] = $data['point'] + ($data['point'] * $data['point_multiple']);
             $qd = $this->model->create($data);
             if (!empty($reqs)) {
                 foreach($reqs as $item){
@@ -82,6 +83,7 @@ class QuestDetailService
     {
         try {
             $data['changed_by'] = $auth->id;
+            $data['point_total'] = $data['point'] + ($data['point'] * $data['point_multiple']);
             $qd = $questDetail->update($data);
             
             if (!empty($reqs)) {

@@ -1,10 +1,10 @@
 @extends('layouts.admin.app')
 
-@section('title', 'Tambah Season')
+@section('title', 'Tambah Musim')
 
 @section('content')
 <div class="container-fluid">
-    <h1 class="h3 mb-3 text-gray-800">Tambah Season</h1>
+    <h1 class="h3 mb-3 text-gray-800">Tambah Musim</h1>
 
     <div class="card shadow">
         <div class="card-body">
@@ -12,7 +12,7 @@
                 @csrf
 
                 <div class="form-group">
-                    <label for="name">Nama Season</label>
+                    <label for="name">Nama Musim</label>
                     <input type="text" name="name" id="name" class="form-control @error('name') is-invalid @enderror"
                         value="{{ old('name') }}" required>
                     @error('name') <div class="invalid-feedback">{{ $message }}</div> @enderror
@@ -36,7 +36,7 @@
 
                 <div class="mt-4">
                     <a href="{{ route('season.index') }}" class="btn btn-secondary">Kembali</a>
-                    <button type="submit" id="btnSave" class="btn btn-success">Simpan</button>
+                    <button type="submit" id="btnSave" class="btn btn-primary">Simpan</button>
                 </div>
             </form>
         </div>

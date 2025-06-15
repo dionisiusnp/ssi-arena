@@ -25,13 +25,14 @@ class LessonController extends Controller
     {
         $auth = Auth::user();
         $filters = [
+            'roadmap_id' => $request->query('roadmap_id') ?? null,
             'topic_id' => $request->query('topic_id') ?? null,
             'search' => $request->query('q') ?? null,
             'visibility' => $request->query('visibility') ?? null,
         ];
         $topic = $this->topicService->model()->find($filters['topic_id']);
         $data = $this->lessonService->paginate($filters);
-        return view('admin.rute.panduan.index', compact('data', 'topic'));
+        return view('admin.materi.panduan.index', compact('data', 'topic'));
     }
 
     /**
@@ -45,7 +46,8 @@ class LessonController extends Controller
             'topic_id' => $request->query('topic_id') ?? null,
         ];
         $lessons = $this->lessonService->byTopic($params['topic_id']);
-        return view('admin.rute.panduan.create', compact('lessons'));
+        $language = $this->lessonService->languageByTopic($params['topic_id']);
+        return view('admin.materi.panduan.create', compact('lessons', 'language'));
     }
 
     /**
@@ -86,9 +88,10 @@ class LessonController extends Controller
         $params = [
             'roadmap_id' => $request->query('roadmap_id') ?? null,
             'topic_id' => $request->query('topic_id') ?? null,
+            'lesson_id'=> $request->query('lesson_id') ?? null,
         ];
-        $lessons = $this->lessonService->byTopic($params['topic_id']);
-        return view('admin.rute.panduan.edit', compact('lessons'));
+        $lesson = $this->lessonService->model()->find($params['lesson_id']);
+        return view('admin.materi.panduan.edit', compact('lesson'));
     }
 
     /**

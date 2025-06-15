@@ -1,10 +1,10 @@
 @extends('layouts.admin.app')
 
-@section('title', 'Edit Level Tantangan')
+@section('title', 'Ubah Level Tantangan')
 
 @section('content')
 <div class="container-fluid">
-    <h1 class="h3 mb-3 text-gray-800">Edit Level Tantangan</h1>
+    <h1 class="h3 mb-3 text-gray-800">Ubah Level Tantangan</h1>
 
     <div class="card shadow">
         <div class="card-body">
@@ -29,7 +29,7 @@
 
                 <div class="mt-4">
                     <a href="{{ route('season.index',['tab' => 'quest-levels']) }}" class="btn btn-secondary">Kembali</a>
-                    <button type="submit" class="btn btn-success">Simpan</button>
+                    <button type="submit" class="btn btn-primary">Simpan</button>
                 </div>
             </form>
         </div>

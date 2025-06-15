@@ -1,10 +1,10 @@
 @extends('layouts.admin.app')
 
-@section('title', 'Tambah Panduan')
+@section('title', 'Ubah Daftar Panduan')
 
 @section('content')
 <div class="container-fluid">
-    <h1 class="h3 mb-3 text-gray-800">Tambah Panduan</h1>
+    <h1 class="h3 mb-3 text-gray-800">Ubah Daftar Panduan</h1>
 
     <div class="card shadow">
         <div class="card-body">
@@ -15,7 +15,14 @@
                 <div class="form-group">
                     <label>Stack</label>
                     <select name="language" class="form-control">
-                        <option value="{{ \App\Enums\StackEnum::LARAVEL->value }}">{{ \App\Enums\StackEnum::LARAVEL->label() }}</option>
+                        @if ($lessons->isNotEmpty())
+                            @php
+                                $enum = \App\Enums\StackEnum::tryFrom($language);
+                            @endphp
+                            <option value="{{ $language }}">
+                                {{ $enum ? $enum->label() : Str::headline($language) }}
+                            </option>
+                        @endif
                         @foreach (\App\Enums\StackEnum::cases() as $stack)
                         <option value="{{ $stack->value }}">
                             {{ $stack->label() }}
@@ -27,48 +34,85 @@
                 <h5>Daftar Panduan</h5>
                     <div id="lessonRepeater">
                         <div data-repeater-list="lessons">
-                            <div data-repeater-item class="mb-3 border rounded p-3">
-                                <div class="form-group">
-                                    <label>Nama Panduan</label>
-                                    <input type="text" name="name" class="form-control" required>
-                                </div>
+                            @forelse ($lessons as $lesson)
+                                <div data-repeater-item class="mb-3 border rounded p-3">
+                                    <div class="form-group">
+                                        <label>Nama Panduan</label>
+                                        <input type="text" name="name" class="form-control" value="{{ $lesson->name }}" required>
+                                    </div>
 
-                                <div class="form-group">
-                                    <label>Jenis Input</label>
-                                    <select name="type_input" class="form-control">
-                                        <option value="{{ \App\Enums\LessonContentEnum::LINK->value }}">{{ \App\Enums\LessonContentEnum::LINK->label() }}</option>
-                                        @foreach (\App\Enums\LessonContentEnum::cases() as $content)
-                                            <option value="{{ $content->value }}">
-                                                {{ $content->label() }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                </div>
+                                    <div class="form-group">
+                                        <label>Jenis Input</label>
+                                        <select name="type_input" class="form-control">
+                                            @foreach (\App\Enums\LessonContentEnum::cases() as $content)
+                                                <option value="{{ $content->value }}" {{ $lesson->type_input === $content->value ? 'selected' : '' }}>
+                                                    {{ $content->label() }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
 
-                                <div class="form-group">
-                                    <label>Konten Input</label>
-                                    <textarea name="content_input" class="form-control" rows="3"></textarea>
-                                </div>
+                                    <div class="form-group">
+                                        <label>Konten Input</label>
+                                        <textarea name="content_input" class="form-control" rows="3">{{ $lesson->content_input }}</textarea>
+                                    </div>
 
-                                <div class="form-group">
-                                    <label>Jenis Output</label>
-                                    <select name="type_output" class="form-control">
-                                        <option value="{{ \App\Enums\LessonContentEnum::LINK->value }}">{{ \App\Enums\LessonContentEnum::LINK->label() }}</option>
-                                        @foreach (\App\Enums\LessonContentEnum::cases() as $content)
-                                            <option value="{{ $content->value }}">
-                                                {{ $content->label() }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                </div>
+                                    <div class="form-group">
+                                        <label>Jenis Output</label>
+                                        <select name="type_output" class="form-control">
+                                            @foreach (\App\Enums\LessonContentEnum::cases() as $content)
+                                                <option value="{{ $content->value }}" {{ $lesson->type_output === $content->value ? 'selected' : '' }}>
+                                                    {{ $content->label() }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
 
-                                <div class="form-group">
-                                    <label>Konten Output</label>
-                                    <textarea name="content_output" class="form-control" rows="3"></textarea>
-                                </div>
+                                    <div class="form-group">
+                                        <label>Konten Output</label>
+                                        <textarea name="content_output" class="form-control" rows="3">{{ $lesson->content_output }}</textarea>
+                                    </div>
 
-                                <button type="button" data-repeater-delete class="btn btn-danger btn-sm mt-2">Hapus Panduan</button>
-                            </div>
+                                    <button type="button" data-repeater-delete class="btn btn-danger btn-sm mt-2">Hapus Panduan</button>
+                                </div>
+                            @empty
+                                <div data-repeater-item class="mb-3 border rounded p-3">
+                                    <div class="form-group">
+                                        <label>Nama Panduan</label>
+                                        <input type="text" name="name" class="form-control" required>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>Jenis Input</label>
+                                        <select name="type_input" class="form-control">
+                                            @foreach (\App\Enums\LessonContentEnum::cases() as $content)
+                                                <option value="{{ $content->value }}">{{ $content->label() }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>Konten Input</label>
+                                        <textarea name="content_input" class="form-control" rows="3"></textarea>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>Jenis Output</label>
+                                        <select name="type_output" class="form-control">
+                                            @foreach (\App\Enums\LessonContentEnum::cases() as $content)
+                                                <option value="{{ $content->value }}">{{ $content->label() }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>Konten Output</label>
+                                        <textarea name="content_output" class="form-control" rows="3"></textarea>
+                                    </div>
+
+                                    <button type="button" data-repeater-delete class="btn btn-danger btn-sm mt-2">Hapus Panduan</button>
+                                </div>
+                            @endforelse
                         </div>
                         <button type="button" data-repeater-create class="btn btn-primary btn-sm mt-3">Tambah Panduan</button>
                     </div>

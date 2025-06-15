@@ -88,7 +88,7 @@
 
                 {{-- Pagination --}}
                 <div class="mt-3">
-                    {{ $data->withQueryString()->links() }}
+                    {{ $data->withQueryString()->links('pagination::bootstrap-4') }}
                 </div>
             </div>
         </div>

@@ -3,18 +3,18 @@
 @section('title', 'Dashboard Admin')
 
 @section('content')
-<h1 class="h3 mb-2 text-gray-800">Fitur</h1>
+<h1 class="h3 mb-2 text-gray-800">Daftar Siklus</h1>
 <p class="mb-4">Kelola data musim, tipe, dan level tantangan.</p>
 
 <div class="mb-3">
     <div id="create-buttons">
-        <a href="{{ route('season.create') }}" class="btn btn-success btn-create" data-tab="seasons">
+        <a href="{{ route('season.create') }}" class="btn btn-primary btn-create {{ request('tab') ? 'd-none' : '' }}" data-tab="seasons">
             <i class="fas fa-plus"></i> Tambah Musim
         </a>
-        <a href="{{ route('quest-type.create') }}" class="btn btn-success btn-create d-none" data-tab="quest-types">
+        <a href="{{ route('quest-type.create') }}" class="btn btn-primary btn-create {{ request('tab') === 'quest-types' ? '' : 'd-none' }}" data-tab="quest-types">
             <i class="fas fa-plus"></i> Tambah Tipe Tantangan
         </a>
-        <a href="{{ route('quest-level.create') }}" class="btn btn-success btn-create d-none" data-tab="quest-levels">
+        <a href="{{ route('quest-level.create') }}" class="btn btn-primary btn-create {{ request('tab') === 'quest-levels' ? '' : 'd-none' }}" data-tab="quest-levels">
             <i class="fas fa-plus"></i> Tambah Level Tantangan
         </a>
     </div>
@@ -46,6 +46,7 @@
                             <th>Mulai</th>
                             <th>Selesai</th>
                             <th>Diubah Oleh</th>
+                            <th>Diubah Pada</th>
                             <th>Aksi</th>
                         </tr>
                     </thead>
@@ -56,8 +57,9 @@
                             <td>{{ $item->started_at_formatted }}</td>
                             <td>{{ $item->finished_at_formatted }}</td>
                             <td>{{ $item->lastChanger->name ?? '-' }}</td>
+                            <td>{{ $item->updated_at_formatted }}</td>
                             <td>
-                                <a href="{{ route('season.edit', $item->id) }}" class="btn btn-sm btn-warning">Edit</a>
+                                <a href="{{ route('season.edit', $item->id) }}" class="btn btn-sm btn-warning">Ubah</a>
                                 <form action="{{ route('season.destroy', $item->id) }}" method="POST" class="d-inline form-delete">
                                     @csrf
                                     @method('DELETE')
@@ -72,7 +74,7 @@
                         @endforelse
                     </tbody>
                 </table>
-                {{ $seasons->appends(['tab' => null])->links() }}
+                {{ $seasons->appends(['tab' => null])->links('pagination::bootstrap-4') }}
             </div>
         </div>
 
@@ -85,6 +87,7 @@
                             <th>Nama</th>
                             <th>Status</th>
                             <th>Diubah Oleh</th>
+                            <th>Diubah Pada</th>
                             <th>Aksi</th>
                         </tr>
                     </thead>
@@ -92,10 +95,11 @@
                         @forelse ($questTypes as $item)
                         <tr>
                             <td>{{ $item->name }}</td>
-                            <td>{{ $item->is_active ? 'Aktif' : 'Nonaktif' }}</td>
+                            <td><span class="badge badge-{{ $item->is_active ? 'success' : 'danger' }}">{{ $item->is_active ? 'Aktif' : 'Nonaktif' }}</span></td>
                             <td>{{ $item->lastChanger->name ?? '-' }}</td>
+                            <td>{{ $item->updated_at_formatted }}</td>
                             <td>
-                                <a href="{{ route('quest-type.edit', $item->id) }}" class="btn btn-sm btn-warning">Edit</a>
+                                <a href="{{ route('quest-type.edit', $item->id) }}" class="btn btn-sm btn-warning">Ubah</a>
                                 <form action="{{ route('quest-type.destroy', $item->id) }}" method="POST" class="d-inline form-delete">
                                     @csrf
                                     @method('DELETE')
@@ -110,7 +114,7 @@
                         @endforelse
                     </tbody>
                 </table>
-                {{ $questTypes->appends(['tab' => 'quest-types'])->links() }}
+                {{ $questTypes->appends(['tab' => 'quest-types'])->links('pagination::bootstrap-4') }}
             </div>
         </div>
 
@@ -123,6 +127,7 @@
                             <th>Nama</th>
                             <th>Status</th>
                             <th>Diubah Oleh</th>
+                            <th>Diubah Pada</th>
                             <th>Aksi</th>
                         </tr>
                     </thead>
@@ -130,10 +135,11 @@
                         @forelse ($questLevels as $item)
                         <tr>
                             <td>{{ $item->name }}</td>
-                            <td>{{ $item->is_active ? 'Aktif' : 'Nonaktif' }}</td>
+                            <td><span class="badge badge-{{ $item->is_active ? 'success' : 'danger' }}">{{ $item->is_active ? 'Aktif' : 'Nonaktif' }}</span></td>
                             <td>{{ $item->lastChanger->name ?? '-' }}</td>
+                            <td>{{ $item->updated_at_formatted }}</td>
                             <td>
-                                <a href="{{ route('quest-level.edit', $item->id) }}" class="btn btn-sm btn-warning">Edit</a>
+                                <a href="{{ route('quest-level.edit', $item->id) }}" class="btn btn-sm btn-warning">Ubah</a>
                                 <form action="{{ route('quest-level.destroy', $item->id) }}" method="POST" class="d-inline form-delete">
                                     @csrf
                                     @method('DELETE')
@@ -148,7 +154,7 @@
                         @endforelse
                     </tbody>
                 </table>
-                {{ $questLevels->appends(['tab' => 'quest-levels'])->links() }}
+                {{ $questLevels->appends(['tab' => 'quest-levels'])->links('pagination::bootstrap-4') }}
             </div>
         </div>
     </div>

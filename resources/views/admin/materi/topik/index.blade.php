@@ -69,12 +69,18 @@
                                         </button>
                                         <div class="dropdown-menu dropdown-menu-right"
                                             aria-labelledby="dropdownMenuButton{{ $topic->id }}">
+                                            @if (($topic->lessons_count) > 0)
+                                                <a class="dropdown-item"
+                                                    href="{{ route('lesson.index') }}?roadmap_id={{ $topic->roadmap_id }}&topic_id={{ $topic->id }}">
+                                                    Daftar Panduan
+                                                </a>
+                                            @endif
                                             <a class="dropdown-item"
                                                 href="{{ route('topic.edit', $topic->id) }}?roadmap_id={{ $topic->roadmap_id }}">
                                                 Ubah Topik
                                             </a>
                                             @if (($topic->lessons_count) > 0)
-                                                <a class="dropdown-item" href="{{ route('lesson.edit') }}?roadmap_id={{ request('roadmap_id') }}&topic_id={{ $topic->id }}">
+                                                <a class="dropdown-item" href="{{ route('lesson.create') }}?roadmap_id={{ request('roadmap_id') }}&topic_id={{ $topic->id }}">
                                                     Ubah Daftar Panduan
                                                 </a>
                                             @else

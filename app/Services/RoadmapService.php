@@ -11,14 +11,15 @@ use Illuminate\Support\Facades\DB;
 class RoadmapService
 {
     protected Model $model;
-    public $topicService;
+    public $topicService, $lessonService;
     /**
      * Create a new class instance.
      */
-    public function __construct(Roadmap $roadmap, TopicService $topicService)
+    public function __construct(Roadmap $roadmap, TopicService $topicService, LessonService $lessonService)
     {
         $this->model = $roadmap;
         $this->topicService = $topicService;
+        $this->lessonService = $lessonService;
     }
 
     public function model()
@@ -99,13 +100,11 @@ class RoadmapService
     public function update(array $data, array $topics, $auth, Roadmap $roadmap)
     {
         DB::beginTransaction();
-
         try {
             $data['changed_by'] = $auth->id;
             $roadmap->update($data);
-
             $existingTopics = $this->topicService->byRoadmap($roadmap->id);
-
+            
             if (empty($topics)) {
                 if ($existingTopics->isNotEmpty()) {
                     foreach ($existingTopics as $topic) {
@@ -113,13 +112,21 @@ class RoadmapService
                             'visibility' => $roadmap->visibility,
                             'changed_by' => $auth->id,
                         ]);
+                        foreach ($topic->lessons as $lesson) {
+                            $lesson->update([
+                                'visibility' => $roadmap->visibility,
+                                'changed_by' => $auth->id,
+                            ]);
+                        }
                     }
                 }
             } else {
                 if ($existingTopics->isNotEmpty()) {
-                    $existingTopics->each->delete();
+                    foreach ($existingTopics as $topic) {
+                        $topic->lessons()->delete();
+                        $topic->delete();
+                    }
                 }
-
                 foreach ($topics as $i => $topic) {
                     $this->topicService->model()->create([
                         'roadmap_id' => $roadmap->id,

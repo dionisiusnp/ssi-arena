@@ -73,7 +73,7 @@
                             </button>
                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton{{ $roadmap->id }}">
                                 <a class="dropdown-item" href="{{ route('topic.index') }}?roadmap_id={{ $roadmap->id }}">
-                                    <i class="fas fa-trophy text-danger mr-1"></i> Topik
+                                    <i class="fas fa-book text-danger mr-1"></i> Topik
                                 </a>
                                 @if ($roadmap->visibility == \App\Enums\VisibilityEnum::DRAFT->value)
                                     <a class="dropdown-item" href="{{ route('roadmap.edit', $roadmap->id) }}">
