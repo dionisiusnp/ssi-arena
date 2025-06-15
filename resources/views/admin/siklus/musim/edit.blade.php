@@ -20,23 +20,25 @@
                     @error('name') <div class="invalid-feedback">{{ $message }}</div> @enderror
                 </div>
 
-                <div class="form-group">
-                    <label for="started_at">Tanggal Mulai</label>
-                    <input type="text" name="started_at" id="started_at"
-                        class="form-control flatpickr @error('started_at') is-invalid @enderror"
-                        value="{{ old('started_at', $season->started_at) }}" required>
-                    @error('started_at') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for="started_at">Tanggal Mulai</label>
+                        <input type="text" name="started_at" id="started_at"
+                            class="form-control flatpickr @error('started_at') is-invalid @enderror"
+                            value="{{ old('started_at', $season->started_at) }}" required>
+                        @error('started_at') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                    </div>
+
+                    <div class="form-group col-md-6">
+                        <label for="finished_at">Tanggal Selesai</label>
+                        <input type="text" name="finished_at" id="finished_at"
+                            class="form-control flatpickr @error('finished_at') is-invalid @enderror"
+                            value="{{ old('finished_at', $season->finished_at) }}" required>
+                        @error('finished_at') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                    </div>
                 </div>
 
-                <div class="form-group">
-                    <label for="finished_at">Tanggal Selesai</label>
-                    <input type="text" name="finished_at" id="finished_at"
-                        class="form-control flatpickr @error('finished_at') is-invalid @enderror"
-                        value="{{ old('finished_at', $season->finished_at) }}" required>
-                    @error('finished_at') <div class="invalid-feedback">{{ $message }}</div> @enderror
-                </div>
-
-                <div class="mt-4">
+                <div class="mt-4 d-flex justify-content-between">
                     <a href="{{ route('season.index') }}" class="btn btn-secondary">Kembali</a>
                     <button type="submit" id="btnSave" class="btn btn-primary">Simpan</button>
                 </div>

@@ -26,6 +26,7 @@
                             <th>Poin</th>
                             <th>Perkalian</th>
                             <th>Total</th>
+                            <th>Status</th>
                             <th>Aksi</th>
                         </tr>
                     </thead>
@@ -35,23 +36,27 @@
                             <td>{{ $questDetails->firstItem() + $index }}.</td>
                             <td>{{ $quest->name }}</td>
                             <td>
-                                Pertarungan: <strong class="badge badge-secondary">{{ $quest->versus_type }}</strong>
+                                Lawan: <strong class="badge badge-secondary">{{ $quest->versus_type }}</strong>
                                 <br>
-                                Tipe Tantangan: <strong class="badge badge-secondary">{{ $quest->questType->name ?? '-' }}</strong>
+                                Tipe: <strong class="badge badge-secondary">{{ $quest->questType->name ?? '-' }}</strong>
                                 <br>
-                                Level Tantangan: <strong class="badge badge-secondary">{{ $quest->questLevel->name ?? '-' }}</strong>
+                                Level: <strong class="badge badge-secondary">{{ $quest->questLevel->name ?? '-' }}</strong>
                             </td>
                             <td>{{ $quest->point }}</td>
                             <td>{{ $quest->point_multiple }}</td>
                             <td>{{ $quest->point_total }}</td>
+                            <td><strong class="badge badge-{{ $quest->is_editable ? 'secondary' : 'success' }}">{{ $quest->is_editable ? 'Draft' : 'Published' }}</strong></td>
                             <td class="text-nowrap">
                                 <div class="btn-group" role="group">
+                                    <a href="{{ route('quest-detail.status', $quest->id) }}" class="btn btn-sm btn-danger btn-action">
+                                        <i class="fas fa-{{ $quest->is_editable ? 'eye' : 'eye-slash' }}"></i>
+                                    </a>
                                     @if ($quest->is_editable)
                                         <a href="{{ route('quest-detail.edit', $quest->id) }}" class="btn btn-sm btn-warning btn-action">
                                             <i class="fas fa-edit"></i>
                                         </a>
                                     @endif
-                                    <button class="btn btn-sm btn-info btn-toggle"
+                                    <button class="btn btn-sm btn-primary btn-toggle"
                                         data-target="#requirements-{{ $quest->id }}" data-toggle="collapse"
                                         aria-expanded="false">
                                         <i class="fas fa-chevron-down toggle-icon"></i>
@@ -60,7 +65,7 @@
                             </td>
                         </tr>
                         <tr class="collapse bg-light" id="requirements-{{ $quest->id }}">
-                            <td colspan="7">
+                            <td colspan="8">
                                 <strong>Daftar Tugas:</strong>
                                 @if($quest->requirements->count())
                                     <ul class="mb-0">

@@ -10,8 +10,8 @@
     <hr class="sidebar-divider my-0">
 
     <!-- Nav Item - Tables -->
-    <li class="nav-item">
-        <a class="nav-link" href="#!">
+    <li class="nav-item {{ request()->routeIs('admin-panel') ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('admin-panel') }}">
             <i class="fas fa-fw fa-home"></i>
             <span>Dashboard</span></a>
     </li>

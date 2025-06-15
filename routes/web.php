@@ -31,6 +31,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('season', SeasonController::class);
     Route::resource('quest-type', QuestTypeController::class);
     Route::resource('quest-level', QuestLevelController::class);
+    Route::get('/quest-detail/{quest_detail}/status',[QuestDetailController::class,'toggleStatus'])->name('quest-detail.status');
     Route::resource('quest-detail', QuestDetailController::class);
 
     Route::get('/user/{user}/status',[UserController::class,'toggleStatus'])->name('user.status');

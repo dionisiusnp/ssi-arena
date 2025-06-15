@@ -102,11 +102,7 @@ class QuestDetailController extends Controller
         try {
             $auth = Auth::user();
             $data = $this->questDetailService->isEditable($auth, $quest_detail);
-            return response()->json([
-                'success' => true,
-                'message' => 'Data berhasil diubah',
-                'data'    => $data,
-            ]);
+            return redirect()->route('quest-detail.index')->with('success', 'Status tantangan berhasil diubah.');
         } catch (\Throwable $th) {
             throw new \ErrorException($th->getMessage());
         }

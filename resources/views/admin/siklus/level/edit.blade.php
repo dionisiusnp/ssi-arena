@@ -13,7 +13,7 @@
                 @method('PUT')
 
                 <div class="form-group">
-                    <label for="name">Nama Level</label>
+                    <label for="name">Nama</label>
                     <input type="text" name="name" id="name"
                         class="form-control @error('name') is-invalid @enderror"
                         value="{{ old('name', $quest_level->name) }}" required>
@@ -21,13 +21,13 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="description">Deskripsi</label>
-                    <textarea name="description" id="description"
-                        class="form-control summernote @error('description') is-invalid @enderror">{{ old('description', $quest_level->description) }}</textarea>
+                    <label for="description">Keterangan</label>
+                    <textarea name="description" id="description" rows="3"
+                        class="form-control @error('description') is-invalid @enderror">{{ old('description', $quest_level->description) }}</textarea>
                     @error('description') <div class="invalid-feedback">{{ $message }}</div> @enderror
                 </div>
 
-                <div class="mt-4">
+                <div class="mt-4 d-flex justify-content-between">
                     <a href="{{ route('season.index',['tab' => 'quest-levels']) }}" class="btn btn-secondary">Kembali</a>
                     <button type="submit" class="btn btn-primary">Simpan</button>
                 </div>
@@ -41,16 +41,16 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.20/summernote-bs4.min.js"></script>
 <script>
-    $('.summernote').summernote({
-        height: 200,
-        disableDragAndDrop: true,
-        toolbar: [
-            ['style', ['bold', 'italic', 'underline', 'clear']],
-            ['font', ['strikethrough']],
-            ['para', ['ul', 'ol', 'paragraph']],
-            ['view', ['fullscreen', 'codeview']],
-        ],
-    });
+    // $('.summernote').summernote({
+    //     height: 200,
+    //     disableDragAndDrop: true,
+    //     toolbar: [
+    //         ['style', ['bold', 'italic', 'underline', 'clear']],
+    //         ['font', ['strikethrough']],
+    //         ['para', ['ul', 'ol', 'paragraph']],
+    //         ['view', ['fullscreen', 'codeview']],
+    //     ],
+    // });
 
     document.getElementById('questLevelForm').addEventListener('submit', function(e) {
         e.preventDefault();
