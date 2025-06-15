@@ -45,7 +45,7 @@ class AuthenticatedSessionController extends Controller
         if ($user->is_lecturer == 1) {
             return redirect()->intended(route('admin-panel', absolute: false));
         } else {
-            return redirect()->intended(route('member', absolute: false));
+            return redirect()->intended(route('member.profile', absolute: false));
         }
     }
 

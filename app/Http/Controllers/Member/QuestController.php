@@ -7,5 +7,8 @@ use Illuminate\Http\Request;
 
 class QuestController extends Controller
 {
-    //
+    public function index(Request $request)
+    {
+        return view('member.tantangan.index');
+    }
 }

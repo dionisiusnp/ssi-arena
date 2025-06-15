@@ -8,7 +8,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>SSI Academy - Login</title>
+    <title>Halaman Masuk | SSI Arena</title>
 
     <!-- Custom fonts for this template-->
     <link href="{{ asset('assets/admin/vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet" type="text/css">
@@ -47,7 +47,7 @@
                         <!-- Nested Row within Card Body -->
                         <div class="p-5">
                             <div class="text-center mb-4">
-                                <h1 class="h4 text-gray-900">Halaman Masuk SSI Academy</h1>
+                                <h1 class="h4 text-gray-900">Halaman Masuk SSI Arena</h1>
                             </div>
 
                             @if ($errors->any())
@@ -79,11 +79,12 @@
                             </form>
 
                             <hr>
-                            <div class="text-center">
+                            {{-- <div class="text-center">
                                 <a class="small" href="#!">Lupa sandi?</a>
-                            </div>
+                            </div> --}}
                             <div class="text-center">
-                                <a class="small" href="#!">Mendaftar SSI Academy</a>
+                                {{-- <a class="small" href="#!">Mendaftar SSI Academy</a> |  --}}
+                                <a class="small" href="{{ route('guest.schedule') }}">Kunjungi SSI Arena</a>
                             </div>
                         </div>
                     </div>

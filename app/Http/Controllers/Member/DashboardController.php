@@ -9,6 +9,6 @@ class DashboardController extends Controller
 {
     public function index(Request $request)
     {
-        return view('member.index');
+        return view('member.kegiatan.index');
     }
 }

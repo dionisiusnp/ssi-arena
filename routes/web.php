@@ -3,7 +3,7 @@
 use App\Http\Controllers\Admin\ActivityChecklistController;
 use App\Http\Controllers\Admin\ActivityController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
-use App\Http\Controllers\Admin\LessonController;
+use App\Http\Controllers\Admin\LessonController as AdminLessonController;
 use App\Http\Controllers\Admin\QuestDetailController;
 use App\Http\Controllers\Admin\QuestLevelController;
 use App\Http\Controllers\Admin\QuestTypeController;
@@ -12,6 +12,11 @@ use App\Http\Controllers\Admin\SeasonController;
 use App\Http\Controllers\Admin\TopicController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Member\DashboardController as MemberDashboardController;
+use App\Http\Controllers\Member\LeaderboardController;
+use App\Http\Controllers\Member\QuestController;
+use App\Http\Controllers\Member\LessonController as MemberLessonController;
+use App\Http\Controllers\Member\MemberController;
+use App\Http\Controllers\Member\RegistrationController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -20,13 +25,18 @@ Route::get('/', function () {
 
 @include('select2.php');
 
+Route::prefix('guest')->name('guest.')->group(function () {
+    Route::get('/lesson',        [MemberLessonController::class, 'index'])->name('lesson');
+    Route::get('/schedule',      [MemberDashboardController::class, 'index'])->name('schedule');
+});
 Route::middleware('auth')->group(function () {
+    // ADMIN
     Route::get('/admin-panel',[AdminDashboardController::class,'index'])->name('admin-panel');
 
     Route::resource('roadmap', RoadmapController::class);
     Route::resource('topic', TopicController::class);
-    Route::get('/lesson/edit',[LessonController::class,'edit'])->name('lesson.edit');
-    Route::resource('lesson', LessonController::class)->except('edit');
+    Route::get('/lesson/edit',[AdminLessonController::class,'edit'])->name('lesson.edit');
+    Route::resource('lesson', AdminLessonController::class)->except('edit');
 
     Route::resource('season', SeasonController::class);
     Route::resource('quest-type', QuestTypeController::class);
@@ -39,8 +49,15 @@ Route::middleware('auth')->group(function () {
     Route::resource('activity', ActivityController::class);
     Route::get('/activity-checklist/{activity_checklist}/status', [ActivityChecklistController::class, 'toggleStatus'])->name('activity-checklist.status');
 
-
-    Route::get('/member',[MemberDashboardController::class,'index'])->name('member');
+    // MEMBER
+    Route::prefix('member')->name('member.')->group(function () {
+        Route::get('/lesson',        [MemberLessonController::class, 'index'])->name('lesson');
+        Route::get('/leaderboard',   [LeaderboardController::class, 'index'])->name('leaderboard');
+        Route::get('/profile',       [MemberController::class, 'index'])->name('profile');
+        Route::get('/quest',         [QuestController::class, 'index'])->name('quest');
+        Route::get('/registration',  [RegistrationController::class, 'index'])->name('registration');
+        Route::get('/schedule',      [MemberDashboardController::class, 'index'])->name('schedule');
+    });
 });
 
 require __DIR__.'/auth.php';

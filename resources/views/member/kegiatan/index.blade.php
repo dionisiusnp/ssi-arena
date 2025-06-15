@@ -1,6 +1,6 @@
 @extends('layouts.member.app')
 
-@section('title', 'Acara')
+@section('title', 'Kegiatan')
 
 @section('content')
 <!-- About-->

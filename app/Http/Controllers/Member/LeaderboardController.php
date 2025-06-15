@@ -7,5 +7,8 @@ use Illuminate\Http\Request;
 
 class LeaderboardController extends Controller
 {
-    //
+    public function index(Request $request)
+    {
+        return view('member.peringkat.index');
+    }
 }
