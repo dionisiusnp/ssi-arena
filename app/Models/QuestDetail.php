@@ -45,4 +45,8 @@ class QuestDetail extends Model
     public function requirements() {
         return $this->hasMany(QuestRequirement::class);
     }
+
+    public function activities() {
+        return $this->hasMany(Activity::class,'quest_detail_id');
+    }
 }

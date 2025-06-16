@@ -48,7 +48,7 @@
                             <td><strong class="badge badge-{{ $quest->is_editable ? 'secondary' : 'success' }}">{{ $quest->is_editable ? 'Draft' : 'Published' }}</strong></td>
                             <td class="text-nowrap">
                                 <div class="btn-group" role="group">
-                                    <a href="{{ route('quest-detail.status', $quest->id) }}" class="btn btn-sm btn-danger btn-action">
+                                    <a href="{{ route('quest-detail.status', $quest->id) }}" class="btn btn-sm btn-{{ $quest->is_editable ? 'success' : 'secondary' }} btn-action">
                                         <i class="fas fa-{{ $quest->is_editable ? 'eye' : 'eye-slash' }}"></i>
                                     </a>
                                     @if ($quest->is_editable)

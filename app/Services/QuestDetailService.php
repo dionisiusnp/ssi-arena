@@ -11,14 +11,15 @@ use Illuminate\Support\Facades\DB;
 class QuestDetailService
 {
     protected Model $model;
-    public $questRequirementService;
+    public $questRequirementService, $activityService;
     /**
      * Create a new class instance.
      */
-    public function __construct(QuestDetail $questDetail, QuestRequirementService $questRequirementService)
+    public function __construct(QuestDetail $questDetail, QuestRequirementService $questRequirementService, ActivityService $activityService)
     {
         $this->model = $questDetail;
         $this->questRequirementService = $questRequirementService;
+        $this->activityService = $activityService;
     }
 
     public function model()
@@ -52,7 +53,6 @@ class QuestDetailService
                 });
             })
             ->when(isset($isEditable), fn($query) => $query->where('is_editable', $isEditable))
-            ->orderByDesc('is_editable')
             ->orderByDesc('created_at')
             ->paginate($perPage);
     }
@@ -81,23 +81,29 @@ class QuestDetailService
 
     public function update(array $data, array $reqs, $auth, QuestDetail $questDetail)
     {
+        DB::beginTransaction();
         try {
             $data['changed_by'] = $auth->id;
             $data['point_total'] = $data['point'] + ($data['point'] * $data['point_multiple']);
             $qd = $questDetail->update($data);
-            
             if (!empty($reqs)) {
+                foreach ($questDetail->activities as $activity) {
+                    $activity->checklists()->delete();
+                }
+                $questDetail->activities()->delete();
                 $existingRequirements = $this->questRequirementService->byQuestDetail($questDetail->id);
                 if ($existingRequirements->isNotEmpty()) {
-                    $existingRequirements->each->delete(); // kalau return collection
+                    $existingRequirements->each->delete();
                 }
 
                 foreach($reqs as $item){
                     $this->questRequirementService->store($item['description'], $questDetail->id, $auth);
                 }
             }
+            DB::commit();
             return $qd;
         } catch (\Throwable $th) {
+            DB::rollBack();
             throw new \ErrorException($th->getMessage());
         }
     }
