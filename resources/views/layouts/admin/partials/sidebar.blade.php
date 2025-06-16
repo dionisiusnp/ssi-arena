@@ -25,8 +25,8 @@
     </div>
 
     <!-- Nav Item - Charts -->
-    <li class="nav-item">
-        <a class="nav-link" href="">
+    <li class="nav-item {{ request()->routeIs('schedule.index') ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('schedule.index') }}">
             <i class="fas fa-fw fa-calendar"></i>
             <span>Acara</span></a>
     </li>

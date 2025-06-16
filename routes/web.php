@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\QuestDetailController;
 use App\Http\Controllers\Admin\QuestLevelController;
 use App\Http\Controllers\Admin\QuestTypeController;
 use App\Http\Controllers\Admin\RoadmapController;
+use App\Http\Controllers\Admin\ScheduleController;
 use App\Http\Controllers\Admin\SeasonController;
 use App\Http\Controllers\Admin\StepController;
 use App\Http\Controllers\Admin\TopicController;
@@ -33,6 +34,9 @@ Route::prefix('guest')->name('guest.')->group(function () {
 Route::middleware('auth')->group(function () {
     // ADMIN
     Route::get('/admin-panel',[AdminDashboardController::class,'index'])->name('admin-panel');
+
+    Route::get('/schedule/{schedule}/status',[ScheduleController::class,'toggleStatus'])->name('schedule.status');
+    Route::resource('schedule', ScheduleController::class);
 
     Route::resource('lesson', AdminLessonController::class);
     Route::resource('topic', TopicController::class);
