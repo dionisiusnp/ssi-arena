@@ -19,8 +19,8 @@
 
                 <div class="form-group">
                     <label>Jenis Input</label>
-                    <select name="type_input" class="form-control">
-                        @foreach (\App\Enums\LessonContentEnum::cases() as $content)
+                    <select name="content_type" class="form-control">
+                        @foreach (\App\Enums\StepContentEnum::cases() as $content)
                             <option value="{{ $content->value }}" {{ $lesson->type_input === $content->value ? 'selected' : '' }}>
                                 {{ $content->label() }}
                             </option>
@@ -34,23 +34,12 @@
                 </div>
 
                 <div class="form-group">
-                    <label>Jenis Output</label>
-                    <select name="type_output" class="form-control">
-                        @foreach (\App\Enums\LessonContentEnum::cases() as $content)
-                            <option value="{{ $content->value }}" {{ $lesson->type_output === $content->value ? 'selected' : '' }}>
-                                {{ $content->label() }}
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
-
-                <div class="form-group">
                     <label>Konten Output</label>
                     <textarea name="content_output" class="form-control" rows="3">{{ old('content_output', $lesson->content_output) }}</textarea>
                 </div>
 
-                <div class="mt-4">
-                    <a href="{{ route('lesson.index') }}?roadmap_id={{ request('roadmap_id') }}&topic_id={{ request('topic_id') }}" class="btn btn-secondary">Kembali</a>
+                <div class="mt-4 d-flex justify-content-between">
+                    <a href="{{ route('lesson.index') }}?lesson_id={{ request('lesson_id') }}&topic_id={{ request('topic_id') }}" class="btn btn-secondary">Kembali</a>
                     <button type="submit" class="btn btn-primary">Simpan</button>
                 </div>
             </form>
@@ -69,7 +58,7 @@
             text: "Data akan diperbarui!",
             icon: 'question',
             showCancelButton: true,
-            confirmButtonColor: '#28a745',
+            confirmButtonColor: '#007bff',
             confirmButtonText: 'Ya, simpan',
             cancelButtonText: 'Batal',
         }).then((result) => {
@@ -95,7 +84,7 @@
                             timer: 2000,
                             showConfirmButton: false
                         }).then(() => {
-                            window.location.href = "{{ route('lesson.index') }}?roadmap_id={{ request('roadmap_id') }}&topic_id={{ request('topic_id') }}";
+                            window.location.href = "{{ route('step.index') }}?lesson_id={{ request('lesson_id') }}&topic_id={{ request('topic_id') }}";
                         });
                     } else {
                         Swal.fire('Gagal', data.message || 'Terjadi kesalahan', 'error');

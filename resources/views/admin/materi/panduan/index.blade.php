@@ -7,11 +7,11 @@
     <h1 class="h3 mb-3 text-gray-800">Daftar Panduan {{ $topic->name }}</h1>
 
     <div class="mb-3 d-flex justify-content-between align-items-center">
-        <a href="{{ route('topic.index') }}?roadmap_id={{ request('roadmap_id') }}" class="btn btn-secondary">Kembali</a>
+        <a href="{{ route('topic.index') }}?lesson_id={{ request('lesson_id') }}" class="btn btn-secondary">Kembali</a>
 
         <form method="GET">
             <div class="row g-2 align-items-end">
-                <input type="hidden" name="roadmap_id" value="{{ request('roadmap_id') }}">
+                <input type="hidden" name="lesson_id" value="{{ request('lesson_id') }}">
 
                 <input type="hidden" name="topic_id" value="{{ request('topic_id') }}">
 
@@ -23,7 +23,7 @@
                     <button type="submit" class="btn btn-primary">Filter</button>
                 </div>
                 <div class="col-md-3">
-                    <a href="{{ route('lesson.index') }}?roadmap_id={{ request('roadmap_id') }}&topic_id={{ request('topic_id') }}" class="btn btn-secondary w-100">Reset</a>
+                    <a href="{{ route('step.index') }}?lesson_id={{ request('lesson_id') }}&topic_id={{ request('topic_id') }}" class="btn btn-secondary w-100">Reset</a>
                 </div>
             </div>
         </form>
@@ -74,7 +74,7 @@
                                     </span>
                                 </td>
                                 <td>
-                                    <a class="btn btn-warning" href="{{ route('lesson.edit') }}?roadmap_id={{ request('roadmap_id') }}&topic_id={{ $lesson->topic_id }}&lesson_id={{ $lesson->id }}">
+                                    <a class="btn btn-warning" href="{{ route('step.edit') }}?lesson_id={{ request('lesson_id') }}&topic_id={{ $lesson->topic_id }}&lesson_id={{ $lesson->id }}">
                                         Ubah Panduan
                                     </a>
                                 </td>

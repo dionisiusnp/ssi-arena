@@ -1,23 +1,23 @@
 @extends('layouts.admin.app')
 
-@section('title', 'Edit Materi')
+@section('title', 'Ubah Materi')
 
 @section('content')
 <div class="container-fluid">
-    <h1 class="h3 mb-3 text-gray-800">Edit Materi</h1>
+    <h1 class="h3 mb-3 text-gray-800">Ubah Materi</h1>
 
     <div class="card shadow">
         <div class="card-body">
-            <form id="curriculumForm" action="{{ route('roadmap.update', $roadmap->id) }}" method="POST">
+            <form id="curriculumForm" action="{{ route('lesson.update', $lesson->id) }}" method="POST">
                 @csrf
                 @method('PUT')
-                <input type="hidden" name="visibility" id="visibility" value="{{ $roadmap->visibility }}">
+                <input type="hidden" name="visibility" id="visibility" value="{{ $lesson->visibility }}">
 
                 <div class="form-group">
                     <label for="role">Kategori</label>
                     <select name="role" id="role" class="form-control">
                         @foreach (\App\Enums\RoleplayEnum::cases() as $status)
-                            <option value="{{ $status->value }}" {{ $roadmap->role === $status->value ? 'selected' : '' }}>
+                            <option value="{{ $status->value }}" {{ $lesson->role === $status->value ? 'selected' : '' }}>
                                 {{ $status->label() }}
                             </option>
                         @endforeach
@@ -26,19 +26,19 @@
 
                 <div class="form-group">
                     <label for="name">Nama</label>
-                    <input type="text" name="name" id="name" class="form-control" value="{{ $roadmap->name }}">
+                    <input type="text" name="name" id="name" class="form-control" value="{{ $lesson->name }}">
                 </div>
 
                 <div class="form-group">
                     <label for="description">Keterangan</label>
-                    <textarea name="description" id="description" class="form-control" rows="3">{{ $roadmap->description }}</textarea>
+                    <textarea name="description" id="description" class="form-control" rows="3">{{ $lesson->description }}</textarea>
                 </div>
 
                 <hr>
                 <h5>Daftar Topik</h5>
                 <div id="topicRepeater">
                     <div data-repeater-list="topics">
-                        @foreach ($roadmap->topics as $topic)
+                        @foreach ($lesson->topics as $topic)
                             <div data-repeater-item class="mb-2 border rounded p-3">
                                 <input type="hidden" name="id" value="{{ $topic->id }}">
                                 <div class="form-group mb-2">
@@ -53,7 +53,7 @@
                             </div>
                         @endforeach
                         {{-- Tambahan baris kosong jika tidak ada topik --}}
-                        @if ($roadmap->topics->isEmpty())
+                        @if ($lesson->topics->isEmpty())
                             <div data-repeater-item class="mb-2 border rounded p-3">
                                 <div class="form-group mb-2">
                                     <label>Topik</label>
@@ -70,8 +70,8 @@
                     <button type="button" data-repeater-create class="btn btn-primary btn-sm mt-2">Tambah Topik</button>
                 </div>
 
-                <div class="mt-4">
-                    <a href="{{ route('roadmap.index') }}" class="btn btn-secondary">Kembali</a>
+                <div class="mt-4 d-flex justify-content-between">
+                    <a href="{{ route('lesson.index') }}" class="btn btn-secondary">Kembali</a>
                     <button type="submit" class="btn btn-primary">Simpan</button>
                 </div>
             </form>
@@ -101,7 +101,7 @@
             text: "Perubahan akan disimpan!",
             icon: 'question',
             showCancelButton: true,
-            confirmButtonColor: '#28a745',
+            confirmButtonColor: '#007bff',
             confirmButtonText: 'Ya, simpan',
             cancelButtonText: 'Batal',
         }).then((result) => {
@@ -127,7 +127,7 @@
                             timer: 2000,
                             showConfirmButton: false
                         }).then(() => {
-                            window.location.href = "{{ route('roadmap.index') }}";
+                            window.location.href = "{{ route('lesson.index') }}";
                         });
                     } else {
                         Swal.fire('Gagal', data.message || 'Terjadi kesalahan', 'error');

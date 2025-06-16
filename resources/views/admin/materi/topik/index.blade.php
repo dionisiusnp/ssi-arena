@@ -4,14 +4,14 @@
 
 @section('content')
 <div class="container-fluid">
-    <h1 class="h3 mb-3 text-gray-800">Daftar Topik {{ $roadmap->name }}</h1>
+    <h1 class="h3 mb-3 text-gray-800">Daftar Topik {{ $lesson->name }}</h1>
 
     <div class="mb-3 d-flex justify-content-between align-items-center">
-        <a href="{{ route('roadmap.index') }}" class="btn btn-secondary">Kembali</a>
+        <a href="{{ route('lesson.index') }}" class="btn btn-secondary">Kembali</a>
 
         <form method="GET">
             <div class="row g-2 align-items-end">
-                <input type="hidden" name="roadmap_id" value="{{ request('roadmap_id') }}">
+                <input type="hidden" name="lesson_id" value="{{ request('lesson_id') }}">
 
                 <div class="col-md-6">
                     <input type="text" name="q" value="{{ request('q') }}" class="form-control mr-2" placeholder="Cari topik">
@@ -21,7 +21,7 @@
                     <button type="submit" class="btn btn-primary">Filter</button>
                 </div>
                 <div class="col-md-3">
-                    <a href="{{ route('topic.index') }}?roadmap_id={{ request('roadmap_id') }}" class="btn btn-secondary w-100">Reset</a>
+                    <a href="{{ route('topic.index') }}?lesson_id={{ request('lesson_id') }}" class="btn btn-secondary w-100">Reset</a>
                 </div>
             </div>
         </form>
@@ -35,7 +35,7 @@
                         <tr>
                             <th>No.</th>
                             <th>Nama</th>
-                            <th>Status</th>
+                            <th>Jumlah Panduan</th>
                             <th>Aksi</th>
                         </tr>
                     </thead>
@@ -46,14 +46,11 @@
 
                                 <td>
                                     {{ $topic->name ?? '-' }}
-                                    <span class="badge badge-secondary">
-                                        {{ $topic->lessons_count ?? $topic->lessons->count() }} Panduan
-                                    </span>
                                 </td>
 
                                 <td>
                                     <span class="badge badge-secondary">
-                                        {{ strtoupper($topic->visibility ?? '-') }}
+                                        {{ $topic->steps_count ?? $topic->steps->count() }} Panduan
                                     </span>
                                 </td>
 
@@ -69,22 +66,22 @@
                                         </button>
                                         <div class="dropdown-menu dropdown-menu-right"
                                             aria-labelledby="dropdownMenuButton{{ $topic->id }}">
-                                            @if (($topic->lessons_count) > 0)
+                                            @if (($topic->steps_count) > 0)
                                                 <a class="dropdown-item"
-                                                    href="{{ route('lesson.index') }}?roadmap_id={{ $topic->roadmap_id }}&topic_id={{ $topic->id }}">
+                                                    href="{{ route('step.index') }}?lesson_id={{ $topic->lesson_id }}&topic_id={{ $topic->id }}">
                                                     Daftar Panduan
                                                 </a>
                                             @endif
                                             <a class="dropdown-item"
-                                                href="{{ route('topic.edit', $topic->id) }}?roadmap_id={{ $topic->roadmap_id }}">
+                                                href="{{ route('topic.edit', $topic->id) }}?lesson_id={{ $topic->lesson_id }}">
                                                 Ubah Topik
                                             </a>
-                                            @if (($topic->lessons_count) > 0)
-                                                <a class="dropdown-item" href="{{ route('lesson.create') }}?roadmap_id={{ request('roadmap_id') }}&topic_id={{ $topic->id }}">
+                                            @if (($topic->steps_count) > 0)
+                                                <a class="dropdown-item" href="{{ route('step.create') }}?lesson_id={{ request('lesson_id') }}&topic_id={{ $topic->id }}">
                                                     Ubah Daftar Panduan
                                                 </a>
                                             @else
-                                                <a class="dropdown-item" href="{{ route('lesson.create') }}?roadmap_id={{ request('roadmap_id') }}&topic_id={{ $topic->id }}">
+                                                <a class="dropdown-item" href="{{ route('step.create') }}?lesson_id={{ request('lesson_id') }}&topic_id={{ $topic->id }}">
                                                     Tambah Daftar Panduan
                                                 </a>
                                             @endif

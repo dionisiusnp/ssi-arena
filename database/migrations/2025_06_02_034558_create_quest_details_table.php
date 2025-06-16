@@ -17,6 +17,7 @@ return new class extends Migration
             $table->foreignId('quest_type_id')->nullable()->constrained('quest_types');
             $table->foreignId('quest_level_id')->nullable()->constrained('quest_levels');
             $table->string('versus_type')->default('PVE');
+            $table->json('claimable_by')->nullable();
             $table->string('name');
             $table->text('description')->nullable();
             $table->integer('minimum_level')->default(1);

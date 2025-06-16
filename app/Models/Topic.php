@@ -30,12 +30,12 @@ class Topic extends Model
         return $this->belongsTo(User::class,'changed_by');
     }
 
-    public function roadmap()
+    public function lesson()
     {
-        return $this->belongsTo(Roadmap::class, 'roadmap_id');
+        return $this->belongsTo(Lesson::class, 'lesson_id');
     }
-    public function lessons()
+    public function steps()
     {
-        return $this->hasMany(Lesson::class, 'topic_id');
+        return $this->hasMany(Step::class, 'topic_id');
     }
 }

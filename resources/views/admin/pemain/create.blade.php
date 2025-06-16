@@ -67,7 +67,7 @@
                     </div>
                 </div>
 
-                <div class="mt-4">
+                <div class="mt-4 d-flex justify-content-between">
                     <a href="{{ route('user.index') }}" class="btn btn-secondary">Kembali</a>
                     <button type="submit" class="btn btn-primary">Simpan</button>
                 </div>
@@ -104,7 +104,7 @@
             text: "Data akan disimpan!",
             icon: 'question',
             showCancelButton: true,
-            confirmButtonColor: '#28a745',
+            confirmButtonColor: '#007bff',
             confirmButtonText: 'Ya, simpan',
             cancelButtonText: 'Batal',
         }).then((result) => {

@@ -30,8 +30,8 @@ class Lesson extends Model
         return $this->belongsTo(User::class,'changed_by');
     }
 
-    public function topic()
+    public function topics()
     {
-        return $this->belongsTo(Topic::class, 'topic_id');
+        return $this->hasMany(Topic::class,'lesson_id');
     }
 }

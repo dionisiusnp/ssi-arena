@@ -21,8 +21,8 @@
                     <textarea name="description" id="description" class="form-control" rows="3">{{ $topic->description }}</textarea>
                 </div>
 
-                <div class="mt-4">
-                    <a href="{{ route('topic.index') }}?roadmap_id={{ request('roadmap_id') }}" class="btn btn-secondary">Kembali</a>
+                <div class="mt-4 d-flex justify-content-between">
+                    <a href="{{ route('topic.index') }}?lesson_id={{ request('lesson_id') }}" class="btn btn-secondary">Kembali</a>
                     <button type="submit" class="btn btn-primary">Simpan</button>
                 </div>
             </form>
@@ -41,7 +41,7 @@
             text: "Perubahan akan disimpan!",
             icon: 'question',
             showCancelButton: true,
-            confirmButtonColor: '#28a745',
+            confirmButtonColor: '#007bff',
             confirmButtonText: 'Ya, simpan',
             cancelButtonText: 'Batal',
         }).then((result) => {
@@ -67,7 +67,7 @@
                             timer: 2000,
                             showConfirmButton: false
                         }).then(() => {
-                            window.location.href = "{{ route('topic.index') }}?roadmap_id={{ request('roadmap_id') }}";
+                            window.location.href = "{{ route('topic.index') }}?lesson_id={{ request('lesson_id') }}";
                         });
                     } else {
                         Swal.fire('Gagal', data.message || 'Terjadi kesalahan', 'error');

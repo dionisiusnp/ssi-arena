@@ -147,7 +147,7 @@
             text: "Data akan diperbarui!",
             icon: 'question',
             showCancelButton: true,
-            confirmButtonColor: '#28a745',
+            confirmButtonColor: '#007bff',
             confirmButtonText: 'Ya, update',
             cancelButtonText: 'Batal',
         }).then((result) => {

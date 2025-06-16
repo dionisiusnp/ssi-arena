@@ -7,14 +7,14 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Roadmap extends Model
+class Step extends Model
 {
     use HasFactory, SoftDeletes;
     protected $guarded = ['id', 'created_at', 'updated_at', 'deleted_at'];
     public function getCreatedAtFormattedAttribute(): string
     {
         return Carbon::parse($this->attributes['created_at'])
-            ->locale('id')
+            ->locale(locale: 'id')
             ->translatedFormat("d F Y H:i");
     }
 
@@ -30,8 +30,8 @@ class Roadmap extends Model
         return $this->belongsTo(User::class,'changed_by');
     }
 
-    public function topics()
+    public function topic()
     {
-        return $this->hasMany(Topic::class,'roadmap_id');
+        return $this->belongsTo(Topic::class, 'topic_id');
     }
 }

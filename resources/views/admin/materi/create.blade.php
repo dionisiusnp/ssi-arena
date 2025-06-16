@@ -8,7 +8,7 @@
 
     <div class="card shadow">
         <div class="card-body">
-            <form id="curriculumForm" action="{{ route('roadmap.store') }}" method="POST">
+            <form id="curriculumForm" action="{{ route('lesson.store') }}" method="POST">
                 @csrf
                 <input type="hidden" name="visibility" id="visibility" value="{{ \App\Enums\VisibilityEnum::DRAFT->value }}">
                 <div class="form-group">
@@ -51,8 +51,8 @@
                     <button type="button" data-repeater-create class="btn btn-primary btn-sm mt-2">Tambah Topik</button>
                 </div>
 
-                <div class="mt-4">
-                    <a href="{{ route('roadmap.index') }}" class="btn btn-secondary">Kembali</a>
+                <div class="mt-4 d-flex justify-content-between">
+                    <a href="{{ route('lesson.index') }}" class="btn btn-secondary">Kembali</a>
                     <button type="submit" class="btn btn-primary">Simpan</button>
                 </div>
             </form>
@@ -82,7 +82,7 @@
             text: "Data akan disimpan!",
             icon: 'question',
             showCancelButton: true,
-            confirmButtonColor: '#28a745',
+            confirmButtonColor: '#007bff',
             confirmButtonText: 'Ya, simpan',
             cancelButtonText: 'Batal',
         }).then((result) => {
@@ -108,7 +108,7 @@
                             timer: 2000,
                             showConfirmButton: false
                         }).then(() => {
-                            window.location.href = "{{ route('roadmap.index') }}";
+                            window.location.href = "{{ route('lesson.index') }}";
                         });
                     } else {
                         Swal.fire('Gagal', data.message || 'Terjadi kesalahan', 'error');

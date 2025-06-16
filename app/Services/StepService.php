@@ -2,21 +2,23 @@
 
 namespace App\Services;
 
-use App\Models\Topic;
+use App\Models\Step;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 
-class TopicService
+class StepService
 {
     protected Model $model;
+    public $topicService;
     /**
      * Create a new class instance.
      */
-    public function __construct(Topic $topic)
+    public function __construct(Step $step, TopicService $topicService)
     {
-        $this->model = $topic;
+        $this->model = $step;
+        $this->topicService = $topicService;
     }
 
     public function model()
@@ -27,8 +29,8 @@ class TopicService
     public function select2($filters = []): Builder
     {
         $data = $this->model->select([
-                DB::raw('topics.id as id'),
-                DB::raw('topics.name as text'),
+                DB::raw('steps.id as id'),
+                DB::raw('steps.name as text'),
             ])
             ->when(count($filters), function ($q) use ($filters) {
                 $q->where($filters);
@@ -40,12 +42,12 @@ class TopicService
     public function paginate(array $filter = [], int $perPage = 10): LengthAwarePaginator
     {
         $search = $filter['search'] ?? null;
-        $lessonId = $filter['lesson_id'] ?? null;
+        $topicId = $filter['topic_id'] ?? null;
         $visibility = $filter['visibility'] ?? null;
 
         return $this->model
-            ->when($lessonId, function ($query) use ($lessonId) {
-                $query->where('lesson_id', $lessonId);
+            ->when($topicId, function ($query) use ($topicId) {
+                $query->where('topic_id', $topicId);
             })
             ->when($search, function ($query) use ($search) {
                 $query->where(function ($q) use ($search) {
@@ -56,26 +58,52 @@ class TopicService
             ->when($visibility, function ($query) use ($visibility) {
                 $query->where('visibility', $visibility);
             })
-            ->withCount('steps')
             ->orderBy('sequence')
             ->paginate($perPage);
     }
 
-    public function byLesson($lessonId)
+    public function byTopic($topicId)
     {
         try {
-            return $this->model->where('lesson_id','=',$lessonId)->get();
+            return $this->model->where('topic_id','=',$topicId)->get();
         } catch (\Throwable $th) {
             throw new \ErrorException($th->getMessage());
         }
     }
 
+    public function languageByTopic($topicId)
+    {
+        return $this->model->where('topic_id','=',$topicId)->pluck('language')->first();
+    }
+
     public function store(array $data, $auth)
     {
+        DB::beginTransaction();
         try {
-            $data['changed_by'] = $auth->id;
-            return $this->model->create($data);
+            $topic = $this->topicService->model()->find($data['topic_id']);
+
+            if (!empty($data['steps'])) {
+                $topic->steps()->delete();
+                $i = 1;
+                foreach ($data['steps'] as $step) {
+                    $this->model()->create([
+                        'topic_id' => $data['topic_id'],
+                        'language' => $data['language'],
+                        'name' => $step['name'],
+                        'content_type' => $step['content_type'],
+                        'content_input' => $step['content_input'],
+                        'content_output' => $step['content_output'],
+                        'sequence' => $i++,
+                        'changed_by' => $auth->id,
+                    ]);
+                }
+            }
+
+            DB::commit();
+            return true;
+
         } catch (\Throwable $th) {
+            DB::rollBack();
             throw new \ErrorException($th->getMessage());
         }
     }
@@ -85,21 +113,21 @@ class TopicService
         return $this->model->find($id);
     }
 
-    public function update(array $data, $auth, Topic $topic)
+    public function update(array $data, $auth, Step $step)
     {
         try {
             $data['changed_by'] = $auth->id;
-            $topic->update($data);
-            return $topic;
+            $step->update($data);
+            return $step;
         } catch (\Throwable $th) {
             throw new \ErrorException($th->getMessage());
         }
     }
 
-    public function destroy(Topic $topic): bool
+    public function destroy(Step $step): bool
     {
         try {
-            return $topic->delete();
+            return $step->delete();
         } catch (\Throwable $th) {
             throw new \ErrorException($th->getMessage());
         }

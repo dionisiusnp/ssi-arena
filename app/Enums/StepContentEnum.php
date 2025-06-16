@@ -2,7 +2,7 @@
 
 namespace App\Enums;
 
-enum LessonContentEnum: string
+enum StepContentEnum: string
 {
     case EDITOR = 'editor';
     case LINK = 'link';

@@ -32,8 +32,8 @@
     </li>
 
     <!-- Nav Item - Charts -->
-    <li class="nav-item {{ request()->routeIs('roadmap.index') ? 'active' : '' }}">
-        <a class="nav-link" href="{{ route('roadmap.index') }}">
+    <li class="nav-item {{ request()->routeIs('lesson.index') ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('lesson.index') }}">
             <i class="fas fa-fw fa-book"></i>
             <span>Materi</span></a>
     </li>

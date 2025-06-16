@@ -8,14 +8,14 @@
 
     <div class="card shadow">
         <div class="card-body">
-            <form id="guideForm" action="{{ route('lesson.store') }}" method="POST" enctype="multipart/form-data">
+            <form id="stepForm" action="{{ route('step.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <input type="hidden" name="topic_id" id="topic_id" value="{{ request('topic_id') }}">
                 
                 <div class="form-group">
                     <label>Stack</label>
                     <select name="language" class="form-control">
-                        @if ($lessons->isNotEmpty())
+                        @if ($steps->isNotEmpty())
                             @php
                                 $enum = \App\Enums\StackEnum::tryFrom($language);
                             @endphp
@@ -32,20 +32,20 @@
                 </div>                
                 <hr>
                 <h5>Daftar Panduan</h5>
-                    <div id="lessonRepeater">
-                        <div data-repeater-list="lessons">
-                            @forelse ($lessons as $lesson)
+                    <div id="stepRepeater">
+                        <div data-repeater-list="steps">
+                            @forelse ($steps as $step)
                                 <div data-repeater-item class="mb-3 border rounded p-3">
                                     <div class="form-group">
                                         <label>Nama Panduan</label>
-                                        <input type="text" name="name" class="form-control" value="{{ $lesson->name }}" required>
+                                        <input type="text" name="name" class="form-control" value="{{ $step->name }}" required>
                                     </div>
 
                                     <div class="form-group">
-                                        <label>Jenis Input</label>
-                                        <select name="type_input" class="form-control">
-                                            @foreach (\App\Enums\LessonContentEnum::cases() as $content)
-                                                <option value="{{ $content->value }}" {{ $lesson->type_input === $content->value ? 'selected' : '' }}>
+                                        <label>Jenis Konten</label>
+                                        <select name="content_type" class="form-control">
+                                            @foreach (\App\Enums\stepContentEnum::cases() as $content)
+                                                <option value="{{ $content->value }}" {{ $step->type_input === $content->value ? 'selected' : '' }}>
                                                     {{ $content->label() }}
                                                 </option>
                                             @endforeach
@@ -54,23 +54,12 @@
 
                                     <div class="form-group">
                                         <label>Konten Input</label>
-                                        <textarea name="content_input" class="form-control" rows="3">{{ $lesson->content_input }}</textarea>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label>Jenis Output</label>
-                                        <select name="type_output" class="form-control">
-                                            @foreach (\App\Enums\LessonContentEnum::cases() as $content)
-                                                <option value="{{ $content->value }}" {{ $lesson->type_output === $content->value ? 'selected' : '' }}>
-                                                    {{ $content->label() }}
-                                                </option>
-                                            @endforeach
-                                        </select>
+                                        <textarea name="content_input" class="form-control" rows="3">{{ $step->content_input }}</textarea>
                                     </div>
 
                                     <div class="form-group">
                                         <label>Konten Output</label>
-                                        <textarea name="content_output" class="form-control" rows="3">{{ $lesson->content_output }}</textarea>
+                                        <textarea name="content_output" class="form-control" rows="3">{{ $step->content_output }}</textarea>
                                     </div>
 
                                     <button type="button" data-repeater-delete class="btn btn-danger btn-sm mt-2">Hapus Panduan</button>
@@ -83,9 +72,9 @@
                                     </div>
 
                                     <div class="form-group">
-                                        <label>Jenis Input</label>
-                                        <select name="type_input" class="form-control">
-                                            @foreach (\App\Enums\LessonContentEnum::cases() as $content)
+                                        <label>Jenis Konten</label>
+                                        <select name="content_type" class="form-control">
+                                            @foreach (\App\Enums\stepContentEnum::cases() as $content)
                                                 <option value="{{ $content->value }}">{{ $content->label() }}</option>
                                             @endforeach
                                         </select>
@@ -94,15 +83,6 @@
                                     <div class="form-group">
                                         <label>Konten Input</label>
                                         <textarea name="content_input" class="form-control" rows="3"></textarea>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label>Jenis Output</label>
-                                        <select name="type_output" class="form-control">
-                                            @foreach (\App\Enums\LessonContentEnum::cases() as $content)
-                                                <option value="{{ $content->value }}">{{ $content->label() }}</option>
-                                            @endforeach
-                                        </select>
                                     </div>
 
                                     <div class="form-group">
@@ -117,8 +97,8 @@
                         <button type="button" data-repeater-create class="btn btn-primary btn-sm mt-3">Tambah Panduan</button>
                     </div>
 
-                <div class="mt-4">
-                    <a href="{{ route('topic.index') }}?roadmap_id={{ request('roadmap_id') }}" class="btn btn-secondary">Kembali</a>
+                <div class="mt-4 d-flex justify-content-between">
+                    <a href="{{ route('topic.index') }}?lesson_id={{ request('lesson_id') }}" class="btn btn-secondary">Kembali</a>
                     <button type="submit" class="btn btn-primary">Simpan</button>
                 </div>
             </form>
@@ -129,7 +109,7 @@
 
 @push('scripts')
 <script>
-    $('#lessonRepeater').repeater({
+    $('#stepRepeater').repeater({
         initEmpty: false,
         show: function () {
             $(this).slideDown();
@@ -139,7 +119,7 @@
         }
     });
 
-    $('#lessonForm').on('submit', function(e) {
+    $('#stepForm').on('submit', function(e) {
         e.preventDefault();
 
         Swal.fire({
@@ -147,7 +127,7 @@
             text: "Data akan disimpan!",
             icon: 'question',
             showCancelButton: true,
-            confirmButtonColor: '#28a745',
+            confirmButtonColor: '#007bff',
             confirmButtonText: 'Ya, simpan',
             cancelButtonText: 'Batal',
         }).then((result) => {
@@ -173,7 +153,7 @@
                             timer: 2000,
                             showConfirmButton: false
                         }).then(() => {
-                            window.location.href = "{{ route('topic.index') }}?roadmap_id={{ request('roadmap_id') }}";
+                            window.location.href = "{{ route('topic.index') }}?lesson_id={{ request('lesson_id') }}";
                         });
                     } else {
                         Swal.fire('Gagal', data.message || 'Terjadi kesalahan', 'error');

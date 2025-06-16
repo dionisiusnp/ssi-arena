@@ -11,43 +11,33 @@ use Illuminate\Support\Facades\Auth;
 
 class LessonController extends Controller
 {
-    public $lessonService, $topicService;
+    public $lessonService;
 
-    public function __construct(LessonService $lessonService, TopicService $topicService)
+    public function __construct(LessonService $lessonService)
     {
         $this->lessonService = $lessonService;
-        $this->topicService = $topicService;
     }
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request)
+    public function index(Request $request) 
     {
         $auth = Auth::user();
         $filters = [
-            'roadmap_id' => $request->query('roadmap_id') ?? null,
-            'topic_id' => $request->query('topic_id') ?? null,
             'search' => $request->query('q') ?? null,
+            'role' => $request->query('role') ?? null,
             'visibility' => $request->query('visibility') ?? null,
         ];
-        $topic = $this->topicService->model()->find($filters['topic_id']);
         $data = $this->lessonService->paginate($filters);
-        return view('admin.materi.panduan.index', compact('data', 'topic'));
+        return view('admin.materi.index', compact('data'));
     }
 
     /**
      * Show the form for creating a new resource.
      */
-    public function create(Request $request)
+    public function create()
     {
-        $auth = Auth::user();
-        $params = [
-            'roadmap_id' => $request->query('roadmap_id') ?? null,
-            'topic_id' => $request->query('topic_id') ?? null,
-        ];
-        $lessons = $this->lessonService->byTopic($params['topic_id']);
-        $language = $this->lessonService->languageByTopic($params['topic_id']);
-        return view('admin.materi.panduan.create', compact('lessons', 'language'));
+        return view('admin.materi.create');
     }
 
     /**
@@ -57,7 +47,9 @@ class LessonController extends Controller
     {
         try {
             $auth = Auth::user();
-            $data = $this->lessonService->store($request->toArray(), $auth);
+            $tops = $request->topics ?? [];
+            unset($request->topics);
+            $data = $this->lessonService->store($request->toArray(), $tops,$auth);
             return response()->json([
                 'success' => true,
                 'message' => 'Data berhasil dibuat',
@@ -82,16 +74,9 @@ class LessonController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Request $request)
+    public function edit(Lesson $lesson)
     {
-        $auth = Auth::user();
-        $params = [
-            'roadmap_id' => $request->query('roadmap_id') ?? null,
-            'topic_id' => $request->query('topic_id') ?? null,
-            'lesson_id'=> $request->query('lesson_id') ?? null,
-        ];
-        $lesson = $this->lessonService->model()->find($params['lesson_id']);
-        return view('admin.materi.panduan.edit', compact('lesson'));
+        return view('admin.materi.edit', compact('lesson'));
     }
 
     /**
@@ -101,7 +86,9 @@ class LessonController extends Controller
     {
         try {
             $auth = Auth::user();
-            $data = $this->lessonService->update($request->toArray(), $auth, $lesson);
+            $tops = $request->topics ?? [];
+            unset($request->topics);
+            $data = $this->lessonService->update($request->toArray(), $tops,$auth, $lesson);
             return response()->json([
                 'success' => true,
                 'message' => 'Data berhasil diubah',

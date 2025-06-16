@@ -11,17 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('lessons', function (Blueprint $table) {
+        Schema::create('steps', function (Blueprint $table) {
             $table->id();
             $table->foreignId('topic_id')->nullable()->constrained('topics');
             $table->string('language')->nullable();
             $table->string('name');
-            $table->string('type_input'); // terminal, editor, link, text
+            $table->string('content_type'); // terminal, editor, link, text
             $table->text('content_input')->nullable();
-            $table->string('type_output'); // terminal, editor, link, text
             $table->text('content_output')->nullable();
             $table->integer('sequence')->default(0);
-            $table->string('visibility')->nullable(); //shared, draft, published
             $table->foreignId('changed_by')->nullable()->constrained('users');
             $table->timestamps();
             $table->softDeletes();
@@ -33,6 +31,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('lessons');
+        Schema::dropIfExists('steps');
     }
 };
