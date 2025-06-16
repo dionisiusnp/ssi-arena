@@ -71,7 +71,7 @@
                         </tr>
                         @empty
                         <tr>
-                            <td colspan="5" class="text-center">Data belum tersedia.</td>
+                            <td colspan="7" class="text-center">Data belum tersedia.</td>
                         </tr>
                         @endforelse
                     </tbody>
@@ -114,7 +114,7 @@
                         </tr>
                         @empty
                         <tr>
-                            <td colspan="4" class="text-center">Data belum tersedia.</td>
+                            <td colspan="6" class="text-center">Data belum tersedia.</td>
                         </tr>
                         @endforelse
                     </tbody>
@@ -157,7 +157,7 @@
                         </tr>
                         @empty
                         <tr>
-                            <td colspan="4" class="text-center">Data belum tersedia.</td>
+                            <td colspan="6" class="text-center">Data belum tersedia.</td>
                         </tr>
                         @endforelse
                     </tbody>

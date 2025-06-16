@@ -33,7 +33,7 @@
         <div class="col-md-3 mb-4">
             <div class="card border-left-primary shadow h-100 py-2">
                 <div class="card-body">
-                    <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Tantangan Aktif</div>
+                    <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Tantangan Diterbitkan</div>
                     <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $activeChallenges ?? 0 }}</div>
                 </div>
             </div>
@@ -43,7 +43,7 @@
         <div class="col-md-3 mb-4">
             <div class="card border-left-primary shadow h-100 py-2">
                 <div class="card-body">
-                    <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Tantangan Non-Aktif</div>
+                    <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Tantangan Dibuat</div>
                     <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $inactiveChallenges ?? 0 }}</div>
                 </div>
             </div>
@@ -58,8 +58,6 @@
             <form method="GET" action="{{ route('admin-panel') }}">
                 <select name="status" onchange="this.form.submit()" class="form-control form-control-sm">
                     <option value="">Semua Musim</option>
-                    <option value="active" {{ request('status') == 'active' ? 'selected' : '' }}>Aktif</option>
-                    <option value="inactive" {{ request('status') == 'inactive' ? 'selected' : '' }}>Non-Aktif</option>
                 </select>
             </form>
         </div>

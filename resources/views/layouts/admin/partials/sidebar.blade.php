@@ -75,10 +75,5 @@
         <button class="rounded-circle border-0" id="sidebarToggle"></button>
     </div>
 
-    <!-- Sidebar Message -->
-    <div class="sidebar-card d-none d-lg-flex">
-        <a class="btn btn-secondary btn-sm" href="{{ route('member.lesson') }}" target="_blank">Landing Page</a>
-    </div>
-
 </ul>
 <!-- End of Sidebar -->

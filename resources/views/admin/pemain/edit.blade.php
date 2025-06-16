@@ -47,7 +47,7 @@
             text: "Perubahan akan disimpan!",
             icon: 'question',
             showCancelButton: true,
-            confirmButtonColor: '#007bff',
+            confirmButtonColor: '#4e73df',
             confirmButtonText: 'Ya, simpan',
             cancelButtonText: 'Batal',
         }).then((result) => {
