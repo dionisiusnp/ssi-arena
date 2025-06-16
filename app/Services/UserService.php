@@ -66,6 +66,28 @@ class UserService
             ->paginate($perPage);
     }
 
+    public function paginateDashboard(array $filter = [], int $perPage = 10): LengthAwarePaginator
+    {
+        $seasonId = $filter['season_id'] ?? null;
+
+        return $this->model
+            ->where('is_member', true)
+            ->where('is_lecturer', false)
+            ->where('is_active', true)
+            ->withCount(['activities as total_point' => function ($query) use ($seasonId) {
+                $query->where('status', true)
+                    ->whereColumn('activities.claimed_by', 'users.id')
+                    ->join('quest_details', 'activities.quest_detail_id', '=', 'quest_details.id')
+                    ->when(!is_null($seasonId), function ($q) use ($seasonId) {
+                        $q->where('quest_details.season_id', $seasonId);
+                    })
+                    ->selectRaw('SUM(quest_details.point_total)');
+            }])
+            ->orderByDesc('current_level')
+            ->orderByDesc('total_point')
+            ->paginate($perPage);
+    }
+
     public function store(array $data)
     {
         try {
