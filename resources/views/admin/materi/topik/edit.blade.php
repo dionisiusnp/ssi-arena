@@ -4,7 +4,7 @@
 
 @section('content')
 <div class="container-fluid">
-    <h1 class="h3 mb-3 text-gray-800">Ubah Materi</h1>
+    <h1 class="h3 mb-3 text-gray-800">Ubah Topik</h1>
 
     <div class="card shadow">
         <div class="card-body">
@@ -23,7 +23,7 @@
 
                 <div class="mt-4">
                     <a href="{{ route('topic.index') }}?roadmap_id={{ request('roadmap_id') }}" class="btn btn-secondary">Kembali</a>
-                    <button type="submit" class="btn btn-success">Simpan Perubahan</button>
+                    <button type="submit" class="btn btn-primary">Simpan</button>
                 </div>
             </form>
         </div>

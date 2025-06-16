@@ -91,14 +91,15 @@ class QuestTypeController extends Controller
     {
         try {
             $auth = Auth::user();
-            $data = $this->questTypeService->isActive($auth, $quest_type);
-            return response()->json([
-                'success' => true,
-                'message' => 'Data berhasil diubah',
-                'data'    => $data,
-            ]);
+            $this->questTypeService->isActive($auth, $quest_type);
+
+            return redirect()
+                ->route('season.index', ['tab' => 'quest-types'])
+                ->with('success', 'Status berhasil diperbarui.');
         } catch (\Throwable $th) {
-            throw new \ErrorException($th->getMessage());
+            return redirect()
+                ->back()
+                ->with('error', 'Gagal memperbarui status: ' . $th->getMessage());
         }
     }
 

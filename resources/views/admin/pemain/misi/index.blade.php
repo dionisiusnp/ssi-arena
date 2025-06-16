@@ -23,7 +23,7 @@
                 @endforeach
             </select>
 
-            <button type="submit" class="btn btn-danger">Filter</button>
+            <button type="submit" class="btn btn-primary">Filter</button>
         </form>
     </div>
 
@@ -37,8 +37,8 @@
             </div>
         </div>
         <div class="col-md-6">
-            <div class="card border-danger">
-                <div class="card-body text-danger">
+            <div class="card border-success">
+                <div class="card-body text-success">
                     <h5 class="card-title">Total Poin Misi Telah Selesai</h5>
                     <p class="card-text font-weight-bold">{{ $totalSelesai }}</p>
                 </div>
@@ -73,7 +73,7 @@
                             <td>{{ $activity->detail->point + ($activity->detail->point * $activity->detail->point_multiple) }}</td>
                             <td><span class="badge badge-{{ $activity->status ? 'success' : 'secondary' }}">{{ $activity->status ? 'Selesai' : 'Belum' }}</span></td>
                             <td>
-                                <a href="{{ route('activity.show', $activity->id) }}?claimed_by={{ request('claimed_by') }}&season_id={{ request('season_id') }}&search={{ request('search') }}" class="btn btn-sm btn-danger">
+                                <a href="{{ route('activity.show', $activity->id) }}?claimed_by={{ request('claimed_by') }}&season_id={{ request('season_id') }}&search={{ request('search') }}" class="btn btn-sm btn-primary">
                                     Daftar Tugas
                                 </a>
                             </td>

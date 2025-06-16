@@ -39,7 +39,9 @@ Route::middleware('auth')->group(function () {
     Route::resource('lesson', AdminLessonController::class)->except('edit');
 
     Route::resource('season', SeasonController::class);
+    Route::get('/quest-type/{quest_type}/status',[QuestTypeController::class,'toggleStatus'])->name('quest-type.status');
     Route::resource('quest-type', QuestTypeController::class);
+    Route::get('/quest-level/{quest_level}/status',[QuestLevelController::class,'toggleStatus'])->name('quest-level.status');
     Route::resource('quest-level', QuestLevelController::class);
     Route::get('/quest-detail/{quest_detail}/status',[QuestDetailController::class,'toggleStatus'])->name('quest-detail.status');
     Route::resource('quest-detail', QuestDetailController::class);

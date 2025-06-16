@@ -20,7 +20,7 @@
                 </div>
 
                 <div class="col-md-3">
-                    <button type="submit" class="btn btn-danger">Filter</button>
+                    <button type="submit" class="btn btn-primary">Filter</button>
                 </div>
                 <div class="col-md-3">
                     <a href="{{ route('lesson.index') }}?roadmap_id={{ request('roadmap_id') }}&topic_id={{ request('topic_id') }}" class="btn btn-secondary w-100">Reset</a>
@@ -74,7 +74,7 @@
                                     </span>
                                 </td>
                                 <td>
-                                    <a class="btn btn-danger" href="{{ route('lesson.edit') }}?roadmap_id={{ request('roadmap_id') }}&topic_id={{ $lesson->topic_id }}&lesson_id={{ $lesson->id }}">
+                                    <a class="btn btn-warning" href="{{ route('lesson.edit') }}?roadmap_id={{ request('roadmap_id') }}&topic_id={{ $lesson->topic_id }}&lesson_id={{ $lesson->id }}">
                                         Ubah Panduan
                                     </a>
                                 </td>

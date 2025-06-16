@@ -91,14 +91,15 @@ class QuestLevelController extends Controller
     {
         try {
             $auth = Auth::user();
-            $data = $this->questLevelService->isActive($auth, $quest_level);
-            return response()->json([
-                'success' => true,
-                'message' => 'Data berhasil diubah',
-                'data'    => $data,
-            ]);
+            $this->questLevelService->isActive($auth, $quest_level);
+            
+            return redirect()
+                ->route('season.index', ['tab' => 'quest-levels'])
+                ->with('success', 'Status berhasil diperbarui.');
         } catch (\Throwable $th) {
-            throw new \ErrorException($th->getMessage());
+            return redirect()
+                ->back()
+                ->with('error', 'Gagal memperbarui status: ' . $th->getMessage());
         }
     }
 

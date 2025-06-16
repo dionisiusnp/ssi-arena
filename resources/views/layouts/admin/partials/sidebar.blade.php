@@ -77,7 +77,7 @@
 
     <!-- Sidebar Message -->
     <div class="sidebar-card d-none d-lg-flex">
-        <a class="btn btn-secondary btn-sm" href="{{ route('member') }}" target="_blank">Landing Page</a>
+        <a class="btn btn-secondary btn-sm" href="{{ route('member.lesson') }}" target="_blank">Landing Page</a>
     </div>
 
 </ul>

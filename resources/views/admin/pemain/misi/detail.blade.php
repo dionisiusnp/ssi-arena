@@ -11,7 +11,7 @@
     </a>
 
     <div class="card shadow mb-4">
-        <div class="card-header bg-{{ $activity->status ? 'success' : 'danger' }} text-white">
+        <div class="card-header bg-{{ $activity->status ? 'success' : 'secondary' }} text-white">
             Informasi Misi
         </div>
         <div class="card-body">
@@ -49,7 +49,7 @@
     </div>
 
     <div class="card shadow">
-        <div class="card-header bg-{{ $activity->status ? 'success' : 'danger' }} text-white">
+        <div class="card-header bg-{{ $activity->status ? 'success' : 'secondary' }} text-white">
             Daftar Tugas
         </div>
         <div class="card-body">
@@ -59,7 +59,7 @@
                     <thead class="thead-light">
                         <tr>
                             <th>No.</th>
-                            <th>Deskripsi</th>
+                            <th>Keterangan</th>
                             <th>Status</th>
                             <th>Aksi</th>
                         </tr>

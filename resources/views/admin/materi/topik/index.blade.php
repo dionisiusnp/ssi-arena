@@ -18,7 +18,7 @@
                 </div>
 
                 <div class="col-md-3">
-                    <button type="submit" class="btn btn-danger">Filter</button>
+                    <button type="submit" class="btn btn-primary">Filter</button>
                 </div>
                 <div class="col-md-3">
                     <a href="{{ route('topic.index') }}?roadmap_id={{ request('roadmap_id') }}" class="btn btn-secondary w-100">Reset</a>
@@ -59,7 +59,7 @@
 
                                 <td>
                                     <div class="dropdown">
-                                        <button class="btn btn-sm btn-outline-danger dropdown-toggle"
+                                        <button class="btn btn-sm btn-outline-primary dropdown-toggle"
                                             type="button"
                                             id="dropdownMenuButton{{ $topic->id }}"
                                             data-toggle="dropdown"

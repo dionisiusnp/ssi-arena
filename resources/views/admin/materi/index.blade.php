@@ -7,7 +7,7 @@
     {{-- Header --}}
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h1 class="h3 text-gray-800">Daftar Materi</h1>
-        <a href="{{ route('roadmap.create') }}" class="btn btn-danger">
+        <a href="{{ route('roadmap.create') }}" class="btn btn-primary">
             <i class="fas fa-plus"></i> Tambah Materi
         </a>
     </div>
@@ -39,7 +39,7 @@
                 </select>
             </div>
             <div class="col-md-2">
-                <button class="btn btn-danger w-100" type="submit">Filter</button>
+                <button class="btn btn-primary w-100" type="submit">Filter</button>
             </div>
             <div class="col-md-2">
                 <a href="{{ route('roadmap.index') }}" class="btn btn-secondary w-100">Reset</a>
@@ -67,17 +67,17 @@
 
                         {{-- Dropdown Aksi --}}
                         <div class="dropdown position-absolute" style="top: 10px; right: 10px;">
-                            <button class="btn btn-sm btn-outline-danger dropdown-toggle" type="button"
+                            <button class="btn btn-sm btn-outline-primary dropdown-toggle" type="button"
                                 id="dropdownMenuButton{{ $roadmap->id }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 Aksi
                             </button>
                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton{{ $roadmap->id }}">
                                 <a class="dropdown-item" href="{{ route('topic.index') }}?roadmap_id={{ $roadmap->id }}">
-                                    <i class="fas fa-book text-danger mr-1"></i> Topik
+                                    <i class="fas fa-book text-primary mr-1"></i> Topik
                                 </a>
                                 @if ($roadmap->visibility == \App\Enums\VisibilityEnum::DRAFT->value)
                                     <a class="dropdown-item" href="{{ route('roadmap.edit', $roadmap->id) }}">
-                                        <i class="fas fa-edit text-danger mr-1"></i> Ubah
+                                        <i class="fas fa-edit text-warning mr-1"></i> Ubah
                                     </a>
                                 @endif
                             </div>
@@ -93,7 +93,7 @@
                                         @method('PUT')
                                         <input type="hidden" name="visibility" value="{{ $status->value }}">
                                         <button type="submit"
-                                            class="btn btn-sm px-3 text-nowrap {{ $roadmap->visibility === $status->value ? 'btn-danger' : 'btn-outline-secondary' }}"
+                                            class="btn btn-sm px-3 text-nowrap {{ $roadmap->visibility === $status->value ? 'btn-primary' : 'btn-outline-secondary' }}"
                                             title="{{ $status->label() }}">
                                             @switch($status->value)
                                                 @case(\App\Enums\VisibilityEnum::SHARED->value) <i class="fas fa-eye"></i> @break

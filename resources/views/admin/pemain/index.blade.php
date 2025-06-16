@@ -6,7 +6,7 @@
 <div class="container-fluid">
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h1 class="h3 text-gray-800">Daftar Pemain</h1>
-        <a href="{{ route('user.create') }}" class="btn btn-danger"><i class="fas fa-plus"></i> Tambah Pemain</a>
+        <a href="{{ route('user.create') }}" class="btn btn-primary"><i class="fas fa-plus"></i> Tambah Pemain</a>
     </div>
     {{-- Filter Form --}}
     <form method="GET" class="mb-4">
@@ -36,7 +36,7 @@
                 </select>
             </div>
             <div class="col-md-1">
-                <button class="btn btn-danger w-100" type="submit">Filter</button>
+                <button class="btn btn-primary w-100" type="submit">Filter</button>
             </div>
             <div class="col-md-1">
                 <a href="{{ route('user.index') }}" class="btn btn-secondary w-100">Reset</a>
@@ -76,19 +76,19 @@
                         <p class="card-text mt-2"><strong>Dibuat:</strong> {{ $user->created_at_formatted }}</p>
 
                         <div class="dropdown position-absolute" style="top: 10px; right: 10px;">
-                            <button class="btn btn-sm btn-outline-danger dropdown-toggle" type="button" id="dropdownMenuButton{{ $user->id }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <button class="btn btn-sm btn-outline-primary dropdown-toggle" type="button" id="dropdownMenuButton{{ $user->id }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 Aksi
                             </button>
                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton{{ $user->id }}">
                                 <a class="dropdown-item" href="{{ route('activity.index', ['claimed_by' => $user->id]) }}">
-                                    <i class="fas fa-trophy text-danger mr-1"></i> Poin
+                                    <i class="fas fa-trophy text-primary mr-1"></i> Poin
                                 </a>
                                 @if ($user->id > 1)
                                     <a class="dropdown-item" href="{{ route('user.edit', $user->id) }}">
-                                        <i class="fas fa-edit text-danger mr-1"></i> Ubah
+                                        <i class="fas fa-edit text-warning mr-1"></i> Ubah
                                     </a>
                                     <a class="dropdown-item" href="{{ route('user.status', $user->id) }}">
-                                        <i class="fas fa-user text-danger mr-1"></i> {{ $user->is_active ? 'Non Aktifkan' : 'Aktifkan' }}
+                                        <i class="fas fa-user text-{{ $user->is_active ? 'danger' : 'success' }} mr-1"></i> {{ $user->is_active ? 'Non Aktifkan' : 'Aktifkan' }}
                                     </a>
                                 @endif
                             </div>

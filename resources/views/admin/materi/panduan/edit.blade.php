@@ -1,10 +1,10 @@
 @extends('layouts.admin.app')
 
-@section('title', 'Edit Panduan')
+@section('title', 'Ubah Panduan')
 
 @section('content')
 <div class="container-fluid">
-    <h1 class="h3 mb-3 text-gray-800">Edit Panduan</h1>
+    <h1 class="h3 mb-3 text-gray-800">Ubah Panduan</h1>
 
     <div class="card shadow">
         <div class="card-body">
@@ -51,7 +51,7 @@
 
                 <div class="mt-4">
                     <a href="{{ route('lesson.index') }}?roadmap_id={{ request('roadmap_id') }}&topic_id={{ request('topic_id') }}" class="btn btn-secondary">Kembali</a>
-                    <button type="submit" class="btn btn-success">Simpan</button>
+                    <button type="submit" class="btn btn-primary">Simpan</button>
                 </div>
             </form>
         </div>

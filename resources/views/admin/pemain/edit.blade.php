@@ -29,7 +29,7 @@
 
                 <div class="mt-4">
                     <a href="{{ route('user.index') }}" class="btn btn-secondary">Kembali</a>
-                    <button type="submit" class="btn btn-success">Simpan</button>
+                    <button type="submit" class="btn btn-primary">Simpan</button>
                 </div>
             </form>
         </div>
