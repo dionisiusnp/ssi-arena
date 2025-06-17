@@ -3,68 +3,47 @@
 @section('title', 'Materi')
 
 @section('content')
-<!-- Education-->
-<section class="resume-section" id="education">
+<section class="resume-section" id="lessons">
     <div class="resume-section-content">
-        <h2 class="mb-5">Education</h2>
-        <div class="d-flex flex-column flex-md-row justify-content-between mb-5">
-            <div class="flex-grow-1">
-                <h3 class="mb-0">University of Colorado Boulder</h3>
-                <div class="subheading mb-3">Bachelor of Science</div>
-                <div>Computer Science - Web Development Track</div>
-                <p>GPA: 3.23</p>
-            </div>
-            <div class="flex-shrink-0"><span class="text-primary">August 2006 - May 2010</span></div>
+        <h2 class="mb-4">Materi</h2>
+
+        <!-- Search Form -->
+        <form method="GET" action="{{ route('member.lesson') }}" class="input-group mb-4">
+            <input type="text" name="search" class="form-control" placeholder="Cari judul, kategori, atau pemateri..." value="{{ request('search') }}">
+            <button class="btn btn-primary text-white" type="submit">Filter</button>
+            <a href="{{ route('member.lesson') }}" class="btn btn-secondary text-white">Reset</a>
+        </form>
+
+        <!-- Cards -->
+        <div class="row" id="lessonContainer">
+            @forelse ($lessons as $lesson)
+                <div class="col-md-6 col-lg-4 mb-4 lesson-card">
+                    <div class="card shadow-sm h-100">
+                        <div class="card-body">
+                            <span class="badge bg-primary mb-2">{{ strtoupper($lesson->role) ?? '-' }}</span>
+                            <h5 class="card-title">{{ $lesson->name }}</h5>
+                            <p class="mb-1"><strong>Pemateri:</strong> {{ $lesson->lastChanger->name ?? '-' }}</p>
+                            <p class="mb-1"><i class="fas fa-layer-group me-1"></i> {{ $lesson->topics_count }} Topik</p>
+                            <p class="mb-3 text-muted"><i class="far fa-calendar-alt me-1"></i> {{ $lesson->created_at_formatted }}</p>
+                            <a href="#!" class="btn btn-sm btn-outline-primary">Lihat Topik</a>
+                        </div>
+                    </div>
+                </div>
+            @empty
+                <div class="col-12">
+                    <div class="alert alert-warning text-center">
+                        Tidak ada materi yang ditemukan.
+                    </div>
+                </div>
+            @endforelse
         </div>
-        <div class="d-flex flex-column flex-md-row justify-content-between">
-            <div class="flex-grow-1">
-                <h3 class="mb-0">James Buchanan High School</h3>
-                <div class="subheading mb-3">Technology Magnet Program</div>
-                <p>GPA: 3.56</p>
+
+        <!-- Pagination -->
+        @if ($lessons->hasPages())
+            <div class="d-flex justify-content-center mt-4">
+                {{ $lessons->withQueryString()->links('pagination::bootstrap-4') }}
             </div>
-            <div class="flex-shrink-0"><span class="text-primary">August 2002 - May 2006</span></div>
-        </div>
-    </div>
-</section>
-<hr class="m-0" />
-<!-- Skills-->
-<section class="resume-section" id="skills">
-    <div class="resume-section-content">
-        <h2 class="mb-5">Skills</h2>
-        <div class="subheading mb-3">Programming Languages & Tools</div>
-        <ul class="list-inline dev-icons">
-            <li class="list-inline-item"><i class="fab fa-html5"></i></li>
-            <li class="list-inline-item"><i class="fab fa-css3-alt"></i></li>
-            <li class="list-inline-item"><i class="fab fa-js-square"></i></li>
-            <li class="list-inline-item"><i class="fab fa-angular"></i></li>
-            <li class="list-inline-item"><i class="fab fa-react"></i></li>
-            <li class="list-inline-item"><i class="fab fa-node-js"></i></li>
-            <li class="list-inline-item"><i class="fab fa-sass"></i></li>
-            <li class="list-inline-item"><i class="fab fa-less"></i></li>
-            <li class="list-inline-item"><i class="fab fa-wordpress"></i></li>
-            <li class="list-inline-item"><i class="fab fa-gulp"></i></li>
-            <li class="list-inline-item"><i class="fab fa-grunt"></i></li>
-            <li class="list-inline-item"><i class="fab fa-npm"></i></li>
-        </ul>
-        <div class="subheading mb-3">Workflow</div>
-        <ul class="fa-ul mb-0">
-            <li>
-                <span class="fa-li"><i class="fas fa-check"></i></span>
-                Mobile-First, Responsive Design
-            </li>
-            <li>
-                <span class="fa-li"><i class="fas fa-check"></i></span>
-                Cross Browser Testing & Debugging
-            </li>
-            <li>
-                <span class="fa-li"><i class="fas fa-check"></i></span>
-                Cross Functional Teams
-            </li>
-            <li>
-                <span class="fa-li"><i class="fas fa-check"></i></span>
-                Agile Development & Scrum
-            </li>
-        </ul>
+        @endif
     </div>
 </section>
 @endsection

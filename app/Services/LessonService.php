@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Enums\VisibilityEnum;
 use App\Models\Lesson;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -58,6 +59,27 @@ class LessonService
             })
             ->when($visibility, function ($query) use ($visibility) {
                 $query->where('visibility', $visibility);
+            })
+            ->withCount('topics')
+            ->orderByDesc('created_at')
+            ->paginate($perPage);
+    }
+
+    public function paginateMember(array $filter = [], int $perPage = 10): LengthAwarePaginator
+    {
+        $search = $filter['search'] ?? null;
+        $role = $filter['role'] ?? null;
+
+        return $this->model
+            ->whereNotIn('visibility', VisibilityEnum::DRAFT->value)
+            ->when($search, function ($query) use ($search) {
+                $query->where(function ($q) use ($search) {
+                    $q->where('name', 'LIKE', "%{$search}%")
+                        ->orWhere('description', 'LIKE', "%{$search}%");
+                });
+            })
+            ->when($role, function ($query) use ($role) {
+                $query->where('role', $role);
             })
             ->withCount('topics')
             ->orderByDesc('created_at')
@@ -121,7 +143,7 @@ class LessonService
                     ]);
                 }
             }
-            
+
             DB::commit();
             return $lesson;
         } catch (\Throwable $th) {
