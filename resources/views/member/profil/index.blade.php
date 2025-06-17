@@ -1,6 +1,6 @@
 @extends('layouts.member.app')
 
-@section('title', 'Profil')
+@section('title', 'Profil dan Misi')
 
 @section('content')
 <!-- About -->
@@ -22,7 +22,7 @@
 <!-- Daftar Tantangan -->
 <section class="resume-section mt-4" id="activities">
     <div class="resume-section-content">
-        <h2 class="mb-4">Tantangan Diambil</h2>
+        <h2 class="mb-4">Daftar Misi</h2>
 
         <form method="GET" class="row g-3 mb-3">
             <div class="col-md-6">
@@ -54,7 +54,7 @@
                                 @if ($activity->detail?->season)
                                     <p class="mb-1"><i class="fas fa-leaf me-1"></i> Musim: {{ $activity->detail->season->name }}</p>
                                 @endif
-                                <a href="#!" class="btn btn-sm btn-outline-primary mt-2">Lihat Detail</a>
+                                <a href="#!" class="btn btn-sm btn-outline-primary mt-2">Lihat Tugas</a>
                             </div>
                         </div>
                     </div>
