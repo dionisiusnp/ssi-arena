@@ -1,11 +1,11 @@
 @extends('layouts.member.app')
 
-@section('title', 'Materi')
+@section('title', 'Daftar Materi')
 
 @section('content')
 <section class="resume-section" id="lessons">
     <div class="resume-section-content">
-        <h2 class="mb-4">Materi</h2>
+        <h2 class="mb-4">Daftar Materi</h2>
 
         <!-- Search Form -->
         <form method="GET" action="{{ route('member.lesson') }}" class="input-group mb-4">
@@ -25,7 +25,7 @@
                             <p class="mb-1"><strong>Pemateri:</strong> {{ $lesson->lastChanger->name ?? '-' }}</p>
                             <p class="mb-1"><i class="fas fa-layer-group me-1"></i> {{ $lesson->topics_count }} Topik</p>
                             <p class="mb-3 text-muted"><i class="far fa-calendar-alt me-1"></i> {{ $lesson->created_at_formatted }}</p>
-                            <a href="#!" class="btn btn-sm btn-outline-primary">Lihat Topik</a>
+                            <a href="{{ route('member.lesson.show', $lesson->id) }}" class="btn btn-sm btn-outline-primary">Lihat Topik</a>
                         </div>
                     </div>
                 </div>

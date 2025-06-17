@@ -65,6 +65,11 @@ class SeasonService
         return $this->model->find($id);
     }
 
+    public function lastSeason()
+    {
+        return $this->model->latest()->first();
+    }
+
     public function update(array $data, $auth, Season $season)
     {
         try {

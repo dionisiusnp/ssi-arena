@@ -71,11 +71,10 @@ class LessonService
         $role = $filter['role'] ?? null;
 
         return $this->model
-            ->whereNotIn('visibility', VisibilityEnum::DRAFT->value)
+            ->whereNotIn('visibility', [VisibilityEnum::DRAFT->value])
             ->when($search, function ($query) use ($search) {
                 $query->where(function ($q) use ($search) {
-                    $q->where('name', 'LIKE', "%{$search}%")
-                        ->orWhere('description', 'LIKE', "%{$search}%");
+                    $q->where('name', 'LIKE', "%{$search}%");
                 });
             })
             ->when($role, function ($query) use ($role) {

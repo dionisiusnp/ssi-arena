@@ -48,19 +48,21 @@
                             <td><strong class="badge badge-{{ $quest->is_editable ? 'secondary' : 'success' }}">{{ $quest->is_editable ? 'Draft' : 'Published' }}</strong></td>
                             <td class="text-nowrap">
                                 <div class="btn-group" role="group">
-                                    <a href="{{ route('quest-detail.status', $quest->id) }}" class="btn btn-sm btn-{{ $quest->is_editable ? 'success' : 'secondary' }} btn-action">
-                                        <i class="fas fa-{{ $quest->is_editable ? 'eye' : 'eye-slash' }}"></i>
-                                    </a>
                                     @if ($quest->is_editable)
+                                        <a href="{{ route('quest-detail.status', $quest->id) }}" class="btn btn-sm btn-{{ $quest->is_editable ? 'success' : 'secondary' }} btn-action">
+                                            <i class="fas fa-{{ $quest->is_editable ? 'eye' : 'eye-slash' }}"></i>
+                                        </a>
                                         <a href="{{ route('quest-detail.edit', $quest->id) }}" class="btn btn-sm btn-warning btn-action">
                                             <i class="fas fa-edit"></i>
                                         </a>
                                     @endif
-                                    <button class="btn btn-sm btn-primary btn-toggle"
-                                        data-target="#requirements-{{ $quest->id }}" data-toggle="collapse"
-                                        aria-expanded="false">
-                                        <i class="fas fa-chevron-down toggle-icon"></i>
-                                    </button>
+                                    @if ($quest->requirements->isNotEmpty())
+                                        <button class="btn btn-sm btn-primary btn-toggle"
+                                            data-target="#requirements-{{ $quest->id }}" data-toggle="collapse"
+                                            aria-expanded="false">
+                                            <i class="fas fa-chevron-down toggle-icon"></i>
+                                        </button>    
+                                    @endif
                                 </div>
                             </td>
                         </tr>

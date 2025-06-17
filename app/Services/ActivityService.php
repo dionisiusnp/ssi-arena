@@ -3,8 +3,11 @@
 namespace App\Services;
 
 use App\Models\Activity;
+use App\Models\ActivityChecklist;
+use App\Models\QuestDetail;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\DB;
 
 class ActivityService
 {
@@ -48,6 +51,33 @@ class ActivityService
             $data['changed_by'] = $auth->id;
             return $this->model->create($data);
         } catch (\Throwable $th) {
+            throw new \ErrorException($th->getMessage());
+        }
+    }
+
+    public function questClaim($questDetailId, $auth)
+    {
+        DB::beginTransaction();
+        try {
+            $questDetail = QuestDetail::with('requirements')->find($questDetailId);
+            $questRequirements = $questDetail->requirements;
+            $data['quest_detail_id'] = $questDetail->id;
+            $data['claimed_by'] = $auth->id;
+            $data['changed_by'] = $auth->id;
+            $activity = $this->model->create($data);
+            if ($questRequirements->isNotEmpty()) {
+                foreach ($questRequirements as $requirement) {
+                    ActivityChecklist::create([
+                        'quest_requirement_id' => $requirement->id,
+                        'activity_id' => $activity->id,
+                        'changed_by' => $auth->id,
+                    ]);
+                }
+            }
+            DB::commit();
+            return $activity;
+        } catch (\Throwable $th) {
+            DB::rollBack();
             throw new \ErrorException($th->getMessage());
         }
     }

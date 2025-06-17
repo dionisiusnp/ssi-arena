@@ -64,7 +64,7 @@ class TopicService
     public function byLesson($lessonId)
     {
         try {
-            return $this->model->where('lesson_id','=',$lessonId)->get();
+            return $this->model->with('steps')->where('lesson_id','=',$lessonId)->orderBy('sequence')->get();
         } catch (\Throwable $th) {
             throw new \ErrorException($th->getMessage());
         }

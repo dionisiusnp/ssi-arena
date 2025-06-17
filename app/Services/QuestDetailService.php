@@ -46,6 +46,7 @@ class QuestDetailService
         $search = $filter['search'] ?? null;
         $isEditable = isset($filter['is_editable']) ? (filter_var($filter['is_editable'], FILTER_VALIDATE_BOOLEAN) ? 1 : 0) : null;
         return $this->model
+            ->with('requirements')
             ->when($search, function ($query) use ($search) {
                 $query->where(function ($q) use ($search) {
                     $q->where('name', 'LIKE', "%{$search}%")
@@ -53,6 +54,28 @@ class QuestDetailService
                 });
             })
             ->when(isset($isEditable), fn($query) => $query->where('is_editable', $isEditable))
+            ->orderByDesc('created_at')
+            ->paginate($perPage);
+    }
+
+    public function paginateMember(array $filter = [], int $perPage = 10, $auth): LengthAwarePaginator
+    {
+        $search = $filter['search'] ?? null;
+        $userId = $auth->id;
+        return $this->model
+            ->with('requirements')
+            ->where('is_editable', false)
+            ->when($search, function ($query) use ($search) {
+                $query->where(function ($q) use ($search) {
+                    $q->where('name', 'LIKE', "%{$search}%")
+                    ->orWhere('description', 'LIKE', "%{$search}%");
+                });
+            })
+            ->when($userId, function ($query) use ($userId) {
+                $query->whereDoesntHave('activities', function ($q) use ($userId) {
+                    $q->where('claimed_by', $userId);
+                });
+            })
             ->orderByDesc('created_at')
             ->paginate($perPage);
     }

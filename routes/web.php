@@ -7,7 +7,6 @@ use App\Http\Controllers\Admin\LessonController as AdminLessonController;
 use App\Http\Controllers\Admin\QuestDetailController;
 use App\Http\Controllers\Admin\QuestLevelController;
 use App\Http\Controllers\Admin\QuestTypeController;
-use App\Http\Controllers\Admin\RoadmapController;
 use App\Http\Controllers\Admin\ScheduleController;
 use App\Http\Controllers\Admin\SeasonController;
 use App\Http\Controllers\Admin\StepController;
@@ -59,9 +58,15 @@ Route::middleware('auth')->group(function () {
     // MEMBER
     Route::prefix('member')->name('member.')->group(function () {
         Route::get('/lesson',        [MemberLessonController::class, 'index'])->name('lesson');
+        Route::get('/lesson/{lesson}',        [MemberLessonController::class, 'show'])->name('lesson.show');
+        
         Route::get('/leaderboard',   [LeaderboardController::class, 'index'])->name('leaderboard');
         Route::get('/profile',       [MemberController::class, 'index'])->name('profile');
+        
         Route::get('/quest',         [QuestController::class, 'index'])->name('quest');
+        Route::get('/quest/{id}/claim', [QuestController::class, 'claim'])->name('quest.claim');
+
+
         Route::get('/registration',  [RegistrationController::class, 'index'])->name('registration');
         Route::get('/schedule',      [MemberDashboardController::class, 'index'])->name('schedule');
     });

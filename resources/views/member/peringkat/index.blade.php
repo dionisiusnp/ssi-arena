@@ -3,50 +3,66 @@
 @section('title', 'Peringkat')
 
 @section('content')
-<!-- Awards-->
-<section class="resume-section" id="awards">
+<section class="resume-section" id="leaderboard">
     <div class="resume-section-content">
-        <h2 class="mb-5">Awards & Certifications</h2>
-        <ul class="fa-ul mb-0">
-            <li>
-                <span class="fa-li"><i class="fas fa-trophy text-warning"></i></span>
-                Google Analytics Certified Developer
-            </li>
-            <li>
-                <span class="fa-li"><i class="fas fa-trophy text-warning"></i></span>
-                Mobile Web Specialist - Google Certification
-            </li>
-            <li>
-                <span class="fa-li"><i class="fas fa-trophy text-warning"></i></span>
-                1
-                <sup>st</sup>
-                Place - University of Colorado Boulder - Emerging Tech Competition 2009
-            </li>
-            <li>
-                <span class="fa-li"><i class="fas fa-trophy text-warning"></i></span>
-                1
-                <sup>st</sup>
-                Place - University of Colorado Boulder - Adobe Creative Jam 2008 (UI Design Category)
-            </li>
-            <li>
-                <span class="fa-li"><i class="fas fa-trophy text-warning"></i></span>
-                2
-                <sup>nd</sup>
-                Place - University of Colorado Boulder - Emerging Tech Competition 2008
-            </li>
-            <li>
-                <span class="fa-li"><i class="fas fa-trophy text-warning"></i></span>
-                1
-                <sup>st</sup>
-                Place - James Buchanan High School - Hackathon 2006
-            </li>
-            <li>
-                <span class="fa-li"><i class="fas fa-trophy text-warning"></i></span>
-                3
-                <sup>rd</sup>
-                Place - James Buchanan High School - Hackathon 2005
-            </li>
-        </ul>
+        <h2 class="mb-4">Peringkat Pemain</h2>
+
+        <!-- Filter Season -->
+        <form method="GET" class="mb-4">
+            <div class="row g-2 align-items-center">
+                <div class="col-auto">
+                    <label for="season_id" class="col-form-label">Pilih Season:</label>
+                </div>
+                <div class="col-auto">
+                    <select name="season_id" id="season_id" class="form-select" onchange="this.form.submit()">
+                        <option value="">Semua Season</option>
+                        @foreach ($seasons as $season)
+                            <option value="{{ $season->id }}" {{ request('season_id') == $season->id ? 'selected' : '' }}>
+                                {{ $season->name }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+        </form>
+
+        <!-- Tabel Peringkat -->
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>#</th>
+                        <th>Nama Pemain</th>
+                        <th>Skor</th>
+                        <th>Misi Selesai</th>
+                        <th>Bergabung</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse ($players as $index => $player)
+                        <tr>
+                            <td>
+                                <span class="badge 
+                                    {{ $index === 0 ? 'bg-warning text-dark' : ($index === 1 ? 'bg-secondary' : ($index === 2 ? 'bg-orange text-white' : 'bg-light text-dark')) }}">
+                                    {{ $index + 1 }}
+                                </span>
+                            </td>
+                            <td>
+                                <strong>{{ $player->name }}</strong><br>
+                                <small class="text-muted">{{ $player->email }}</small>
+                            </td>
+                            <td><span class="fw-bold">{{ $player->score ?? 0 }}</span></td>
+                            <td>{{ $player->completed_missions ?? 0 }}</td>
+                            <td>{{ $player->created_at->diffForHumans() }}</td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="5" class="text-center">Belum ada data pemain tersedia.</td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
     </div>
 </section>
 @endsection
