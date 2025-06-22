@@ -15,6 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->text('url')->nullable();
+            $table->date('started_at')->nullable();
+            $table->date('finished_at')->nullable();
             $table->boolean('is_active')->default(true);
             $table->foreignId('changed_by')->nullable()->constrained('users');
             $table->timestamps();

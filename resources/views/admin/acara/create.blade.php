@@ -3,81 +3,109 @@
 @section('title', 'Tambah Acara')
 
 @section('content')
-<div class="container-fluid">
-    <h1 class="h3 mb-3 text-gray-800">Tambah Acara</h1>
+    <div class="container-fluid">
+        <h1 class="h3 mb-3 text-gray-800">Tambah Acara</h1>
 
-    <div class="card shadow">
-        <div class="card-body">
-            <form id="scheduleForm" action="{{ route('schedule.store') }}" method="POST">
-                @csrf
+        <div class="card shadow">
+            <div class="card-body">
+                <form id="scheduleForm" action="{{ route('schedule.store') }}" method="POST" enctype="multipart/form-data">
+                    @csrf
 
-                <div class="form-group">
-                    <label for="name">Nama</label>
-                    <input type="text" name="name" id="name" class="form-control" placeholder="Nama Acara">
-                </div>
+                    <div class="form-group">
+                        <label for="name">Nama</label>
+                        <input type="text" name="name" id="name" class="form-control" placeholder="Masukkan nama acara">
+                    </div>
 
-                <div class="form-group">
-                    <label for="description">URL</label>
-                    <textarea name="url" id="url" class="form-control" rows="3"></textarea>
-                </div>
-                
-                <div class="mt-4 d-flex justify-content-between">
-                    <a href="{{ route('schedule.index') }}" class="btn btn-secondary">Kembali</a>
-                    <button type="submit" class="btn btn-primary">Simpan</button>
-                </div>
-            </form>
+                    <div class="form-group">
+                        <label for="url">URL</label>
+                        <textarea name="url" id="url" class="form-control" rows="2">Tuliskan link acara...</textarea>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="started_at">Tanggal Mulai</label>
+                            <input type="text" name="started_at" id="started_at"
+                                class="form-control flatpickr @error('started_at') is-invalid @enderror"
+                                value="{{ old('started_at') }}">
+                            @error('started_at') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                        </div>
+
+                        <div class="form-group col-md-6">
+                            <label for="finished_at">Tanggal Selesai</label>
+                            <input type="text" name="finished_at" id="finished_at"
+                                class="form-control flatpickr @error('finished_at') is-invalid @enderror"
+                                value="{{ old('finished_at') }}">
+                            @error('finished_at') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="schedule_img">Gambar</label>
+                        <input type="file" name="schedule_img" id="schedule_img" class="form-control">
+                    </div>
+
+                    <div class="mt-4 d-flex justify-content-between">
+                        <a href="{{ route('schedule.index') }}" class="btn btn-secondary">Kembali</a>
+                        <button type="submit" class="btn btn-primary">Simpan</button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
-</div>
 @endsection
 
 @push('scripts')
-<script>
-    $('#scheduleForm').on('submit', function(e) {
-        e.preventDefault();
-
-        Swal.fire({
-            title: 'Apakah Anda yakin?',
-            text: "Perubahan akan disimpan!",
-            icon: 'question',
-            showCancelButton: true,
-            confirmButtonColor: '#4e73df',
-            confirmButtonText: 'Ya, simpan',
-            cancelButtonText: 'Batal',
-        }).then((result) => {
-            if (result.isConfirmed) {
-                const form = e.target;
-                const formData = new FormData(form);
-
-                fetch(form.action, {
-                    method: 'POST',
-                    headers: {
-                        'X-Requested-With': 'XMLHttpRequest',
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                    },
-                    body: formData
-                })
-                .then(res => res.json())
-                .then(data => {
-                    if (data.success) {
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Berhasil',
-                            text: data.message,
-                            timer: 2000,
-                            showConfirmButton: false
-                        }).then(() => {
-                            window.location.href = "{{ route('schedule.index') }}";
-                        });
-                    } else {
-                        Swal.fire('Gagal', data.message || 'Terjadi kesalahan', 'error');
-                    }
-                })
-                .catch(() => {
-                    Swal.fire('Error', 'Terjadi kesalahan saat menyimpan data', 'error');
-                });
-            }
+    <script>
+        flatpickr(".flatpickr", {
+            altInput: true,
+            altFormat: "d-m-Y",
+            dateFormat: "Y-m-d",
         });
-    });
-</script>
+
+        $('#scheduleForm').on('submit', function (e) {
+            e.preventDefault();
+
+            Swal.fire({
+                title: 'Apakah Anda yakin?',
+                text: "Perubahan akan disimpan!",
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#4e73df',
+                confirmButtonText: 'Ya, simpan',
+                cancelButtonText: 'Batal',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    const form = e.target;
+                    const formData = new FormData(form);
+
+                    fetch(form.action, {
+                        method: 'POST',
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        },
+                        body: formData
+                    })
+                        .then(res => res.json())
+                        .then(data => {
+                            if (data.success) {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Berhasil',
+                                    text: data.message,
+                                    timer: 2000,
+                                    showConfirmButton: false
+                                }).then(() => {
+                                    window.location.href = "{{ route('schedule.index') }}";
+                                });
+                            } else {
+                                Swal.fire('Gagal', data.message || 'Terjadi kesalahan', 'error');
+                            }
+                        })
+                        .catch(() => {
+                            Swal.fire('Error', 'Terjadi kesalahan saat menyimpan data', 'error');
+                        });
+                }
+            });
+        });
+    </script>
 @endpush

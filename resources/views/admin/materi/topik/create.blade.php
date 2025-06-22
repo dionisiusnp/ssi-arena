@@ -1,51 +1,36 @@
 @extends('layouts.admin.app')
 
-@section('title', 'Tambah Materi')
+@section('title', 'Tambah Topik')
 
 @section('content')
 <div class="container-fluid">
-    <h1 class="h3 mb-3 text-gray-800">Tambah Materi</h1>
+    <h1 class="h3 mb-3 text-gray-800">Tambah Topik</h1>
 
     <div class="card shadow">
         <div class="card-body">
-            <form id="lessonForm" action="{{ route('lesson.store') }}" method="POST">
+            <form id="topicForm" action="{{ route('topic.store') }}" method="POST">
                 @csrf
-                <input type="hidden" name="visibility" id="visibility" value="{{ \App\Enums\VisibilityEnum::DRAFT->value }}">
-                <div class="form-row">
-                <div class="form-group col-md-6">
-                    <label for="role">Kategori Roleplay</label>
-                    <select name="role" id="role" class="form-control">
-                        <option value="">Pilih Roleplay</option>
-                        @foreach (\App\Enums\RoleplayEnum::cases() as $status)
-                            <option value="{{ $status->value }}" {{ old('status') === $status->value ? 'selected' : '' }}>
-                                {{ $status->label() }}
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
-                <div class="form-group col-md-6">
-                    <label>Bahasa Materi</label>
-                    <select name="language" class="form-control">
-                        <option value="">Pilih Bahasa</option>
-                        @foreach (\App\Enums\StackEnum::cases() as $stack)
-                        <option value="{{ $stack->value }}">
-                            {{ $stack->label() }}
-                        </option>
-                        @endforeach
-                    </select>
-                </div>
+                <input type="hidden" name="lesson_id" id="lesson_id" value="{{ request('lesson_id') }}">
+                <input type="hidden" name="visibility" id="visibility" value="{{ \App\Enums\VisibilityEnum::PUBLISHED->value }}">
+                <div class="form-group">
+                    <label for="sequence">Urutan Topik</label>
+                    <input type="number" name="sequence" id="sequence" class="form-control" value="{{ $recentSequence }}" min="1" max="{{ $recentSequence }}">
                 </div>
                 <div class="form-group">
-                    <label for="name">Nama Materi</label>
-                    <input type="text" name="name" id="name" class="form-control" placeholder="contoh: Framework Laravel">
+                    <label for="name">Nama Topik</label>
+                    <input type="text" name="name" id="name" class="form-control" placeholder="contoh: Instalasi Environment Laravel">
                 </div>
-
                 <div class="form-group">
-                    <label for="description">Keterangan Materi</label>
-                    <textarea name="description" id="description" class="form-control summernote"></textarea>
+                    <label for="description">Keterangan Topik</label>
+                    <textarea name="description" id="description" class="form-control summernote1"></textarea>
+                </div>
+                <hr>
+                <div class="form-group">
+                    <label for="steps">Panduan Topik</label>
+                    <textarea name="steps" id="steps" class="form-control summernote2"></textarea>
                 </div>
                 <div class="mt-4 d-flex justify-content-between">
-                    <a href="{{ route('lesson.index') }}" class="btn btn-secondary">Kembali</a>
+                    <a href="{{ route('topic.index') }}?lesson_id={{ request('lesson_id') }}" class="btn btn-secondary">Kembali</a>
                     <button type="submit" class="btn btn-primary">Simpan</button>
                 </div>
             </form>
@@ -56,9 +41,9 @@
 
 @push('scripts')
 <script>
-    $('.summernote').summernote({
+    $('.summernote1').summernote({
         height: 200,
-        placeholder: 'Tulis keterangan di sini...',
+        placeholder: 'Tuliskan keterangan disini...',
         disableDragAndDrop: true,
         toolbar: [
             ['style', ['bold', 'italic', 'underline', 'clear']],
@@ -75,7 +60,26 @@
         }
     });
 
-    $('#lessonForm').on('submit', function(e) {
+    $('.summernote2').summernote({
+        height: 200,
+        placeholder: 'Tuliskan panduan disini...',
+        disableDragAndDrop: true,
+        toolbar: [
+            ['style', ['bold', 'italic', 'underline', 'clear']],
+            ['font', ['strikethrough', 'superscript', 'subscript']],
+            ['para', ['ul', 'ol', 'paragraph']],
+            ['insert', []], // Tidak ada image/video
+            ['view', ['fullscreen', 'codeview']],
+        ],
+        callbacks: {
+            onImageUpload: function () {
+                // Mencegah upload gambar lewat drag/drop
+                return false;
+            }
+        }
+    });
+
+    $('#topicForm').on('submit', function(e) {
         e.preventDefault();
 
         Swal.fire({
@@ -109,7 +113,7 @@
                             timer: 2000,
                             showConfirmButton: false
                         }).then(() => {
-                            window.location.href = "{{ route('lesson.index') }}";
+                            window.location.href = "{{ route('topic.index') }}?lesson_id={{ request('lesson_id') }}";
                         });
                     } else {
                         Swal.fire('Gagal', data.message || 'Terjadi kesalahan', 'error');

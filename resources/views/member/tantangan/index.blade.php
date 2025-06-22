@@ -20,7 +20,7 @@
                 <div class="list-group" id="questList">
                     @forelse ($quests ?? [] as $index => $quest)
                         <a href="#" 
-                           class="list-group-item list-group-item-action {{ $index === 0 ? 'active' : '' }}"
+                           class="list-group-item list-group-item-action"
                            data-quest-id="{{ $quest->id }}"
                            data-requirements='@json($quest->requirements ?? [])'
                            data-name="{{ $quest->name }}">
@@ -43,7 +43,6 @@
                         @foreach ($quests->first()->requirements as $req)
                             <div class="card mb-3">
                                 <div class="card-body">
-                                    <h5 class="card-title">{{ $req->name }}</h5>
                                     <p class="mb-0">{{ $req->description }}</p>
                                 </div>
                             </div>
@@ -104,7 +103,6 @@
                     html += `
                         <div class="card mb-3">
                             <div class="card-body">
-                                <h5 class="card-title">${req.name}</h5>
                                 <p class="mb-0">${req.description}</p>
                             </div>
                         </div>`;

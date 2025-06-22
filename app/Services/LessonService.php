@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Enums\VisibilityEnum;
 use App\Models\Lesson;
+use App\Models\Topic;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -12,15 +13,12 @@ use Illuminate\Support\Facades\DB;
 class LessonService
 {
     protected Model $model;
-    public $topicService, $stepService;
     /**
      * Create a new class instance.
      */
-    public function __construct(Lesson $lesson, TopicService $topicService, StepService $stepService)
+    public function __construct(Lesson $lesson)
     {
         $this->model = $lesson;
-        $this->topicService = $topicService;
-        $this->stepService = $stepService;
     }
 
     public function model()
@@ -45,6 +43,7 @@ class LessonService
     {
         $search = $filter['search'] ?? null;
         $role = $filter['role'] ?? null;
+        $language = $filter['language'] ?? null;
         $visibility = $filter['visibility'] ?? null;
 
         return $this->model
@@ -56,6 +55,9 @@ class LessonService
             })
             ->when($role, function ($query) use ($role) {
                 $query->where('role', $role);
+            })
+            ->when($language, function ($query) use ($language) {
+                $query->where('language', $language);
             })
             ->when($visibility, function ($query) use ($visibility) {
                 $query->where('visibility', $visibility);
@@ -69,6 +71,7 @@ class LessonService
     {
         $search = $filter['search'] ?? null;
         $role = $filter['role'] ?? null;
+        $language = $filter['language'] ?? null;
 
         return $this->model
             ->whereNotIn('visibility', [VisibilityEnum::DRAFT->value])
@@ -80,34 +83,20 @@ class LessonService
             ->when($role, function ($query) use ($role) {
                 $query->where('role', $role);
             })
+            ->when($language, function ($query) use ($language) {
+                $query->where('language', $language);
+            })
             ->withCount('topics')
             ->orderByDesc('created_at')
             ->paginate($perPage);
     }
 
-    public function store(array $data, array $topics, $auth)
+    public function store(array $data, $auth)
     {
-        DB::beginTransaction();
         try {
             $data['changed_by'] = $auth->id;
-            $lesson = $this->model->create($data);
-
-            if (!empty($topics)) {
-                $i = 1;
-                foreach ($topics as $topic) {
-                    $this->topicService->model()->create([
-                        'lesson_id' => $lesson->id,
-                        'name' => $topic['name'],
-                        'description' => $topic['description'],
-                        'sequence' => $i++,
-                        'changed_by' => $auth->id,
-                    ]);
-                }
-            }
-            DB::commit();
-            return $lesson;
+            return $this->model->create($data);
         } catch (\Throwable $th) {
-            DB::rollBack();
             throw new \ErrorException($th->getMessage());
         }
     }
@@ -117,32 +106,20 @@ class LessonService
         return $this->model->find($id);
     }
 
-    public function update(array $data, array $topics, $auth, Lesson $lesson)
+    public function update(array $data, $auth, Lesson $lesson)
     {
         DB::beginTransaction();
         try {
             $data['changed_by'] = $auth->id;
-            $lesson->update($data);
-            $existingTopics = $this->topicService->byLesson($lesson->id);
-            
-            if (!empty($topics)) {
-                if ($existingTopics->isNotEmpty()) {
-                    foreach ($existingTopics as $topic) {
-                        $topic->steps()->delete();
-                        $topic->delete();
+            if (!empty($data['visibility']) && $lesson->visibility !== $data['visibility']) {
+                $topics = Topic::where('lesson_id', $lesson->id)->get();
+                if ($topics->isNotEmpty() && !empty($data['visibility'])) {
+                    foreach ($topics as $topic) {
+                        $topic->update(['visibility' => $data['visibility']]);
                     }
                 }
-                foreach ($topics as $i => $topic) {
-                    $this->topicService->model()->create([
-                        'lesson_id' => $lesson->id,
-                        'name' => $topic['name'],
-                        'description' => $topic['description'],
-                        'sequence' => $i + 1,
-                        'changed_by' => $auth->id,
-                    ]);
-                }
             }
-
+            $lesson->update($data);
             DB::commit();
             return $lesson;
         } catch (\Throwable $th) {

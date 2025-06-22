@@ -32,6 +32,8 @@ class UserService
                 DB::raw('users.name as text'),
             ])
             ->where('users.is_member', true)
+            ->where('users.is_lecturer', false)
+            ->where('users.is_active', true)
             ->when(count($filters), function ($q) use ($filters) {
                 $q->where($filters);
             })
@@ -106,6 +108,11 @@ class UserService
     public function update(array $data, User $user)
     {
         try {
+            if (!empty($data['password'])) {
+                $data['password'] = Hash::make($data['password']);
+            } else {
+                unset($data['password']);
+            }
             $user->update($data);
             return $user;
         } catch (\Throwable $th) {

@@ -3,9 +3,9 @@
 namespace App\Services;
 
 use App\Models\Schedule;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\DB;
 
 class ScheduleService
 {
@@ -38,12 +38,31 @@ class ScheduleService
             ->paginate($perPage);
     }
 
+    public function paginateMember(array $filter = [], int $perPage = 10): LengthAwarePaginator
+    {
+        $search = $filter['search'] ?? null;
+        return $this->model
+            ->where('is_active', true)
+            ->when($search, function ($query) use ($search) {
+                $query->where(function ($q) use ($search) {
+                    $q->where('name', 'LIKE', "%{$search}%");
+                });
+            })
+            ->orderByDesc('created_at')
+            ->paginate($perPage);
+    }
+
     public function store(array $data, $auth)
     {
+        DB::beginTransaction();
         try {
             $data['changed_by'] = $auth->id;
-            return $this->model->create($data);
+            $schedule = $this->model->create($data);
+
+            DB::commit();
+            return $schedule;
         } catch (\Throwable $th) {
+            DB::rollBack();
             throw new \ErrorException($th->getMessage());
         }
     }
@@ -55,11 +74,14 @@ class ScheduleService
 
     public function update(array $data, $auth, Schedule $schedule)
     {
+        DB::beginTransaction();
         try {
             $data['changed_by'] = $auth->id;
             $schedule->update($data);
+            DB::commit();
             return $schedule;
         } catch (\Throwable $th) {
+            DB::rollBack();
             throw new \ErrorException($th->getMessage());
         }
     }

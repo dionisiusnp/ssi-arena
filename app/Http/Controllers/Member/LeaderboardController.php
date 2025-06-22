@@ -20,9 +20,9 @@ class LeaderboardController extends Controller
     public function index(Request $request)
     {
         $auth = Auth::user();
-        $lastSeason = $this->seasonService->lastSeason();
+        $lastSeason = $this->seasonService->lastSeason() ?? null;
         $filters = [
-            'season_id' => $request->query('season_id') ?? $lastSeason->id,
+            'season_id' => $request->query('season_id') ?? optional($lastSeason)->id,
         ];
         $players = $this->userService->paginateDashboard($filters);
         $seasons = Season::all();

@@ -9,7 +9,6 @@ use App\Http\Controllers\Admin\QuestLevelController;
 use App\Http\Controllers\Admin\QuestTypeController;
 use App\Http\Controllers\Admin\ScheduleController;
 use App\Http\Controllers\Admin\SeasonController;
-use App\Http\Controllers\Admin\StepController;
 use App\Http\Controllers\Admin\TopicController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Member\DashboardController as MemberDashboardController;
@@ -39,8 +38,6 @@ Route::middleware('auth')->group(function () {
 
     Route::resource('lesson', AdminLessonController::class);
     Route::resource('topic', TopicController::class);
-    Route::get('/step/edit',[StepController::class,'edit'])->name('step.edit');
-    Route::resource('step', StepController::class)->except('edit');
 
     Route::resource('season', SeasonController::class);
     Route::get('/quest-type/{quest_type}/status',[QuestTypeController::class,'toggleStatus'])->name('quest-type.status');

@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class CreateUserRequest extends FormRequest
 {
@@ -21,14 +22,31 @@ class CreateUserRequest extends FormRequest
      */
     public function rules(): array
     {
+        $userId = $this->route('user')?->id ?? null;
+        $isUpdate = $userId !== null;
+
         return [
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'email', 'max:255', 'unique:users,email'],
-            'nim' => ['nullable', 'string', 'max:50', 'unique:users,nim'],
-            'password' => ['required', 'string', 'min:6', 'confirmed'],
-            'is_member' => ['nullable', 'boolean'],
-            'is_lecturer' => ['nullable', 'boolean'],
-            'is_active' => ['nullable', 'boolean'],
+            'email' => [
+                'required', 'email', 'max:255',
+                Rule::unique('users', 'email')->ignore($userId)
+            ],
+            'nim' => [
+                'nullable', 'string', 'max:50',
+                Rule::unique('users', 'nim')->ignore($userId)
+            ],
+            'password' => [$isUpdate ? 'nullable' : 'required', 'string', 'min:6', 'confirmed'],
+            'is_member' => ['required', 'boolean'],
+            'is_lecturer' => ['required', 'boolean'],
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'email.unique' => 'Email ini sudah digunakan.',
+            'nim.unique' => 'NIM ini sudah digunakan.',
+            'password.confirmed' => 'Konfirmasi password tidak cocok.',
         ];
     }
 }

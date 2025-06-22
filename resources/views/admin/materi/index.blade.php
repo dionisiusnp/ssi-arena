@@ -54,9 +54,15 @@
                 <div class="card shadow h-100 position-relative">
                     <div class="card-body text-center">
                         {{-- Roadmap Info --}}
-                        <h5 class="card-title"><strong>{{ $lesson->name }}</strong> <span class="badge badge-primary">{{ strtoupper($lesson->visibility) }}</span></h5>
+                        <h5 class="card-title"><strong>{{ $lesson->name }}</strong></h5>
+                        <p class="card-text mb-1">
+                            Visibilitas: <strong class="badge badge-{{ $lesson->visibility !== \App\Enums\VisibilityEnum::DRAFT->value ? 'success' : 'danger' }}">{{ strtoupper($lesson->visibility) }}</strong>
+                        </p>
                         <p class="card-text mb-1">
                             Kategori: <strong>{{ strtoupper($lesson->role) ?? '-' }}</strong>
+                        </p>
+                        <p class="card-text mb-1">
+                            Bahasa: <strong>{{ strtoupper($lesson->language) ?? '-' }}</strong>
                         </p>
                         <p class="card-text mb-1">
                             Topik: <strong>{{ $lesson->topics_count }} Topik</strong>

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\QuestDetail;
+use App\Models\Season;
 use App\Services\QuestDetailService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -26,8 +27,9 @@ class QuestDetailController extends Controller
             'search' => $request->query('q') ?? null,
             'is_editable' => $request->query('is_editable') ?? null,
         ];
+        $seasons = Season::all();
         $questDetails = $this->questDetailService->paginate($filters);
-        return view('admin.tantangan.index', compact('questDetails'));
+        return view('admin.tantangan.index', compact('questDetails', 'seasons'));
     }
 
     /**
@@ -45,7 +47,7 @@ class QuestDetailController extends Controller
     {
         try {
             $auth = Auth::user();
-            $reqs = $request->requirements ?? [];
+            $reqs = $request->requirements ?? null;
             unset($request->requirements);
             $data = $this->questDetailService->store($request->toArray(), $reqs, $auth);
             return response()->json([
@@ -84,7 +86,7 @@ class QuestDetailController extends Controller
     {
         try {
             $auth = Auth::user();
-            $reqs = $request->requirements ?? [];
+            $reqs = $request->requirements ?? null;
             unset($request->requirements);
             $data = $this->questDetailService->update($request->toArray(),$reqs, $auth, $quest_detail);
             return response()->json([
@@ -101,7 +103,7 @@ class QuestDetailController extends Controller
     {
         try {
             $auth = Auth::user();
-            $data = $this->questDetailService->isEditable($auth, $quest_detail);
+            $this->questDetailService->isEditable($auth, $quest_detail);
             return redirect()->route('quest-detail.index')->with('success', 'Status tantangan berhasil diubah.');
         } catch (\Throwable $th) {
             throw new \ErrorException($th->getMessage());

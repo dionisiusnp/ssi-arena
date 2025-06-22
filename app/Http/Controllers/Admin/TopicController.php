@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Lesson;
 use App\Models\Topic;
 use App\Services\LessonService;
 use App\Services\TopicService;
@@ -29,17 +30,21 @@ class TopicController extends Controller
             'search' => $request->query('q') ?? null,
             'visibility' => $request->query('visibility') ?? null,
         ];
+        $lessons = Lesson::all();
         $lesson = $this->lessonService->model()->find($filters['lesson_id']);
         $data = $this->topicService->paginate($filters);
-        return view('admin.materi.topik.index', compact('data', 'lesson'));
+        return view('admin.materi.topik.index', compact('data', 'lesson', 'lessons'));
     }
 
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(Request $request)
     {
-        // 
+        $lessonId = $request->query('lesson_id');
+        $getSequence = $this->topicService->byLesson($lessonId);
+        $recentSequence = $getSequence->count() + 1;
+        return view('admin.materi.topik.create', compact('recentSequence'));
     }
 
     /**
@@ -68,7 +73,7 @@ class TopicController extends Controller
      */
     public function show(Topic $topic)
     {
-        //
+        return view('admin.materi.topik.detail', compact('topic'));
     }
 
     /**
@@ -76,7 +81,9 @@ class TopicController extends Controller
      */
     public function edit(Topic $topic)
     {
-        return view('admin.materi.topik.edit', compact('topic'));
+        $getSequence = $this->topicService->byLesson($topic->lesson_id);
+        $recentSequence = $getSequence->count() + 1;
+        return view('admin.materi.topik.edit', compact('topic', 'recentSequence'));
     }
 
     /**
