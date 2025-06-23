@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('claimed_by')->nullable()->constrained('users');
             $table->foreignId('quest_detail_id')->nullable()->constrained('quest_details');
-            $table->boolean('status')->default(false);
+            $table->string('status')->nullable();
             $table->foreignId('changed_by')->nullable()->constrained('users');
             $table->timestamps();
             $table->softDeletes();

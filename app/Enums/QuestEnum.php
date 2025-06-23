@@ -6,13 +6,15 @@ enum QuestEnum: string
 {
     case CLAIMED = 'claimed';
     case TESTING = 'testing';
+    case PENDING = 'pending';
     case CLEAR = 'clear';
 
     public function label(): string
     {
         return match($this) {
-            self::CLAIMED => 'Editor',
-            self::TESTING => 'Link',
+            self::CLAIMED => 'Claimed',
+            self::TESTING => 'Testing',
+            self::PENDING => 'Pending',
             self::CLEAR => 'Clear',
         };
     }

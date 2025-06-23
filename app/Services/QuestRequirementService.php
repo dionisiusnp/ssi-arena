@@ -74,18 +74,6 @@ class QuestRequirementService
         }
     }
 
-    public function isActive($auth, QuestRequirement $questRequirement): bool
-    {
-        try {
-            $questRequirement->is_active = !$questRequirement->is_active;
-            $questRequirement->changed_by = $auth->id ?? null;
-            $questRequirement->save();
-            return true;
-        } catch (\Throwable $th) {
-            throw new \ErrorException($th->getMessage());
-        }
-    }
-
     public function destroy(QuestRequirement $questRequirement): bool
     {
         try {

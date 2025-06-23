@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\ActivityChecklistController;
-use App\Http\Controllers\Admin\ActivityController;
+use App\Http\Controllers\Admin\ActivityController as AdminActivityController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\LessonController as AdminLessonController;
 use App\Http\Controllers\Admin\QuestDetailController;
@@ -16,6 +16,8 @@ use App\Http\Controllers\Member\LeaderboardController;
 use App\Http\Controllers\Member\QuestController;
 use App\Http\Controllers\Member\LessonController as MemberLessonController;
 use App\Http\Controllers\Member\MemberController;
+use App\Http\Controllers\Member\ActivityController as MemberActivityController;
+use App\Http\Controllers\Member\RegisterController;
 use App\Http\Controllers\Member\RegistrationController;
 use Illuminate\Support\Facades\Route;
 
@@ -26,8 +28,10 @@ Route::get('/', function () {
 @include('select2.php');
 
 Route::prefix('guest')->name('guest.')->group(function () {
-    Route::get('/lesson',        [MemberLessonController::class, 'index'])->name('lesson');
-    Route::get('/schedule',      [MemberDashboardController::class, 'index'])->name('schedule');
+    Route::get('/schedule',[MemberDashboardController::class, 'index'])->name('schedule');
+    Route::get('/lesson',[MemberLessonController::class, 'index'])->name('lesson');
+    Route::get('/register',[RegisterController::class, 'index'])->name('register');
+    Route::post('/register/store',[RegisterController::class, 'register'])->name('register');
 });
 Route::middleware('auth')->group(function () {
     // ADMIN
@@ -49,22 +53,23 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/user/{user}/status',[UserController::class,'toggleStatus'])->name('user.status');
     Route::resource('user', UserController::class);
-    Route::resource('activity', ActivityController::class);
+    Route::resource('activity', AdminActivityController::class);
     Route::get('/activity-checklist/{activity_checklist}/status', [ActivityChecklistController::class, 'toggleStatus'])->name('activity-checklist.status');
 
     // MEMBER
     Route::prefix('member')->name('member.')->group(function () {
-        Route::get('/lesson',        [MemberLessonController::class, 'index'])->name('lesson');
-        Route::get('/lesson/{lesson}',        [MemberLessonController::class, 'show'])->name('lesson.show');
-        
-        Route::get('/leaderboard',   [LeaderboardController::class, 'index'])->name('leaderboard');
-        Route::get('/profile',       [MemberController::class, 'index'])->name('profile');
+        Route::get('/lesson',[MemberLessonController::class, 'index'])->name('lesson');
+        Route::get('/lesson/{lesson}',[MemberLessonController::class, 'show'])->name('lesson.show');
         
         Route::get('/quest',         [QuestController::class, 'index'])->name('quest');
         Route::get('/quest/{id}/claim', [QuestController::class, 'claim'])->name('quest.claim');
 
+        Route::get('/leaderboard',[LeaderboardController::class, 'index'])->name('leaderboard');
+        
+        Route::get('/profile',[MemberController::class, 'index'])->name('profile');
 
-        Route::get('/registration',  [RegistrationController::class, 'index'])->name('registration');
+        Route::get('/activity',[MemberActivityController::class, 'index'])->name('activity');
+
         Route::get('/schedule',      [MemberDashboardController::class, 'index'])->name('schedule');
     });
 });

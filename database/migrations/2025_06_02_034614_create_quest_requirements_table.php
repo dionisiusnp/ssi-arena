@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id();
             $table->foreignId('quest_detail_id')->nullable()->constrained('quest_details');
             $table->text('description')->nullable();
-            $table->boolean('is_editable')->default(true);
             $table->foreignId('changed_by')->nullable()->constrained('users');
             $table->timestamps();
             $table->softDeletes();
