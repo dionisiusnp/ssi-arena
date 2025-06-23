@@ -15,7 +15,6 @@
                 <li class="nav-item"><a class="nav-link {{ request()->routeIs('guest.schedule') ? 'active' : '' }}" href="{{ route('guest.schedule') }}">Kegiatan</a></li><!-- Events, Ads (Public)-->
                 <li class="nav-item"><a class="nav-link {{ request()->routeIs('guest.lesson') ? 'active' : '' }}" href="{{ route('guest.lesson') }}">Materi</a></li><!-- Lessons, Roadmaps (Private)-->
                 <li class="nav-item"><a class="nav-link {{ request()->routeIs('guest.register') ? 'active' : '' }}" href="{{ route('guest.register') }}">Daftar</a></li>
-                <li class="nav-item"><a class="nav-link" href="{{ url('/') }}">Halaman Masuk</a></li>
             @endif
             
             @if (auth()->user())

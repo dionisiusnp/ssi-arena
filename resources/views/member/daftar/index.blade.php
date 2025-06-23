@@ -10,54 +10,85 @@
 
             <div class="card shadow">
                 <div class="card-body">
-                    <form id="memberForm" action="{{ route('guest.register') }}" method="POST">
+                    <form id="memberForm" action="{{ route('guest.register.store') }}" method="POST">
                         @csrf
 
+                        {{-- is_member --}}
                         <div class="form-group">
-                            <label>Apakah Member?</label><br>
+                            <label>Mendaftar SSI Academy sebagai apa?</label><br>
                             <div>
-                                <label><input type="radio" name="is_member" value="1" checked> Ya</label>
-                                <label class="ms-3"><input type="radio" name="is_member" value="0"> Tidak</label>
+                                <label><input type="radio" name="is_member" value="1" {{ old('is_member', '1') == '1' ? 'checked' : '' }}> Member</label>
+                                <label class="ms-3"><input type="radio" name="is_member" value="0" {{ old('is_member') == '0' ? 'checked' : '' }}> Peserta Bootcamp</label>
                             </div>
+                            @error('is_member')
+                                <div class="text-danger mt-1 small">{{ $message }}</div>
+                            @enderror
                         </div>
 
-                        <div class="form-group mt-2">
-                            <label>Apakah Pengajar?</label><br>
+                        {{-- is_lecturer --}}
+                        {{-- <div class="form-group mt-2">
+                            <label>Apakah Anda Pengajar?</label><br>
                             <div>
-                                <label><input type="radio" name="is_lecturer" value="1"> Ya</label>
-                                <label class="ms-3"><input type="radio" name="is_lecturer" value="0" checked> Tidak</label>
+                                <label><input type="radio" name="is_lecturer" value="1" {{ old('is_lecturer') == '1' ? 'checked' : '' }}> Ya</label>
+                                <label class="ms-3"><input type="radio" name="is_lecturer" value="0" {{ old('is_lecturer', '0') == '0' ? 'checked' : '' }}> Tidak</label>
                             </div>
-                        </div>
+                            @error('is_lecturer')
+                                <div class="text-danger mt-1 small">{{ $message }}</div>
+                            @enderror
+                        </div> --}}
+                        <input type="hidden" name="is_lecturer" id="is_lecturer" value="0">
 
+                        {{-- name --}}
                         <div class="form-group mt-3">
-                            <label for="name">Nama</label>
-                            <input type="text" name="name" class="form-control" required>
+                            <label for="name">Nama Lengkap</label>
+                            <input type="text" name="name" class="form-control @error('name') is-invalid @enderror" required value="{{ old('name') }}" placeholder="Masukkan nama lengkap">
+                            @error('name')
+                                <div class="text-danger mt-1 small">{{ $message }}</div>
+                            @enderror
                         </div>
 
-                        <div class="form-group mt-3">
-                            <label for="email">Email</label>
-                            <input type="email" name="email" class="form-control" required>
-                        </div>
-
+                        {{-- nim --}}
                         <div class="form-group mt-3" id="nimGroup">
                             <label for="nim">NIM</label>
-                            <input type="text" name="nim" id="nim" class="form-control">
+                            <input type="text" name="nim" id="nim" class="form-control @error('nim') is-invalid @enderror" value="{{ old('nim') }}" placeholder="Masukkan nim mahasiswa/i jika masih berkuliah">
+                            @error('nim')
+                                <div class="text-danger mt-1 small">{{ $message }}</div>
+                            @enderror
                         </div>
 
+                        {{-- email --}}
+                        <div class="form-group mt-3">
+                            <label for="email">Email</label>
+                            <input type="email" name="email" class="form-control @error('email') is-invalid @enderror" required value="{{ old('email') }}" placeholder="Masukkan email">
+                            @error('email')
+                                <div class="text-danger mt-1 small">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <div class="mt-3">
+                            <button type="button" class="btn btn-secondary" onclick="generatePassword()">Generate Sandi</button>
+                            <button type="button" class="btn btn-outline-primary" onclick="copyPassword()">Salin Sandi</button>
+                        </div>
+                        
+                        {{-- password --}}
                         <div class="form-row mt-3 row">
                             <div class="form-group col-md-6">
-                                <label for="password">Password</label>
+                                <label for="password">Sandi</label>
                                 <div class="input-group">
-                                    <input type="password" name="password" id="password" class="form-control" minlength="6" required>
+                                    <input type="password" name="password" id="password" class="form-control @error('password') is-invalid @enderror" minlength="6" placeholder="Masukkan sandi" required>
                                     <button type="button" class="btn btn-outline-secondary" onclick="togglePassword('password')">
                                         <i class="fas fa-eye"></i>
                                     </button>
                                 </div>
+                                @error('password')
+                                    <div class="text-danger mt-1 small">{{ $message }}</div>
+                                @enderror
                             </div>
+
                             <div class="form-group col-md-6">
-                                <label for="password_confirmation">Konfirmasi Password</label>
+                                <label for="password_confirmation">Konfirmasi Sandi</label>
                                 <div class="input-group">
-                                    <input type="password" name="password_confirmation" id="password_confirmation" class="form-control" minlength="6" required>
+                                    <input type="password" name="password_confirmation" id="password_confirmation" class="form-control" minlength="6" placeholder="Ulangi sandi" required>
                                     <button type="button" class="btn btn-outline-secondary" onclick="togglePassword('password_confirmation')">
                                         <i class="fas fa-eye"></i>
                                     </button>
@@ -65,13 +96,9 @@
                             </div>
                         </div>
 
-                        <div class="mt-3">
-                            <button type="button" class="btn btn-secondary" onclick="generatePassword()">Generate Password</button>
-                            <button type="button" class="btn btn-outline-primary" onclick="copyPassword()">Salin Password</button>
-                        </div>
-
                         <div class="mt-4 d-flex justify-content-between">
-                            <button type="submit" class="btn btn-primary">Simpan</button>
+                            <a href="{{ url('/') }}" class="btn btn-secondary text-white">Halaman Masuk</a>
+                            <button type="submit" class="btn btn-primary text-white">Daftar</button>
                         </div>
                     </form>
                 </div>
@@ -80,6 +107,16 @@
     </div>
 </section>
 @endsection
+<div class="position-fixed top-0 end-0 p-3" style="z-index: 1080">
+    <div id="copyToast" class="toast align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="d-flex">
+            <div class="toast-body">
+                Sandi berhasil disalin!
+            </div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+    </div>
+</div>
 
 @push('scripts')
 <script>
@@ -112,7 +149,8 @@
     function copyPassword() {
         const password = document.getElementById('password').value;
         navigator.clipboard.writeText(password).then(() => {
-            alert('Password disalin ke clipboard!');
+            const toast = new bootstrap.Toast(document.getElementById('copyToast'));
+            toast.show();
         });
     }
 

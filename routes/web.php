@@ -18,7 +18,6 @@ use App\Http\Controllers\Member\LessonController as MemberLessonController;
 use App\Http\Controllers\Member\MemberController;
 use App\Http\Controllers\Member\ActivityController as MemberActivityController;
 use App\Http\Controllers\Member\RegisterController;
-use App\Http\Controllers\Member\RegistrationController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -31,8 +30,9 @@ Route::prefix('guest')->name('guest.')->group(function () {
     Route::get('/schedule',[MemberDashboardController::class, 'index'])->name('schedule');
     Route::get('/lesson',[MemberLessonController::class, 'index'])->name('lesson');
     Route::get('/register',[RegisterController::class, 'index'])->name('register');
-    Route::post('/register/store',[RegisterController::class, 'register'])->name('register');
+    Route::post('/register/store',[RegisterController::class, 'register'])->middleware('throttle:register')->name('register.store');
 });
+
 Route::middleware('auth')->group(function () {
     // ADMIN
     Route::get('/admin-panel',[AdminDashboardController::class,'index'])->name('admin-panel');
