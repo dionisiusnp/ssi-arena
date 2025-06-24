@@ -35,10 +35,10 @@
 
 <body class="bg-gradient-primary">
 
-    <div class="container">
+    <div class="container min-vh-100 d-flex align-items-center justify-content-center"">
 
         <!-- Outer Row -->
-        <div class="row justify-content-center">
+        <div class="row w-100 justify-content-center">
 
             <div class="col-xl-6 col-lg-8 col-md-9">
 

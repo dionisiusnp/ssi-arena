@@ -1,6 +1,6 @@
 @extends('layouts.member.app')
 
-@section('title', 'Profil dan Misi')
+@section('title', 'Misi dan Tugas')
 
 @section('content')
 <!-- Daftar Tantangan -->

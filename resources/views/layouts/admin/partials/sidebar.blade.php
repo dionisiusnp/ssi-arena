@@ -25,12 +25,13 @@
     </div>
 
     <!-- Nav Item - Charts -->
+    @if(auth()->user()->is_member == null)
     <li class="nav-item {{ request()->routeIs('schedule.index') ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('schedule.index') }}">
             <i class="fas fa-fw fa-calendar"></i>
             <span>Acara</span></a>
     </li>
-
+    @endif
     <!-- Nav Item - Charts -->
     <li class="nav-item {{ request()->routeIs('lesson.index') ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('lesson.index') }}">
@@ -38,6 +39,7 @@
             <span>Materi</span></a>
     </li>
 
+    @if(auth()->user()->is_member == null)
     <!-- Divider -->
     <hr class="sidebar-divider">
 
@@ -66,7 +68,7 @@
             <i class="fas fa-fw fa-trophy"></i>
             <span>Pemain</span></a>
     </li>
-
+    @endif
     <!-- Divider -->
     <hr class="sidebar-divider d-none d-md-block">
 
