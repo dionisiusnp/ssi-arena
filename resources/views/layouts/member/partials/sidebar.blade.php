@@ -24,17 +24,6 @@
                 <li class="nav-item"><a class="nav-link {{ request()->routeIs('member.quest') ? 'active' : '' }}" href="{{ route('member.quest') }}">Tantangan</a></li><!-- Tasks, Guides, Helpers (Private)-->
                 <li class="nav-item"><a class="nav-link {{ request()->routeIs('member.lesson') ? 'active' : '' }}" href="{{ route('member.lesson') }}">Materi</a></li><!-- Lessons, Roadmaps (Private)-->
                 <li class="nav-item"><a class="nav-link {{ request()->routeIs('member.profile') ? 'active' : '' }}" href="{{ route('member.profile') }}">Profil</a></li><!--Yourself-->
-                @if(auth()->user()->is_lecturer)
-                    <li class="nav-item"><a class="nav-link" href="{{ route('admin-panel') }}">CMS Materi</a></li><!--Yourself-->
-                @endif
-                <li class="nav-item">
-                    <form method="POST" action="{{ route('logout') }}" id="logout-form">
-                        @csrf
-                        <a href="#" class="nav-link" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                            Keluar
-                        </a>
-                    </form>
-                </li>
             @endif
         </ul>
     </div>

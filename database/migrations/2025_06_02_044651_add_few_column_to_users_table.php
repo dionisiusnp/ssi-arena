@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             $table->integer('current_level')->default(1);
-            $table->decimal('current_point', 6,2)->default(0);
+            $table->integer('current_point')->default(0);
             $table->string('nim')->nullable();
             $table->boolean('is_member')->nullable();
             $table->boolean('is_lecturer')->default(false);

@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Enums\QuestEnum;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -76,7 +77,7 @@ class UserService
             ->where('is_lecturer', false)
             ->where('is_active', true)
             ->withCount(['activities as total_point' => function ($query) use ($seasonId) {
-                $query->where('status', true)
+                $query->where('status', QuestEnum::PLUS->value)
                     ->whereColumn('activities.claimed_by', 'users.id')
                     ->join('quest_details', 'activities.quest_detail_id', '=', 'quest_details.id')
                     ->when(!is_null($seasonId), function ($q) use ($seasonId) {

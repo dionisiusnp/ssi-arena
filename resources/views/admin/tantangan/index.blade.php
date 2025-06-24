@@ -75,7 +75,7 @@
                                 </td>
                                 <td>
                                     Poin: <span class="badge bg-secondary text-white">{{ $quest->point }}</span><br>
-                                    Tambahan: <span class="badge bg-secondary text-white">{{ $quest->point_multiple }}</span><br>
+                                    Tambahan: <span class="badge bg-secondary text-white">{{ $quest->point_additional }}</span><br>
                                     Total: <span class="badge bg-secondary text-white">{{ $quest->point_total }}</span>
                                 </td>
                                 <td>{{ $quest->claimable_names }}</td>

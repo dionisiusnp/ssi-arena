@@ -7,15 +7,38 @@
 <section class="resume-section" id="profil">
     <div class="resume-section-content">
         <h1 class="mb-0">{{ auth()->user()->name }}</h1>
+
         <div class="subheading mb-1">
             Email: {{ auth()->user()->email ?? '-' }} | NIM: {{ auth()->user()->nim ?? '-' }}
         </div>
+
         <div class="subheading mb-1">
             Level: {{ auth()->user()->current_level }} | Poin: {{ auth()->user()->current_point }}
         </div>
-        <div class="subheading mb-5">
+
+        <div class="subheading mb-4">
             Musim: Musim Pertama | Periode: 01 Juni 2025 - 30 Juni 2025
         </div>
+
+        <div class="d-flex flex-wrap align-items-center gap-2 mt-3">
+            <a href="" class="btn btn-outline-primary">
+                <i class="fas fa-key me-1"></i> Ganti Sandi
+            </a>
+            @if(auth()->user()->is_lecturer)
+                <a href="{{ route('admin-panel') }}" class="btn btn-outline-dark">
+                    <i class="fas fa-tools me-1"></i> CMS Materi
+                </a>
+            @endif
+
+            <form method="POST" action="{{ route('logout') }}" class="d-inline-block m-0 p-0">
+                @csrf
+                <button type="submit" class="btn btn-outline-danger">
+                    <i class="fas fa-sign-out-alt me-1"></i> Keluar
+                </button>
+            </form>
+        </div>
+
+
     </div>
 </section>
 <hr class="m-0">
@@ -23,6 +46,7 @@
 use Illuminate\Support\Carbon;
 
 $year = request('year', now()->year);
+
 $levelColors = [
     0 => 'bg-light border',
     1 => 'bg-success bg-opacity-25',
@@ -30,17 +54,18 @@ $levelColors = [
     3 => 'bg-success bg-opacity-75',
     4 => 'bg-success',
 ];
+
 $levelRanges = [
     0 => '0', 1 => '1', 2 => '2', 3 => '3', 4 => '≥4'
 ];
 
-// Simulasi data (ganti dengan dari DB jika ada)
+// Simulasi data aktivitas harian (ganti dari database jika tersedia)
 $activityLevels = [];
 for ($m = 1; $m <= 12; $m++) {
     $days = Carbon::create($year, $m)->daysInMonth;
     for ($d = 1; $d <= $days; $d++) {
         $date = Carbon::create($year, $m, $d);
-        $activityLevels[$date->format('Y-m-d')] = rand(0, 4); // <-- replace dengan dari DB jika tersedia
+        $activityLevels[$date->format('Y-m-d')] = rand(0, 4);
     }
 }
 @endphp
@@ -59,7 +84,17 @@ for ($m = 1; $m <= 12; $m++) {
             </select>
         </form>
 
-        <!-- Grid Heatmap -->
+        <!-- Header Tanggal (1-31) -->
+        <div class="d-flex align-items-center">
+            <div style="width: 100px;" class="text-end pe-2 small text-muted">&nbsp;</div>
+            <div class="d-flex flex-wrap gap-1">
+                @for ($d = 1; $d <= 31; $d++)
+                    <div class="text-center small text-muted" style="width: 20px;">{{ $d }}</div>
+                @endfor
+            </div>
+        </div>
+
+        <!-- Grid Heatmap per Bulan -->
         <div class="d-flex flex-column gap-2">
             @for ($month = 1; $month <= 12; $month++)
                 @php
@@ -69,15 +104,22 @@ for ($m = 1; $m <= 12; $m++) {
                 <div class="d-flex align-items-center">
                     <div style="width: 100px;" class="text-end pe-2 small text-muted">{{ $monthName }}</div>
                     <div class="d-flex flex-wrap gap-1">
-                        @for ($day = 1; $day <= $daysInMonth; $day++)
+                        @for ($day = 1; $day <= 31; $day++)
                             @php
-                                $date = Carbon::create($year, $month, $day)->format('Y-m-d');
-                                $level = $activityLevels[$date] ?? 0;
+                                $dateObj = Carbon::create($year, $month, 1)->setDay($day);
+                                $isValid = $day <= $daysInMonth;
+                                $dateStr = $dateObj->format('Y-m-d');
+                                $level = $isValid ? ($activityLevels[$dateStr] ?? 0) : null;
                             @endphp
-                            <div class="{{ $levelColors[$level] }} rounded" 
-                                 style="width: 20px; height: 20px;" 
-                                 title="{{ $date }}: {{ $level * 2 }} aktivitas">
-                            </div>
+
+                            @if ($level !== null)
+                                <div class="{{ $levelColors[$level] }} rounded"
+                                     style="width: 20px; height: 20px;"
+                                     title="{{ $dateStr }}: {{ $level * 2 }} aktivitas">
+                                </div>
+                            @else
+                                <div style="width: 20px; height: 20px; opacity: 0;"></div>
+                            @endif
                         @endfor
                     </div>
                 </div>
@@ -90,7 +132,7 @@ for ($m = 1; $m <= 12; $m++) {
             @foreach ($levelColors as $level => $class)
                 <div class="{{ $class }} rounded"
                     style="width: 14px; height: 14px;"
-                    title="Task: {{ $levelRanges[$level] }}">
+                    title="Aktivitas: {{ $levelRanges[$level] }}">
                 </div>
             @endforeach
             <span class="small text-muted">Lebih banyak</span>

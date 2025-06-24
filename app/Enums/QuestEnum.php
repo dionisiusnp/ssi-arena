@@ -7,7 +7,8 @@ enum QuestEnum: string
     case CLAIMED = 'claimed';
     case TESTING = 'testing';
     case PENDING = 'pending';
-    case CLEAR = 'clear';
+    case PLUS = 'plus';
+    case MINUS = 'minus';
 
     public function label(): string
     {
@@ -15,7 +16,8 @@ enum QuestEnum: string
             self::CLAIMED => 'Claimed',
             self::TESTING => 'Testing',
             self::PENDING => 'Pending',
-            self::CLEAR => 'Clear',
+            self::PLUS => 'Plus',
+            self::MINUS => 'Minus',
         };
     }
 

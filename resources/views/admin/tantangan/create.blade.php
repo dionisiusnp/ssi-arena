@@ -60,11 +60,11 @@
                     </div>
                     <div class="form-group col-md-4">
                         <label for="point">Poin</label>
-                        <input type="number" name="point" class="form-control" value="0">
+                        <input type="number" name="point" class="form-control" value="1" min="1">
                     </div>
                     <div class="form-group col-md-4">
-                        <label for="point_multiple">Perkalian Poin Tambahan</label>
-                        <input type="number" step="0.01" name="point_multiple" class="form-control" value="0">
+                        <label for="point_additional">Poin Tambahan</label>
+                        <input type="number" name="point_additional" class="form-control" value="0">
                     </div>
                 </div>
 

@@ -46,8 +46,8 @@ class ActivityController extends Controller
         $taskClear   = (clone $baseQuery)->where('status', true)->get();
         $taskUnclear = (clone $baseQuery)->where('status', false)->get();
 
-        $totalSelesai = $taskClear->sum(fn($activity) => $activity->detail->point + ($activity->detail->point * $activity->detail->point_multiple));
-        $totalBelum   = $taskUnclear->sum(fn($activity) => $activity->detail->point + ($activity->detail->point * $activity->detail->point_multiple));
+        $totalSelesai = $taskClear->sum(fn($activity) => $activity->detail->point + $activity->detail->point_additional);
+        $totalBelum   = $taskUnclear->sum(fn($activity) => $activity->detail->point + $activity->detail->point_additional);
 
         return view('admin.pemain.misi.index', compact('data', 'user', 'seasons', 'totalSelesai', 'totalBelum'));
     }
@@ -114,21 +114,6 @@ class ActivityController extends Controller
         try {
             $auth = Auth::user();
             $data = $this->activityService->update($request->toArray(), $auth, $activity);
-            return response()->json([
-                'success' => true,
-                'message' => 'Data berhasil diubah',
-                'data'    => $data,
-            ]);
-        } catch (\Throwable $th) {
-            throw new \ErrorException($th->getMessage());
-        }
-    }
-
-    public function toggleStatus(Activity $activity)
-    {
-        try {
-            $auth = Auth::user();
-            $data = $this->activityService->isClear($auth, $activity);
             return response()->json([
                 'success' => true,
                 'message' => 'Data berhasil diubah',

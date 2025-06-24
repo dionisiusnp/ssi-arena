@@ -145,7 +145,7 @@
                     <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
                     Activity Log
                 </a> -->
-                <a class="dropdown-item" href="{{ route('member.profile') }}" target="_blank">
+                <a class="dropdown-item" href="{{ route('member.profile') }}">
                     <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                     Halaman Member
                 </a>

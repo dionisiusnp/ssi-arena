@@ -6,7 +6,7 @@
 {{-- KEMBANG API --}}
 <div id="introOverlay" class="position-fixed top-0 start-0 w-100 h-100 bg-dark" style="z-index: 2000; display: flex; align-items: center; justify-content: center; transition: opacity 2s;">
     <canvas id="fireworksCanvas" class="position-absolute top-0 start-0 w-100 h-100"></canvas>
-    <h1 id="introText" class="text-white text-center fw-bold" style="z-index: 1; font-size: 3rem; opacity: 0; transition: opacity 0.5s ease-in-out;">Eksplorasi hari ini, inovasi esok hari.</h1>
+    <h1 id="introText" class="text-white text-center fw-bold" style="z-index: 1; font-size: 3rem; opacity: 0; transition: opacity 0.5s ease-in-out;">Inovasi mendatang, berawal dari eksplorasi.</h1>
 </div>
 {{-- KEMBANG API --}}
 <section class="resume-section">
@@ -21,27 +21,26 @@
 
                         {{-- is_member --}}
                         <div class="form-group">
-                            <label>Mendaftar SSI Academy sebagai apa?</label><br>
-                            <div>
-                                <label><input type="radio" name="is_member" value="1" {{ old('is_member', '1') == '1' ? 'checked' : '' }}> Member</label>
-                                <label class="ms-3"><input type="radio" name="is_member" value="0" {{ old('is_member') == '0' ? 'checked' : '' }}> Peserta Bootcamp</label>
+                            <label class="form-label">Mendaftar SSI Academy sebagai apa?</label>
+                            <div class="d-flex flex-column flex-sm-row gap-2 mt-2">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="is_member" id="is_member1" value="1" {{ old('is_member', '1') == '1' ? 'checked' : '' }}>
+                                    <label class="form-check-label" for="is_member1">
+                                        Member
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="is_member" id="is_member0" value="0" {{ old('is_member') == '0' ? 'checked' : '' }}>
+                                    <label class="form-check-label" for="is_member0">
+                                        Peserta Bootcamp
+                                    </label>
+                                </div>
                             </div>
                             @error('is_member')
                                 <div class="text-danger mt-1 small">{{ $message }}</div>
                             @enderror
                         </div>
 
-                        {{-- is_lecturer --}}
-                        {{-- <div class="form-group mt-2">
-                            <label>Apakah Anda Pengajar?</label><br>
-                            <div>
-                                <label><input type="radio" name="is_lecturer" value="1" {{ old('is_lecturer') == '1' ? 'checked' : '' }}> Ya</label>
-                                <label class="ms-3"><input type="radio" name="is_lecturer" value="0" {{ old('is_lecturer', '0') == '0' ? 'checked' : '' }}> Tidak</label>
-                            </div>
-                            @error('is_lecturer')
-                                <div class="text-danger mt-1 small">{{ $message }}</div>
-                            @enderror
-                        </div> --}}
                         <input type="hidden" name="is_lecturer" id="is_lecturer" value="0">
 
                         {{-- name --}}

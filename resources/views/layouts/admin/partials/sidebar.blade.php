@@ -25,7 +25,7 @@
     </div>
 
     <!-- Nav Item - Charts -->
-    @if(auth()->user()->is_member == null)
+    @if(auth()->user()->is_member === null)
     <li class="nav-item {{ request()->routeIs('schedule.index') ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('schedule.index') }}">
             <i class="fas fa-fw fa-calendar"></i>
@@ -39,7 +39,7 @@
             <span>Materi</span></a>
     </li>
 
-    @if(auth()->user()->is_member == null)
+    @if(auth()->user()->is_member === null)
     <!-- Divider -->
     <hr class="sidebar-divider">
 
