@@ -62,11 +62,11 @@
                             <td>{{ $item->created_at_formatted }}</td>
                             <td>
                                 <a href="{{ route('season.edit', $item->id) }}" class="btn btn-sm btn-warning">Ubah</a>
-                                <form action="{{ route('season.destroy', $item->id) }}" method="POST" class="d-inline form-delete">
+                                {{-- <form action="{{ route('season.destroy', $item->id) }}" method="POST" class="d-inline form-delete">
                                     @csrf
                                     @method('DELETE')
                                     <button type="button" class="btn btn-sm btn-danger btn-delete" data-name="{{ $item->name }}">Hapus</button>
-                                </form>
+                                </form> --}}
                             </td>
                         </tr>
                         @empty
@@ -105,11 +105,11 @@
                             <td>
                                 <a href="{{ route('quest-type.status', $item->id) }}" class="btn btn-sm btn-{{ $item->is_active ? 'danger' : 'success' }}">{{ $item->is_active ? 'Non Aktifkan' : 'Aktifkan' }}</a>
                                 <a href="{{ route('quest-type.edit', $item->id) }}" class="btn btn-sm btn-warning">Ubah</a>
-                                <form action="{{ route('quest-type.destroy', $item->id) }}" method="POST" class="d-inline form-delete">
+                                {{-- <form action="{{ route('quest-type.destroy', $item->id) }}" method="POST" class="d-inline form-delete">
                                     @csrf
                                     @method('DELETE')
                                     <button type="button" class="btn btn-sm btn-danger btn-delete" data-name="{{ $item->name }}">Hapus</button>
-                                </form>
+                                </form> --}}
                             </td>
                         </tr>
                         @empty
@@ -148,11 +148,11 @@
                             <td>
                                 <a href="{{ route('quest-level.status', $item->id) }}" class="btn btn-sm btn-{{ $item->is_active ? 'danger' : 'success' }}">{{ $item->is_active ? 'Non Aktifkan' : 'Aktifkan' }}</a>
                                 <a href="{{ route('quest-level.edit', $item->id) }}" class="btn btn-sm btn-warning">Ubah</a>
-                                <form action="{{ route('quest-level.destroy', $item->id) }}" method="POST" class="d-inline form-delete">
+                                {{-- <form action="{{ route('quest-level.destroy', $item->id) }}" method="POST" class="d-inline form-delete">
                                     @csrf
                                     @method('DELETE')
                                     <button type="button" class="btn btn-sm btn-danger btn-delete" data-name="{{ $item->name }}">Hapus</button>
-                                </form>
+                                </form> --}}
                             </td>
                         </tr>
                         @empty

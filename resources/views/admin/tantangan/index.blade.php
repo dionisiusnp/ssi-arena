@@ -57,6 +57,7 @@
                             <th>Konfigurasi</th>
                             <th>Akumulasi Poin</th>
                             <th>Daftar Pemain</th>
+                            <th>Pemenang</th>
                             <th>Status</th>
                             <th>Diubah</th>
                             <th>Dibuat</th>
@@ -79,6 +80,7 @@
                                     Total: <span class="badge bg-secondary text-white">{{ $quest->point_total }}</span>
                                 </td>
                                 <td>{{ $quest->claimable_names }}</td>
+                                <td>{{ '-' }}</td>
                                 <td>
                                     <span class="badge bg-{{ $quest->is_editable ? 'secondary' : 'success' }} text-white">
                                         {{ $quest->is_editable ? 'Draft' : 'Published' }}
