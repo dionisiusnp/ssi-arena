@@ -5,6 +5,15 @@
 @section('content')
 <div class="container-fluid">
     <h1 class="h3 mb-4 text-gray-800">Pengaturan Perks Statis</h1>
+    <div class="row mb-3">
+        <div class="col-lg-8">
+            <form method="GET" action="{{ route('settings.static') }}" class="d-flex gap-2">
+                <input type="text" name="search" class="form-control" placeholder="Cari nama atau deskripsi..." value="{{ request('search') }}">
+                <button type="submit" class="btn btn-primary">Filter</button>
+                <a href="{{ route('settings.static') }}" class="btn btn-secondary">Reset</a>
+            </form>
+        </div>
+    </div>
 
     <div class="row justify-content-start">
         <div class="col-lg-8">

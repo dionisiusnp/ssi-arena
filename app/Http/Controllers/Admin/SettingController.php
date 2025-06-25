@@ -21,19 +21,23 @@ class SettingController extends Controller
      */
     public function indexLevel(Request $request)
     {
-        $settings = $this->settingService->getSettings(SettingGroupEnum::LEVEL->value);
+        $search = $request->input('search');
+        $settings = $this->settingService->getSettings(SettingGroupEnum::LEVEL->value, $search);
+
         return view('admin.pengaturan.level.index', compact('settings'));
     }
 
     public function indexStatic(Request $request)
     {
-        $settings = $this->settingService->getSettings(SettingGroupEnum::PERKQUESTLEVEL->value);
+        $search = $request->input('search');
+        $settings = $this->settingService->getSettings(SettingGroupEnum::PERKQUESTLEVEL->value, $search);
         return view('admin.pengaturan.keuntungan-statis.index', compact('settings'));
     }
 
     public function indexDynamic(Request $request)
     {
-        $settings = $this->settingService->getSettings(SettingGroupEnum::PERKCUSTOM->value);
+        $search = $request->input('search');
+        $settings = $this->settingService->getSettings(SettingGroupEnum::PERKCUSTOM->value, $search);
         return view('admin.pengaturan.keuntungan-dinamis.index', compact('settings'));
     }
 

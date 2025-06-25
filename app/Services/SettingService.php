@@ -21,9 +21,17 @@ class SettingService
         return $this->model;
     }
 
-    public function getSettings($groupEnum)
+    public function getSettings($groupEnum, $search = null)
     {
-        $settings = $this->model->where('group', $groupEnum)->orderBy('sequence')->get();
-        return $settings;
+        $query = $this->model->where('group', $groupEnum);
+
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', '%' . $search . '%')
+                ->orWhere('description', 'like', '%' . $search . '%');
+            });
+        }
+
+        return $query->orderBy('sequence')->get();
     }
 }
