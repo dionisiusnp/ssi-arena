@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Enums\FieldTypeEnum;
+use App\Enums\SettingGroupEnum;
 use App\Models\Setting;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -16,7 +17,7 @@ class SettingLevelSeeder extends Seeder
     {
         $settings = [
             [
-                'group' => 'LEVEL',
+                'group' => SettingGroupEnum::LEVEL->value,
                 'sequence' => 1,
                 'key' => 'level_1',
                 'name' => 'Level 1',
@@ -26,7 +27,7 @@ class SettingLevelSeeder extends Seeder
                 'current_value' => '0', // dari poin
             ],
             [
-                'group' => 'LEVEL',
+                'group' => SettingGroupEnum::LEVEL->value,
                 'sequence' => 2,
                 'key' => 'level_2',
                 'name' => 'Level 2',
@@ -36,7 +37,7 @@ class SettingLevelSeeder extends Seeder
                 'current_value' => '0', // dari poin
             ],
             [
-                'group' => 'LEVEL',
+                'group' => SettingGroupEnum::LEVEL->value,
                 'sequence' => 3,
                 'key' => 'level_3',
                 'name' => 'Level 3',
@@ -46,7 +47,7 @@ class SettingLevelSeeder extends Seeder
                 'current_value' => '0', // dari poin
             ],
             [
-                'group' => 'LEVEL',
+                'group' => SettingGroupEnum::LEVEL->value,
                 'sequence' => 4,
                 'key' => 'level_4',
                 'name' => 'Level 4',
@@ -56,7 +57,7 @@ class SettingLevelSeeder extends Seeder
                 'current_value' => '0', // dari poin
             ],
             [
-                'group' => 'LEVEL',
+                'group' => SettingGroupEnum::LEVEL->value,
                 'sequence' => 5,
                 'key' => 'level_5',
                 'name' => 'Level 5',
@@ -66,7 +67,7 @@ class SettingLevelSeeder extends Seeder
                 'current_value' => '0', // dari poin
             ],
             [
-                'group' => 'LEVEL',
+                'group' => SettingGroupEnum::LEVEL->value,
                 'sequence' => 6,
                 'key' => 'level_6',
                 'name' => 'Level 6',
@@ -76,7 +77,7 @@ class SettingLevelSeeder extends Seeder
                 'current_value' => '0', // dari poin
             ],
             [
-                'group' => 'LEVEL',
+                'group' => SettingGroupEnum::LEVEL->value,
                 'sequence' => 7,
                 'key' => 'level_7',
                 'name' => 'Level 7',
@@ -86,7 +87,7 @@ class SettingLevelSeeder extends Seeder
                 'current_value' => '0', // dari poin
             ],
             [
-                'group' => 'LEVEL',
+                'group' => SettingGroupEnum::LEVEL->value,
                 'sequence' => 8,
                 'key' => 'level_8',
                 'name' => 'Level 8',
@@ -96,7 +97,7 @@ class SettingLevelSeeder extends Seeder
                 'current_value' => '0', // dari poin
             ],
             [
-                'group' => 'LEVEL',
+                'group' => SettingGroupEnum::LEVEL->value,
                 'sequence' => 9,
                 'key' => 'level_9',
                 'name' => 'Level 9',
@@ -106,7 +107,7 @@ class SettingLevelSeeder extends Seeder
                 'current_value' => '0', // dari poin
             ],
             [
-                'group' => 'LEVEL',
+                'group' => SettingGroupEnum::LEVEL->value,
                 'sequence' => 10,
                 'key' => 'level_10',
                 'name' => 'Level 10',
@@ -116,7 +117,7 @@ class SettingLevelSeeder extends Seeder
                 'current_value' => '0', // dari poin
             ],
             [
-                'group' => 'LEVEL',
+                'group' => SettingGroupEnum::LEVEL->value,
                 'sequence' => 11,
                 'key' => 'level_11',
                 'name' => 'Level 11',
@@ -126,7 +127,7 @@ class SettingLevelSeeder extends Seeder
                 'current_value' => '0', // dari poin
             ],
             [
-                'group' => 'LEVEL',
+                'group' => SettingGroupEnum::LEVEL->value,
                 'sequence' => 12,
                 'key' => 'level_12',
                 'name' => 'Level 12',
@@ -136,7 +137,7 @@ class SettingLevelSeeder extends Seeder
                 'current_value' => '0', // dari poin
             ],
             [
-                'group' => 'LEVEL',
+                'group' => SettingGroupEnum::LEVEL->value,
                 'sequence' => 13,
                 'key' => 'level_13',
                 'name' => 'Level 13',
@@ -146,7 +147,7 @@ class SettingLevelSeeder extends Seeder
                 'current_value' => '0', // dari poin
             ],
             [
-                'group' => 'LEVEL',
+                'group' => SettingGroupEnum::LEVEL->value,
                 'sequence' => 14,
                 'key' => 'level_14',
                 'name' => 'Level 14',
@@ -156,7 +157,7 @@ class SettingLevelSeeder extends Seeder
                 'current_value' => '0', // dari poin
             ],
             [
-                'group' => 'LEVEL',
+                'group' => SettingGroupEnum::LEVEL->value,
                 'sequence' => 15,
                 'key' => 'level_15',
                 'name' => 'Level 15',

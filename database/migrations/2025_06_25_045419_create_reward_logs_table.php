@@ -13,12 +13,13 @@ return new class extends Migration
     {
         Schema::create('reward_logs', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('season_id')->constrained('seasons');
             $table->foreignId('quest_detail_id')->constrained('quest_details');
             $table->foreignId('activity_id')->constrained('activities');
-            $table->foreignId('season_id')->constrained('seasons');
             $table->foreignId('user_id')->constrained('users');
-            $table->integer('get_level');
-            $table->integer('get_poin');
+            $table->integer('current_level');
+            $table->integer('current_point');
+            $table->integer('get_point');
             $table->string('status');
             $table->timestamps();
             $table->softDeletes();

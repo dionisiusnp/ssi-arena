@@ -2,20 +2,18 @@
 
 namespace App\Enums;
 
-enum StepContentEnum: string
+enum SettingGroupEnum: string
 {
-    case EDITOR = 'editor';
-    case LINK = 'link';
-    case TERMINAL = 'terminal';
-    case TEXT = 'text';
-
+    case LEVEL = 'level';
+    case PERKQUESTLEVEL = 'perk_quest_level';
+    case PERKCUSTOM = 'perk_custom';
+    
     public function label(): string
     {
         return match($this) {
-            self::EDITOR => 'Editor',
-            self::LINK => 'Link',
-            self::TERMINAL => 'Terminal',
-            self::TEXT => 'Text',
+            self::LEVEL => 'Level',
+            self::PERKQUESTLEVEL => 'Perk Quest Level',
+            self::PERKCUSTOM => 'Perk Custom',
         };
     }
 

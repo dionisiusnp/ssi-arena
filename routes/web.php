@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\QuestLevelController;
 use App\Http\Controllers\Admin\QuestTypeController;
 use App\Http\Controllers\Admin\ScheduleController;
 use App\Http\Controllers\Admin\SeasonController;
+use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\TopicController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Member\DashboardController as MemberDashboardController;
@@ -50,6 +51,11 @@ Route::middleware('auth')->group(function () {
     Route::resource('quest-level', QuestLevelController::class);
     Route::get('/quest-detail/{quest_detail}/status',[QuestDetailController::class,'toggleStatus'])->name('quest-detail.status');
     Route::resource('quest-detail', QuestDetailController::class);
+
+    Route::get('/settings/level',[SettingController::class,'indexLevel'])->name('settings.level');
+    Route::get('/settings/static',[SettingController::class,'indexStatic'])->name('settings.static');
+    Route::get('/settings/dynamic',[SettingController::class,'indexDynamic'])->name('settings.dynamic');
+    Route::post('/settings/store',[SettingController::class,'store'])->name('settings.update');
 
     Route::get('/user/{user}/status',[UserController::class,'toggleStatus'])->name('user.status');
     Route::resource('user', UserController::class);

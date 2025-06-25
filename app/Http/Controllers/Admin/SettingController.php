@@ -2,18 +2,39 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Enums\SettingGroupEnum;
 use App\Http\Controllers\Controller;
 use App\Models\Setting;
+use App\Services\SettingService;
 use Illuminate\Http\Request;
 
 class SettingController extends Controller
 {
+    public $settingService;
+
+    public function __construct(SettingService $settingService)
+    {
+        $this->settingService = $settingService;
+    }
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function indexLevel(Request $request)
     {
-        //
+        $settings = $this->settingService->getSettings(SettingGroupEnum::LEVEL->value);
+        return view('admin.pengaturan.level.index', compact('settings'));
+    }
+
+    public function indexStatic(Request $request)
+    {
+        $settings = $this->settingService->getSettings(SettingGroupEnum::PERKQUESTLEVEL->value);
+        return view('admin.pengaturan.keuntungan-statis.index', compact('settings'));
+    }
+
+    public function indexDynamic(Request $request)
+    {
+        $settings = $this->settingService->getSettings(SettingGroupEnum::PERKCUSTOM->value);
+        return view('admin.pengaturan.keuntungan-dinamis.index', compact('settings'));
     }
 
     /**
@@ -29,7 +50,14 @@ class SettingController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = $request->input('settings', []);
+
+        foreach ($data as $key => $value) {
+            Setting::where('key', $key)->update([
+                'current_value' => $value
+            ]);
+        }
+        return redirect()->back()->with('success', 'Pengaturan berhasil diperbarui.');
     }
 
     /**
