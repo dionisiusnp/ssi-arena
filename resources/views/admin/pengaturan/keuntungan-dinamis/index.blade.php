@@ -21,7 +21,7 @@
                 <div class="card-body">
                     @if ($settings->isEmpty())
                         <div class="alert alert-warning mb-0" role="alert">
-                            Belum ada data pengaturan perks dinamis, silakan jalankan <code>SettingPerkCustomSeeder</code> terlebih dahulu.
+                            Belum ada data pengaturan perks dinamis.
                         </div>
                     @else
                         <form action="{{ route('settings.update') }}" method="POST">
