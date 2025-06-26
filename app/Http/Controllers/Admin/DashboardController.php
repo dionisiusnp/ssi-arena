@@ -2,9 +2,14 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Enums\VisibilityEnum;
 use App\Http\Controllers\Controller;
+use App\Models\Lesson;
+use App\Models\QuestDetail;
+use App\Models\Schedule;
 use App\Services\LessonService;
 use App\Services\QuestDetailService;
+use App\Services\ScheduleService;
 use App\Services\UserService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -13,24 +18,40 @@ class DashboardController extends Controller
 {
     public $lessonService, $scheduleService, $questDetailService, $userService;
 
-    public function __construct(LessonService $lessonService, QuestDetailService $questDetailService, UserService $userService){
+    public function __construct(ScheduleService $scheduleService, LessonService $lessonService, QuestDetailService $questDetailService, UserService $userService){
         $this->lessonService = $lessonService;
-        // $this->scheduleService = $scheduleService;
+        $this->scheduleService = $scheduleService;
         $this->questDetailService = $questDetailService;
         $this->userService = $userService;
     }
     public function index(Request $request)
     {
         $auth = Auth::user();
-        $filters = [
-            'season_id' => $request->query('season_id'),
-        ];
-        $players = $this->userService->paginateDashboard($filters);
 
-        $activeChallenges = 12;
-        $inactiveChallenges = 4;
-        $totalLessons = 30;
-        $totalEvents = 5;
+        $seasonId = $request->query('season_id');
+
+        $filters = [
+            'season_id' => $seasonId,
+        ];
+
+        $players = $this->userService->paginateDashboard($filters);
+        $events = Schedule::where('is_active', true)->get();
+        $lessons = Lesson::where('visibility', [VisibilityEnum::DRAFT->value])->get();
+
+        // Ambil quest detail tergantung season_id
+        $detailsActiveQuery = QuestDetail::where('is_editable', false);
+        $detailsInActiveQuery = QuestDetail::where('is_editable', true);
+        if (!empty($seasonId)) {
+            $detailsActiveQuery->where('season_id', $seasonId);
+            $detailsInActiveQuery->where('season_id', $seasonId);
+        }
+        $detailsActive = $detailsActiveQuery->get();
+        $detailsInActive = $detailsActiveQuery->get();
+
+        $activeChallenges = $detailsActive->count();
+        $inactiveChallenges = $detailsInActive->count();
+        $totalLessons = $lessons->count();
+        $totalEvents = $events->count();
 
         return view('admin.index', compact(
             'activeChallenges',

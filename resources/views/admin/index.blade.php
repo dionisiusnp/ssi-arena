@@ -69,24 +69,16 @@
                             <th>Urutan</th>
                             <th>Nama</th>
                             <th>Level</th>
-                            <th>Skor</th>
-                            <th>Status</th>
+                            <th>Poin</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach ($players ?? [] as $index => $player)
                             <tr>
                                 <td>{{ $index+1 }}.</td>
-                                <td>{{ $player->name }}</td>
+                                <td>{{ $player->name }} <span class="badge badge-primary">{{ $player->is_lecturer ? 'Pemateri' : 'Member' }}</span></td>
                                 <td>{{ $player->current_level }}</td>
                                 <td>{{ $player->current_point }}</td>
-                                <td>
-                                    @if ($player->is_active)
-                                        <span class="badge badge-success">Aktif</span>
-                                    @else
-                                        <span class="badge badge-danger">Non Aktif</span>
-                                    @endif
-                                </td>
                             </tr>
                         @endforeach
                         @if (empty($players))

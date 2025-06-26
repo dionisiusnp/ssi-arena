@@ -66,8 +66,8 @@
                         <input type="number" name="point" class="form-control" value="{{ $quest_detail->point }}">
                     </div>
                     <div class="form-group col-md-4">
-                        <label for="point_multiple">Perkalian Poin Tambahan</label>
-                        <input type="number" step="0.01" name="point_multiple" class="form-control" value="{{ $quest_detail->point_multiple }}">
+                        <label for="point_additional">Perkalian Poin Tambahan</label>
+                        <input type="number" name="point_additional" class="form-control" value="{{ $quest_detail->point_additional }}">
                     </div>
                 </div>
 

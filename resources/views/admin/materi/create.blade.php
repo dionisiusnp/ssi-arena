@@ -8,12 +8,14 @@
 
     <div class="card shadow">
         <div class="card-body">
-            <form id="curriculumForm" action="{{ route('lesson.store') }}" method="POST">
+            <form id="lessonForm" action="{{ route('lesson.store') }}" method="POST">
                 @csrf
                 <input type="hidden" name="visibility" id="visibility" value="{{ \App\Enums\VisibilityEnum::DRAFT->value }}">
-                <div class="form-group">
-                    <label for="role">Kategori</label>
+                <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="role">Kategori Roleplay</label>
                     <select name="role" id="role" class="form-control">
+                        <option value="">Pilih Roleplay</option>
                         @foreach (\App\Enums\RoleplayEnum::cases() as $status)
                             <option value="{{ $status->value }}" {{ old('status') === $status->value ? 'selected' : '' }}>
                                 {{ $status->label() }}
@@ -21,36 +23,27 @@
                         @endforeach
                     </select>
                 </div>
-
+                <div class="form-group col-md-6">
+                    <label>Bahasa Materi</label>
+                    <select name="language" class="form-control">
+                        <option value="">Pilih Bahasa</option>
+                        @foreach (\App\Enums\StackEnum::cases() as $stack)
+                        <option value="{{ $stack->value }}">
+                            {{ $stack->label() }}
+                        </option>
+                        @endforeach
+                    </select>
+                </div>
+                </div>
                 <div class="form-group">
                     <label for="name">Nama Materi</label>
-                    <input type="text" name="name" id="name" class="form-control">
+                    <input type="text" name="name" id="name" class="form-control" placeholder="contoh: Framework Laravel">
                 </div>
 
                 <div class="form-group">
                     <label for="description">Keterangan Materi</label>
-                    <textarea name="description" id="description" class="form-control" rows="3"></textarea>
+                    <textarea name="description" id="description" class="form-control summernote"></textarea>
                 </div>
-
-                <hr>
-                <h5>Daftar Topik</h5>
-                <div id="topicRepeater">
-                    <div data-repeater-list="topics">
-                        <div data-repeater-item class="mb-2 border rounded p-3">
-                            <div class="form-group mb-2">
-                                <label>Topik</label>
-                                <input type="text" name="name" id="name" class="form-control">
-                            </div>
-                            <div class="form-group mb-2">
-                                <label>Catatan</label>
-                                <textarea name="description" class="form-control" rows="3"></textarea>
-                            </div>
-                            <button type="button" data-repeater-delete class="btn btn-danger btn-sm">Hapus</button>
-                        </div>
-                    </div>
-                    <button type="button" data-repeater-create class="btn btn-primary btn-sm mt-2">Tambah Topik</button>
-                </div>
-
                 <div class="mt-4 d-flex justify-content-between">
                     <a href="{{ route('lesson.index') }}" class="btn btn-secondary">Kembali</a>
                     <button type="submit" class="btn btn-primary">Simpan</button>
@@ -63,18 +56,26 @@
 
 @push('scripts')
 <script>
-    $('#topicRepeater').repeater({
-        initEmpty: false,
-        defaultValues: { 'description': '' },
-        show: function () {
-            $(this).slideDown();
-        },
-        hide: function (deleteElement) {
-            $(this).slideUp(deleteElement);
+    $('.summernote').summernote({
+        height: 200,
+        placeholder: 'Tulis keterangan di sini...',
+        disableDragAndDrop: true,
+        toolbar: [
+            ['style', ['bold', 'italic', 'underline', 'clear']],
+            ['font', ['strikethrough', 'superscript', 'subscript']],
+            ['para', ['ul', 'ol', 'paragraph']],
+            ['insert', []], // Tidak ada image/video
+            ['view', ['fullscreen', 'codeview']],
+        ],
+        callbacks: {
+            onImageUpload: function () {
+                // Mencegah upload gambar lewat drag/drop
+                return false;
+            }
         }
     });
 
-    $('#curriculumForm').on('submit', function(e) {
+    $('#lessonForm').on('submit', function(e) {
         e.preventDefault();
 
         Swal.fire({

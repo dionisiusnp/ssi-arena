@@ -34,7 +34,7 @@
                 </tr>
                 <tr>
                     <th>Poin</th>
-                    <td>{{ $activity->detail->point + ($activity->detail->point * $activity->detail->point_multiple) }}</td>
+                    <td>{{ $activity->detail->point_total }}</td>
                 </tr>
                 <tr>
                     <th>Status</th>

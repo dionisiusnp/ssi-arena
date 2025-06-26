@@ -13,7 +13,7 @@
 
                 <div class="form-row">
                     <div class="form-group col-md-4">
-                        <label for="season_id">Musim</label>
+                        <label for="season_id">Periode</label>
                         <select name="season_id" id="season_id" class="form-control" required></select>
                     </div>
                     <div class="form-group col-md-4">
@@ -38,14 +38,19 @@
                         </select>
                     </div>
                     <div class="form-group col-md-8">
-                        <label for="name">Nama</label>
-                        <input type="text" name="name" id="name" class="form-control" required>
+                        <label for="claimable_by">Pemain (Kosongi jika untuk semua member)</label>
+                        <select name="claimable_by[]" id="claimable_by" class="form-control" multiple></select>
                     </div>
                 </div>
 
                 <div class="form-group">
+                        <label for="name">Nama Tantangan</label>
+                        <input type="text" name="name" id="name" class="form-control" required>
+                    </div>
+
+                <div class="form-group">
                     <label for="description">Keterangan</label>
-                    <textarea name="description" id="description" class="form-control" rows="3"></textarea>
+                    <textarea name="description" id="description" class="form-control summernote"></textarea>
                 </div>
 
                 <div class="form-row">
@@ -55,11 +60,11 @@
                     </div>
                     <div class="form-group col-md-4">
                         <label for="point">Poin</label>
-                        <input type="number" name="point" class="form-control" value="0">
+                        <input type="number" name="point" class="form-control" value="1" min="1">
                     </div>
                     <div class="form-group col-md-4">
-                        <label for="point_multiple">Perkalian Poin Tambahan</label>
-                        <input type="number" step="0.01" name="point_multiple" class="form-control" value="0">
+                        <label for="point_additional">Poin Tambahan</label>
+                        <input type="number" name="point_additional" class="form-control" value="0">
                     </div>
                 </div>
 
@@ -91,7 +96,7 @@
 @push('scripts')
 <script>
     $('#season_id').select2({
-        placeholder: 'Pilih Season',
+        placeholder: 'Pilih Periode',
         ajax: {
             url: '{{ route("season.select2") }}',
             dataType: 'json',
@@ -110,7 +115,7 @@
     });
 
     $('#quest_type_id').select2({
-        placeholder: 'Pilih Quest Type',
+        placeholder: 'Pilih Tipe Level',
         ajax: {
             url: '{{ route("quest-type.select2") }}',
             dataType: 'json',
@@ -129,7 +134,7 @@
     });
 
     $('#quest_level_id').select2({
-        placeholder: 'Pilih Quest Level',
+        placeholder: 'Pilih Level Tantangan',
         ajax: {
             url: '{{ route("quest-level.select2") }}',
             dataType: 'json',
@@ -147,18 +152,38 @@
         }
     });
 
-    // $('#description').summernote({
-    //     height: 100,
-    //     toolbar: [
-    //         ['style', ['bold', 'italic', 'underline', 'clear']],
-    //         ['para', ['ul', 'ol', 'paragraph']],
-    //         ['view', ['fullscreen', 'codeview']]
-    //     ]
-    // });
+    $('#claimable_by').select2({
+        placeholder: 'Pilih Pemain',
+        multiple: true,
+        ajax: {
+            url: '{{ route("player.select2") }}',
+            dataType: 'json',
+            delay: 250,
+            data: function (params) {
+                return {
+                    q: params.term
+                };
+            },
+            processResults: function (data) {
+                return {
+                    results: data
+                };
+            }
+        }
+    });
+
+    $('.summernote').summernote({
+        height: 100,
+        placeholder: 'Tuliskan keterangan disini...',
+        toolbar: [
+            ['style', ['bold', 'italic', 'underline', 'clear']],
+            ['para', ['ul', 'ol', 'paragraph']],
+            ['view', ['fullscreen', 'codeview']]
+        ]
+    });
 
     $('#requirementRepeater').repeater({
         initEmpty: false,
-        defaultValues: { 'description': '' },
         show: function () {
             $(this).slideDown();
         },

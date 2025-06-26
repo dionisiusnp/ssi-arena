@@ -46,6 +46,10 @@ class ScheduleController extends Controller
         try {
             $auth = Auth::user();
             $data = $this->scheduleService->store($request->toArray(), $auth);
+            if ($request->hasFile('schedule_img')) {
+                $data->clearMediaCollection('schedule_img');
+                $data->addMediaFromRequest('schedule_img')->toMediaCollection('schedule_img', 'media');
+            }
             return response()->json([
                 'success' => true,
                 'message' => 'Data berhasil dibuat',
@@ -83,6 +87,10 @@ class ScheduleController extends Controller
         try {
             $auth = Auth::user();
             $data = $this->scheduleService->update($request->toArray(), $auth, $schedule);
+            if ($request->hasFile('schedule_img')) {
+                $schedule->clearMediaCollection('schedule_img');
+                $schedule->addMediaFromRequest('schedule_img')->toMediaCollection('schedule_img', 'media');
+            }
             return response()->json([
                 'success' => true,
                 'message' => 'Data berhasil diubah',

@@ -34,8 +34,4 @@ class Topic extends Model
     {
         return $this->belongsTo(Lesson::class, 'lesson_id');
     }
-    public function steps()
-    {
-        return $this->hasMany(Step::class, 'topic_id');
-    }
 }

@@ -46,8 +46,8 @@
                             <th>Nama</th>
                             <th>Mulai</th>
                             <th>Selesai</th>
-                            <th>Diubah Oleh</th>
-                            <th>Diubah Pada</th>
+                            <th>Diubah</th>
+                            <th>Dibuat</th>
                             <th>Aksi</th>
                         </tr>
                     </thead>
@@ -59,14 +59,14 @@
                             <td>{{ $item->started_at_formatted }}</td>
                             <td>{{ $item->finished_at_formatted }}</td>
                             <td>{{ $item->lastChanger->name ?? '-' }}</td>
-                            <td>{{ $item->updated_at_formatted }}</td>
+                            <td>{{ $item->created_at_formatted }}</td>
                             <td>
                                 <a href="{{ route('season.edit', $item->id) }}" class="btn btn-sm btn-warning">Ubah</a>
-                                <form action="{{ route('season.destroy', $item->id) }}" method="POST" class="d-inline form-delete">
+                                {{-- <form action="{{ route('season.destroy', $item->id) }}" method="POST" class="d-inline form-delete">
                                     @csrf
                                     @method('DELETE')
                                     <button type="button" class="btn btn-sm btn-danger btn-delete" data-name="{{ $item->name }}">Hapus</button>
-                                </form>
+                                </form> --}}
                             </td>
                         </tr>
                         @empty
@@ -89,8 +89,8 @@
                             <th>No.</th>
                             <th>Nama</th>
                             <th>Status</th>
-                            <th>Diubah Oleh</th>
-                            <th>Diubah Pada</th>
+                            <th>Diubah</th>
+                            <th>Dibuat</th>
                             <th>Aksi</th>
                         </tr>
                     </thead>
@@ -101,15 +101,15 @@
                             <td>{{ $item->name }}</td>
                             <td><span class="badge badge-{{ $item->is_active ? 'success' : 'danger' }}">{{ $item->is_active ? 'Aktif' : 'Non Aktif' }}</span></td>
                             <td>{{ $item->lastChanger->name ?? '-' }}</td>
-                            <td>{{ $item->updated_at_formatted }}</td>
+                            <td>{{ $item->created_at_formatted }}</td>
                             <td>
                                 <a href="{{ route('quest-type.status', $item->id) }}" class="btn btn-sm btn-{{ $item->is_active ? 'danger' : 'success' }}">{{ $item->is_active ? 'Non Aktifkan' : 'Aktifkan' }}</a>
                                 <a href="{{ route('quest-type.edit', $item->id) }}" class="btn btn-sm btn-warning">Ubah</a>
-                                <form action="{{ route('quest-type.destroy', $item->id) }}" method="POST" class="d-inline form-delete">
+                                {{-- <form action="{{ route('quest-type.destroy', $item->id) }}" method="POST" class="d-inline form-delete">
                                     @csrf
                                     @method('DELETE')
                                     <button type="button" class="btn btn-sm btn-danger btn-delete" data-name="{{ $item->name }}">Hapus</button>
-                                </form>
+                                </form> --}}
                             </td>
                         </tr>
                         @empty
@@ -132,8 +132,8 @@
                             <th>No.</th>
                             <th>Nama</th>
                             <th>Status</th>
-                            <th>Diubah Oleh</th>
-                            <th>Diubah Pada</th>
+                            <th>Diubah</th>
+                            <th>Dibuat</th>
                             <th>Aksi</th>
                         </tr>
                     </thead>
@@ -144,15 +144,15 @@
                             <td>{{ $item->name }}</td>
                             <td><span class="badge badge-{{ $item->is_active ? 'success' : 'danger' }}">{{ $item->is_active ? 'Aktif' : 'Non Aktif' }}</span></td>
                             <td>{{ $item->lastChanger->name ?? '-' }}</td>
-                            <td>{{ $item->updated_at_formatted }}</td>
+                            <td>{{ $item->created_at_formatted }}</td>
                             <td>
                                 <a href="{{ route('quest-level.status', $item->id) }}" class="btn btn-sm btn-{{ $item->is_active ? 'danger' : 'success' }}">{{ $item->is_active ? 'Non Aktifkan' : 'Aktifkan' }}</a>
                                 <a href="{{ route('quest-level.edit', $item->id) }}" class="btn btn-sm btn-warning">Ubah</a>
-                                <form action="{{ route('quest-level.destroy', $item->id) }}" method="POST" class="d-inline form-delete">
+                                {{-- <form action="{{ route('quest-level.destroy', $item->id) }}" method="POST" class="d-inline form-delete">
                                     @csrf
                                     @method('DELETE')
                                     <button type="button" class="btn btn-sm btn-danger btn-delete" data-name="{{ $item->name }}">Hapus</button>
-                                </form>
+                                </form> --}}
                             </td>
                         </tr>
                         @empty

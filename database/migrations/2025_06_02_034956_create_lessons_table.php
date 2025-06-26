@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('lessons', function (Blueprint $table) {
             $table->id();
             $table->string('role')->nullable(); //fullstack, back end, front end, devops
+            $table->string('language')->nullable();
             $table->string('name');
             $table->text('description')->nullable();
             $table->string('visibility')->nullable(); //shared, draft, published
@@ -28,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('roadmaps');
+        Schema::dropIfExists('lessons');
     }
 };

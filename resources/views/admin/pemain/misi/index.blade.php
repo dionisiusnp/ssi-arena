@@ -70,7 +70,7 @@
                             <td><span class="badge badge-secondary">{{ $activity->detail->questType->name ?? '-' }}</span></td>
                             <td><span class="badge badge-secondary">{{ $activity->detail->questLevel->name ?? '-' }}</span></td>
                             <td>{{ $activity->detail->name ?? '-' }}</td>
-                            <td>{{ $activity->detail->point + ($activity->detail->point * $activity->detail->point_multiple) }}</td>
+                            <td>{{ $activity->detail->point_total }}</td>
                             <td><span class="badge badge-{{ $activity->status ? 'success' : 'secondary' }}">{{ $activity->status ? 'Selesai' : 'Belum' }}</span></td>
                             <td>
                                 <a href="{{ route('activity.show', $activity->id) }}?claimed_by={{ request('claimed_by') }}&season_id={{ request('season_id') }}&search={{ request('search') }}" class="btn btn-sm btn-primary">

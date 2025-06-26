@@ -16,6 +16,8 @@ return new class extends Migration
             $table->foreignId('lesson_id')->nullable()->constrained('lessons');
             $table->string('name');
             $table->text('description')->nullable();
+            $table->text('steps')->nullable();
+            $table->string('visibility')->nullable(); //shared, draft, published
             $table->integer('sequence')->default(0);
             $table->foreignId('changed_by')->nullable()->constrained('users');
             $table->timestamps();

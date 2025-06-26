@@ -47,9 +47,7 @@ class LessonController extends Controller
     {
         try {
             $auth = Auth::user();
-            $tops = $request->topics ?? [];
-            unset($request->topics);
-            $data = $this->lessonService->store($request->toArray(), $tops,$auth);
+            $data = $this->lessonService->store($request->toArray(),$auth);
             return response()->json([
                 'success' => true,
                 'message' => 'Data berhasil dibuat',
@@ -86,9 +84,7 @@ class LessonController extends Controller
     {
         try {
             $auth = Auth::user();
-            $tops = $request->topics ?? [];
-            unset($request->topics);
-            $data = $this->lessonService->update($request->toArray(), $tops,$auth, $lesson);
+            $data = $this->lessonService->update($request->toArray(),$auth, $lesson);
             return response()->json([
                 'success' => true,
                 'message' => 'Data berhasil diubah',

@@ -49,4 +49,23 @@ class QuestDetail extends Model
     public function activities() {
         return $this->hasMany(Activity::class,'quest_detail_id');
     }
+
+    public function getClaimableUsersAttribute()
+    {
+        if (empty($this->claimable_by)) {
+            return collect();
+        }
+        $ids = is_array($this->claimable_by)
+        ? $this->claimable_by
+        : json_decode($this->claimable_by, true);
+        return \App\Models\User::whereIn('id', $ids)->get();
+    }
+
+    public function getClaimableNamesAttribute()
+    {
+        $users = $this->claimable_users;
+        return $users->isNotEmpty()
+            ? $users->pluck('name')->implode(', ')
+            : 'Semua Member';
+    }
 }

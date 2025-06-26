@@ -8,66 +8,56 @@
 
     <div class="card shadow">
         <div class="card-body">
-            <form id="curriculumForm" action="{{ route('lesson.update', $lesson->id) }}" method="POST">
+            <form id="lessonForm" action="{{ route('lesson.update', $lesson->id) }}" method="POST">
                 @csrf
                 @method('PUT')
                 <input type="hidden" name="visibility" id="visibility" value="{{ $lesson->visibility }}">
-
-                <div class="form-group">
-                    <label for="role">Kategori</label>
-                    <select name="role" id="role" class="form-control">
-                        @foreach (\App\Enums\RoleplayEnum::cases() as $status)
-                            <option value="{{ $status->value }}" {{ $lesson->role === $status->value ? 'selected' : '' }}>
-                                {{ $status->label() }}
-                            </option>
-                        @endforeach
-                    </select>
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for="role">Kategori Roleplay</label>
+                        <select name="role" id="role" class="form-control">
+                            @php
+                                $enum1 = \App\Enums\RoleplayEnum::tryFrom($lesson->role);
+                            @endphp
+                            @if (!$enum1 && $lesson->role)
+                                <option value="{{ $lesson->role }}">
+                                    {{ Str::headline($lesson->role) }}
+                                </option>
+                            @endif
+                            @foreach (\App\Enums\RoleplayEnum::cases() as $status)
+                                <option value="{{ $status->value }}" {{ $lesson->role === $status->value ? 'selected' : '' }}>
+                                    {{ $status->label() }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label>Bahasa Materi</label>
+                        <select name="language" class="form-control">
+                            @php
+                                $enum2 = \App\Enums\StackEnum::tryFrom($lesson->language);
+                            @endphp
+                            @if (!$enum2 && $lesson->language)
+                                <option value="{{ $lesson->language }}">
+                                    {{ Str::headline($lesson->language) }}
+                                </option>
+                            @endif
+                            @foreach (\App\Enums\StackEnum::cases() as $stack)
+                                <option value="{{ $stack->value }}" {{ $lesson->language === $stack->value ? 'selected' : '' }}>
+                                    {{ $stack->label() }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
                 </div>
-
                 <div class="form-group">
                     <label for="name">Nama</label>
-                    <input type="text" name="name" id="name" class="form-control" value="{{ $lesson->name }}">
+                    <input type="text" name="name" id="name" class="form-control" placeholder="contoh: Framework Laravel" value="{{ $lesson->name }}">
                 </div>
 
                 <div class="form-group">
                     <label for="description">Keterangan</label>
-                    <textarea name="description" id="description" class="form-control" rows="3">{{ $lesson->description }}</textarea>
-                </div>
-
-                <hr>
-                <h5>Daftar Topik</h5>
-                <div id="topicRepeater">
-                    <div data-repeater-list="topics">
-                        @foreach ($lesson->topics as $topic)
-                            <div data-repeater-item class="mb-2 border rounded p-3">
-                                <input type="hidden" name="id" value="{{ $topic->id }}">
-                                <div class="form-group mb-2">
-                                    <label>Topik</label>
-                                    <input type="text" name="name" class="form-control" value="{{ $topic->name }}">
-                                </div>
-                                <div class="form-group mb-2">
-                                    <label>Catatan</label>
-                                    <textarea name="description" class="form-control" rows="3">{{ $topic->description }}</textarea>
-                                </div>
-                                <button type="button" data-repeater-delete class="btn btn-danger btn-sm">Hapus</button>
-                            </div>
-                        @endforeach
-                        {{-- Tambahan baris kosong jika tidak ada topik --}}
-                        @if ($lesson->topics->isEmpty())
-                            <div data-repeater-item class="mb-2 border rounded p-3">
-                                <div class="form-group mb-2">
-                                    <label>Topik</label>
-                                    <input type="text" name="name" class="form-control">
-                                </div>
-                                <div class="form-group mb-2">
-                                    <label>Catatan</label>
-                                    <textarea name="description" class="form-control" rows="3"></textarea>
-                                </div>
-                                <button type="button" data-repeater-delete class="btn btn-danger btn-sm">Hapus</button>
-                            </div>
-                        @endif
-                    </div>
-                    <button type="button" data-repeater-create class="btn btn-primary btn-sm mt-2">Tambah Topik</button>
+                    <textarea name="description" id="description" class="form-control summernote">{!! $lesson->description !!}</textarea>
                 </div>
 
                 <div class="mt-4 d-flex justify-content-between">
@@ -82,18 +72,26 @@
 
 @push('scripts')
 <script>
-    $('#topicRepeater').repeater({
-        initEmpty: false,
-        defaultValues: { 'description': '' },
-        show: function () {
-            $(this).slideDown();
-        },
-        hide: function (deleteElement) {
-            $(this).slideUp(deleteElement);
+    $('.summernote').summernote({
+        height: 200,
+        placeholder: 'Tulis keterangan di sini...',
+        disableDragAndDrop: true,
+        toolbar: [
+            ['style', ['bold', 'italic', 'underline', 'clear']],
+            ['font', ['strikethrough', 'superscript', 'subscript']],
+            ['para', ['ul', 'ol', 'paragraph']],
+            ['insert', []], // Tidak ada image/video
+            ['view', ['fullscreen', 'codeview']],
+        ],
+        callbacks: {
+            onImageUpload: function () {
+                // Mencegah upload gambar lewat drag/drop
+                return false;
+            }
         }
     });
 
-    $('#curriculumForm').on('submit', function(e) {
+    $('#lessonForm').on('submit', function(e) {
         e.preventDefault();
 
         Swal.fire({

@@ -56,7 +56,6 @@ class TopicService
             ->when($visibility, function ($query) use ($visibility) {
                 $query->where('visibility', $visibility);
             })
-            ->withCount('steps')
             ->orderBy('sequence')
             ->paginate($perPage);
     }
@@ -64,7 +63,22 @@ class TopicService
     public function byLesson($lessonId)
     {
         try {
-            return $this->model->with('steps')->where('lesson_id','=',$lessonId)->orderBy('sequence')->get();
+            return $this->model
+            ->where('lesson_id',$lessonId)
+            ->orderBy('sequence')->get();
+        } catch (\Throwable $th) {
+            throw new \ErrorException($th->getMessage());
+        }
+    }
+
+    public function underSequence(int $lessonId, int $sequence)
+    {
+        try {
+            return $this->model
+                ->where('lesson_id', $lessonId)
+                ->where('sequence', '>=', $sequence)
+                ->orderBy('sequence', 'desc')
+                ->get();
         } catch (\Throwable $th) {
             throw new \ErrorException($th->getMessage());
         }
@@ -73,6 +87,19 @@ class TopicService
     public function store(array $data, $auth)
     {
         try {
+            $lessonId = $data['lesson_id'];
+            $targetSequence = (int) $data['sequence'];
+            $maxSequence = $this->byLesson($lessonId)->count() + 1;
+            if ($targetSequence < $maxSequence) {
+                $topicsToShift = $this->underSequence($lessonId, $targetSequence);
+                foreach ($topicsToShift as $topic) {
+                    $topic->update([
+                        'sequence' => $topic->sequence + 1,
+                    ]);
+                }
+            } else {
+                $data['sequence'] = $maxSequence;
+            }
             $data['changed_by'] = $auth->id;
             return $this->model->create($data);
         } catch (\Throwable $th) {
@@ -89,6 +116,32 @@ class TopicService
     {
         try {
             $data['changed_by'] = $auth->id;
+            $oldSequence = $topic->sequence;
+            $newSequence = (int) $data['sequence'];
+            $lessonId = $topic->lesson_id;
+            if ($oldSequence !== $newSequence) {
+                if ($newSequence < $oldSequence) {
+                    $this->model
+                        ->where('lesson_id', $lessonId)
+                        ->where('sequence', '>=', $newSequence)
+                        ->where('sequence', '<', $oldSequence)
+                        ->orderBy('sequence', 'desc')
+                        ->get()
+                        ->each(function ($t) {
+                            $t->update(['sequence' => $t->sequence + 1]);
+                        });
+                } elseif ($newSequence > $oldSequence) {
+                    $this->model
+                        ->where('lesson_id', $lessonId)
+                        ->where('sequence', '<=', $newSequence)
+                        ->where('sequence', '>', $oldSequence)
+                        ->orderBy('sequence', 'asc')
+                        ->get()
+                        ->each(function ($t) {
+                            $t->update(['sequence' => $t->sequence - 1]);
+                        });
+                }
+            }
             $topic->update($data);
             return $topic;
         } catch (\Throwable $th) {

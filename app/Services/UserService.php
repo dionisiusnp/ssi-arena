@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Enums\QuestEnum;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -32,6 +33,7 @@ class UserService
                 DB::raw('users.name as text'),
             ])
             ->where('users.is_member', true)
+            ->where('users.is_active', true)
             ->when(count($filters), function ($q) use ($filters) {
                 $q->where($filters);
             })
@@ -72,10 +74,9 @@ class UserService
 
         return $this->model
             ->where('is_member', true)
-            ->where('is_lecturer', false)
             ->where('is_active', true)
             ->withCount(['activities as total_point' => function ($query) use ($seasonId) {
-                $query->where('status', true)
+                $query->where('status', QuestEnum::PLUS->value)
                     ->whereColumn('activities.claimed_by', 'users.id')
                     ->join('quest_details', 'activities.quest_detail_id', '=', 'quest_details.id')
                     ->when(!is_null($seasonId), function ($q) use ($seasonId) {
@@ -106,6 +107,11 @@ class UserService
     public function update(array $data, User $user)
     {
         try {
+            if (!empty($data['password'])) {
+                $data['password'] = Hash::make($data['password']);
+            } else {
+                unset($data['password']);
+            }
             $user->update($data);
             return $user;
         } catch (\Throwable $th) {

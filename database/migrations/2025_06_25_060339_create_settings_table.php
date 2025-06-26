@@ -11,15 +11,18 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('steps', function (Blueprint $table) {
+        Schema::create('settings', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('topic_id')->nullable()->constrained('topics');
-            $table->string('language')->nullable();
-            $table->string('name');
-            $table->string('content_type'); // terminal, editor, link, text
-            $table->text('content_input')->nullable();
-            $table->text('content_output')->nullable();
+            $table->string('group');
             $table->integer('sequence')->default(0);
+            $table->string('key')->unique();
+            $table->string('name');
+            $table->text('description')->nullable();
+            $table->string('column_type');
+            $table->string('select_endpoint')->nullable();
+            $table->string('select_label')->nullable();
+            $table->text('default_value')->nullable();
+            $table->text('current_value')->nullable();
             $table->foreignId('changed_by')->nullable()->constrained('users');
             $table->timestamps();
             $table->softDeletes();
@@ -31,6 +34,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('steps');
+        Schema::dropIfExists('settings');
     }
 };

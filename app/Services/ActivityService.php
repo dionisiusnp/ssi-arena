@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Enums\QuestEnum;
 use App\Models\Activity;
 use App\Models\ActivityChecklist;
 use App\Models\QuestDetail;
@@ -63,6 +64,7 @@ class ActivityService
             $questRequirements = $questDetail->requirements;
             $data['quest_detail_id'] = $questDetail->id;
             $data['claimed_by'] = $auth->id;
+            $data['status'] = QuestEnum::CLAIMED->value;
             $data['changed_by'] = $auth->id;
             $activity = $this->model->create($data);
             if ($questRequirements->isNotEmpty()) {
@@ -93,18 +95,6 @@ class ActivityService
             $data['changed_by'] = $auth->id;
             $activity->update($data);
             return $activity;
-        } catch (\Throwable $th) {
-            throw new \ErrorException($th->getMessage());
-        }
-    }
-
-    public function isClear($auth, Activity $activity): bool
-    {
-        try {
-            $activity->status = !$activity->status;
-            $activity->changed_by = $auth->id ?? null;
-            $activity->save();
-            return true;
         } catch (\Throwable $th) {
             throw new \ErrorException($th->getMessage());
         }

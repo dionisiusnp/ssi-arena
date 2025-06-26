@@ -8,61 +8,79 @@
 
     <div class="card shadow">
         <div class="card-body">
-            <form id="questDetailForm" action="{{ route('user.store') }}" method="POST">
+            <form id="userForm" action="{{ route('user.store') }}" method="POST">
                 @csrf
 
-                <input type="hidden" name="is_member" id="is_member" value="1">
-                <input type="hidden" name="is_lecturer" id="is_lecturer" value="1">
-
-                <div class="form-group">
-                    <label for="name">Nama Lengkap</label>
-                    <input type="text" name="name" id="name" class="form-control" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="email">Email</label>
-                    <input type="email" name="email" id="email" class="form-control" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="nim">NIM</label>
-                    <input type="text" name="nim" id="nim" class="form-control">
-                </div>
-
-                <div class="form-group">
-                    <label for="password">Password</label>
-                    <div class="input-group">
-                        <input 
-                            type="password" 
-                            name="password" 
-                            id="password" 
-                            class="form-control" 
-                            required 
-                            minlength="6"
-                            autocomplete="new-password">
-                        <div class="input-group-append">
-                            <button class="btn btn-outline-secondary toggle-password" type="button" data-target="#password">
-                                <i class="fas fa-eye"></i>
-                            </button>
-                        </div>
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for="is_member">Apakah Member?</label>
+                        <select name="is_member" id="is_member" class="form-control">
+                            <option value="1" selected>Ya</option>
+                            <option value="0">Tidak</option>
+                        </select>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="is_lecturer">Apakah Pengajar?</label>
+                        <select name="is_lecturer" id="is_lecturer" class="form-control">
+                            <option value="1">Ya</option>
+                            <option value="0" selected>Tidak</option>
+                        </select>
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <label for="password_confirmation">Konfirmasi Password</label>
-                    <div class="input-group">
-                        <input 
-                            type="password" 
-                            name="password_confirmation" 
-                            id="password_confirmation" 
-                            class="form-control" 
-                            required 
-                            minlength="6"
-                            autocomplete="new-password">
-                        <div class="input-group-append">
-                            <button class="btn btn-outline-secondary toggle-password" type="button" data-target="#password_confirmation">
-                                <i class="fas fa-eye"></i>
-                            </button>
+                    <label for="name">Nama Pemain</label>
+                    <input type="text" name="name" id="name" class="form-control" required>
+                </div>
+
+                <div class="row">
+                    <div class="form-group col-md-6">
+                        <label for="nim">NIM</label>
+                        <input type="text" name="nim" id="nim" class="form-control">
+                    </div>
+
+                    <div class="form-group col-md-6">
+                        <label for="email">Email</label>
+                        <input type="email" name="email" id="email" class="form-control" required>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group col-md-6">
+                        <label for="password">Password</label>
+                        <div class="input-group">
+                            <input 
+                                type="password" 
+                                name="password" 
+                                id="password" 
+                                class="form-control" 
+                                required 
+                                minlength="6"
+                                autocomplete="new-password">
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-secondary toggle-password" type="button" data-target="#password">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group col-md-6">
+                        <label for="password_confirmation">Konfirmasi Password</label>
+                        <div class="input-group">
+                            <input 
+                                type="password" 
+                                name="password_confirmation" 
+                                id="password_confirmation" 
+                                class="form-control" 
+                                required 
+                                minlength="6"
+                                autocomplete="new-password">
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-secondary toggle-password" type="button" data-target="#password_confirmation">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -96,7 +114,7 @@
         });
     });
 
-    $('#questDetailForm').on('submit', function(e) {
+    $('#userForm').on('submit', function(e) {
         e.preventDefault();
 
         Swal.fire({

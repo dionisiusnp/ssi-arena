@@ -28,6 +28,7 @@ class AuthenticatedSessionController extends Controller
         $request->authenticate();
         $user = Auth::user();
         
+        // is_active || is_member || is_lecturer
         // true || null || true = admin
         // true || true || true = pengajar
         // true || true || false = member

@@ -21,8 +21,8 @@
 
                 <div class="form-group">
                     <label for="description">Keterangan</label>
-                    <textarea name="description" id="description" rows="3"
-                        class="form-control @error('description') is-invalid @enderror">{{ old('description') }}</textarea>
+                    <textarea name="description" id="description"
+                        class="form-control summernote @error('description') is-invalid @enderror">{{ old('description') }}</textarea>
                     @error('description') <div class="invalid-feedback">{{ $message }}</div> @enderror
                 </div>
 
@@ -39,24 +39,24 @@
 @push('scripts')
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
-    // $('.summernote').summernote({
-    //     height: 200,
-    //     placeholder: 'Tulis deskripsi di sini...',
-    //     disableDragAndDrop: true,
-    //     toolbar: [
-    //         ['style', ['bold', 'italic', 'underline', 'clear']],
-    //         ['font', ['strikethrough', 'superscript', 'subscript']],
-    //         ['para', ['ul', 'ol', 'paragraph']],
-    //         ['insert', []], // Tidak ada image/video
-    //         ['view', ['fullscreen', 'codeview']],
-    //     ],
-    //     callbacks: {
-    //         onImageUpload: function () {
-    //             // Mencegah upload gambar lewat drag/drop
-    //             return false;
-    //         }
-    //     }
-    // });
+    $('.summernote').summernote({
+        height: 200,
+        placeholder: 'Tulis deskripsi di sini...',
+        disableDragAndDrop: true,
+        toolbar: [
+            ['style', ['bold', 'italic', 'underline', 'clear']],
+            ['font', ['strikethrough', 'superscript', 'subscript']],
+            ['para', ['ul', 'ol', 'paragraph']],
+            ['insert', []], // Tidak ada image/video
+            ['view', ['fullscreen', 'codeview']],
+        ],
+        callbacks: {
+            onImageUpload: function () {
+                // Mencegah upload gambar lewat drag/drop
+                return false;
+            }
+        }
+    });
 
     document.getElementById('questTypeForm').addEventListener('submit', function(e) {
         e.preventDefault();

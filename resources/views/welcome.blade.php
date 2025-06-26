@@ -35,10 +35,10 @@
 
 <body class="bg-gradient-primary">
 
-    <div class="container">
+    <div class="container min-vh-100 d-flex align-items-center justify-content-center"">
 
         <!-- Outer Row -->
-        <div class="row justify-content-center">
+        <div class="row w-100 justify-content-center">
 
             <div class="col-xl-6 col-lg-8 col-md-9">
 
@@ -106,6 +106,8 @@
     <!-- Custom scripts for all pages-->
     <script src="{{ asset('assets/admin/js/sb-admin-2.min.js') }}"></script>
 
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <!-- Toggle Password Script -->
     <script>
         $(document).on('click', '.toggle-password', function () {
@@ -120,6 +122,18 @@
                 icon.removeClass("fa-eye-slash").addClass("fa-eye");
             }
         });
+
+        @if(session('success'))
+            Swal.fire({
+                icon: 'success',
+                title: 'Berhasil!',
+                text: '{{ session('success') }}',
+                timer: 2500,
+                showConfirmButton: false,
+                toast: true,
+                position: 'top-end'
+            });
+        @endif
     </script>
 
 </body>

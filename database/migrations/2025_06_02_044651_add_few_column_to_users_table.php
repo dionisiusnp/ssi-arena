@@ -12,9 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->boolean('current_level')->default(1);
-            $table->decimal('current_point', 6,2)->default(0);
-            $table->boolean('nim')->nullable();
+            $table->integer('current_level')->default(1);
+            $table->integer('current_point')->default(0);
+            $table->string('nim')->nullable();
             $table->boolean('is_member')->nullable();
             $table->boolean('is_lecturer')->default(false);
             $table->boolean('is_active')->default(true);

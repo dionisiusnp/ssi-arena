@@ -84,11 +84,15 @@ class QuestDetailService
     {
         try {
             $data['changed_by'] = $auth->id;
-            $data['point_total'] = $data['point'] + ($data['point'] * $data['point_multiple']);
+            $data['claimable_by'] = isset($data['claimable_by']) && $data['claimable_by'] ? json_encode($data['claimable_by']) : null;
+            $data['claimable_clan_by'] = isset($data['claimable_clan_by']) && $data['claimable_clan_by'] ? json_encode($data['claimable_by']) : null;
+            $data['point_total'] = $data['point'] + $data['point_additional'];
             $qd = $this->model->create($data);
             if (!empty($reqs)) {
                 foreach($reqs as $item){
-                    $this->questRequirementService->store($item['description'], $qd->id, $auth);
+                    if (!empty(trim($item['description'] ?? ''))) {
+                        $this->questRequirementService->store($item['description'], $qd->id, $auth);
+                    }
                 }
             }
             return $qd;
@@ -107,7 +111,8 @@ class QuestDetailService
         DB::beginTransaction();
         try {
             $data['changed_by'] = $auth->id;
-            $data['point_total'] = $data['point'] + ($data['point'] * $data['point_multiple']);
+            $data['claimable_by'] = isset($data['claimable_by']) && $data['claimable_by'] ? json_encode($data['claimable_by']) : null;
+            $data['point_total'] = $data['point'] + $data['point_additional'];
             $qd = $questDetail->update($data);
             if (!empty($reqs)) {
                 foreach ($questDetail->activities as $activity) {
@@ -120,7 +125,9 @@ class QuestDetailService
                 }
 
                 foreach($reqs as $item){
-                    $this->questRequirementService->store($item['description'], $questDetail->id, $auth);
+                    if (!empty(trim($item['description'] ?? ''))) {
+                        $this->questRequirementService->store($item['description'], $questDetail->id, $auth);
+                    }
                 }
             }
             DB::commit();

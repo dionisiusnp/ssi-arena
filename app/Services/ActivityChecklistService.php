@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Enums\QuestEnum;
 use App\Models\ActivityChecklist;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -77,7 +78,7 @@ class ActivityChecklistService
         try {
             $activity = $this->activityService->model()->find($activityChecklist->activity_id);
             $activity->update([
-                'status' => false,
+                'status' => QuestEnum::PENDING->value,
             ]);
             $activityChecklist->status = !$activityChecklist->status;
             $activityChecklist->changed_by = $auth->id ?? null;
