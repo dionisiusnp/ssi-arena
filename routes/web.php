@@ -30,6 +30,7 @@ Route::get('/', function () {
 Route::prefix('guest')->name('guest.')->group(function () {
     Route::get('/schedule',[MemberDashboardController::class, 'index'])->name('schedule');
     Route::get('/lesson',[MemberLessonController::class, 'index'])->name('lesson');
+    Route::get('/lesson/{lesson}',[MemberLessonController::class, 'show'])->name('lesson.show');
     Route::get('/register',[RegisterController::class, 'index'])->name('register');
     Route::post('/register/store',[RegisterController::class, 'register'])->middleware('throttle:register')->name('register.store');
 });

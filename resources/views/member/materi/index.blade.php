@@ -25,7 +25,7 @@
                             <p class="mb-1"><strong>Pemateri:</strong> {{ $lesson->lastChanger->name ?? '-' }}</p>
                             <p class="mb-1"><i class="fas fa-layer-group me-1"></i> {{ $lesson->topics_count }} Topik</p>
                             <p class="mb-3 text-muted"><i class="far fa-calendar-alt me-1"></i> {{ $lesson->created_at_formatted }}</p>
-                            <a href="{{ route('member.lesson.show', $lesson->id) }}" class="btn btn-sm btn-outline-primary">Lihat Topik</a>
+                            <a href="{{ auth()->check() ? route('member.lesson.show', $lesson->id) : route('guest.lesson.show', $lesson->id) }}" class="btn btn-sm btn-outline-primary">Lihat Topik</a>
                         </div>
                     </div>
                 </div>
