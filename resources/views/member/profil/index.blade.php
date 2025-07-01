@@ -16,12 +16,14 @@
             Level: {{ auth()->user()->current_level }} | Poin: {{ auth()->user()->current_point }}
         </div>
 
+        @if ($musim)
         <div class="subheading mb-4">
-            Musim: Musim Pertama | Periode: 01 Juni 2025 - 30 Juni 2025
+            Musim: {{ $musim->name }} | Periode: {{ $musim->started_at_formatted . '-' . $musim->finished_at_formatted }}
         </div>
+        @endif
 
         <div class="d-flex flex-wrap align-items-center gap-2 mt-3">
-            <a href="" class="btn btn-outline-primary">
+            <a href="{{ route('member.reset') }}" class="btn btn-outline-primary">
                 <i class="fas fa-key me-1"></i> Ganti Sandi
             </a>
             @if(auth()->user()->is_lecturer)

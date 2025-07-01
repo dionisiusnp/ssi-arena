@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Season;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -67,7 +68,11 @@ class SeasonService
 
     public function lastSeason()
     {
-        return $this->model->latest()->first();
+        return $this->model
+        ->where('started_at', '<=', Carbon::today())
+        ->where('finished_at', '>=', Carbon::today())
+        ->orderByDesc('started_at')
+        ->first();
     }
 
     public function update(array $data, $auth, Season $season)
