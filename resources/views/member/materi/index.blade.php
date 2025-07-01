@@ -9,7 +9,7 @@
 
         <!-- Search Form -->
         <form method="GET" action="{{ route('member.lesson') }}" class="input-group mb-4">
-            <input type="text" name="search" class="form-control" placeholder="Cari judul, kategori, atau pemateri..." value="{{ request('search') }}">
+            <input type="text" name="q" class="form-control" placeholder="Cari materi..." value="{{ request('q') }}">
             <button class="btn btn-primary text-white" type="submit">Filter</button>
             <a href="{{ route('member.lesson') }}" class="btn btn-secondary text-white">Reset</a>
         </form>

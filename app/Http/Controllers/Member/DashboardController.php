@@ -19,9 +19,8 @@ class DashboardController extends Controller
         $auth = Auth::user();
         $filters = [
             'search' => $request->query('q') ?? null,
-            'is_active' => $request->query('is_active') ?? null,
         ];
-        $schedules = $this->scheduleService->paginate($filters);
+        $schedules = $this->scheduleService->paginateMember($filters);
         return view('member.index', compact('schedules'));
     }
 }

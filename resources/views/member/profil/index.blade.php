@@ -141,3 +141,30 @@ for ($m = 1; $m <= 12; $m++) {
         </div>
     </div>
 </section>
+
+<!-- Toast sukses -->
+@if (session('success'))
+<div class="position-fixed top-0 end-0 p-3" style="z-index: 1080">
+    <div id="successToast" class="toast align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="4000">
+        <div class="d-flex">
+            <div class="toast-body">
+                {{ session('success') }}
+            </div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+    </div>
+</div>
+@endif
+@endsection
+
+@push('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const toastEl = document.getElementById('successToast');
+        if (toastEl) {
+            const toast = new bootstrap.Toast(toastEl);
+            toast.show();
+        }
+    });
+</script>
+@endpush

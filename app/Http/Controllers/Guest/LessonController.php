@@ -24,8 +24,9 @@ class LessonController extends Controller
         $filters = [
             'search' => $request->query('q') ?? null,
             'role' => $request->query('role') ?? null,
+            'language' => $request->query('language') ?? null,
         ];
-        $lessons = $this->lessonService->paginateMember($filters);
+        $lessons = $this->lessonService->paginateMember($auth,$filters);
         return view('member.materi.index', compact('lessons'));
     }
 
