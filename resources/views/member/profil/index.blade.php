@@ -16,12 +16,14 @@
             Level: {{ auth()->user()->current_level }} | Poin: {{ auth()->user()->current_point }}
         </div>
 
+        @if ($musim)
         <div class="subheading mb-4">
-            Musim: Musim Pertama | Periode: 01 Juni 2025 - 30 Juni 2025
+            Musim: {{ $musim->name }} | Periode: {{ $musim->started_at_formatted . '-' . $musim->finished_at_formatted }}
         </div>
+        @endif
 
         <div class="d-flex flex-wrap align-items-center gap-2 mt-3">
-            <a href="" class="btn btn-outline-primary">
+            <a href="{{ route('member.reset') }}" class="btn btn-outline-primary">
                 <i class="fas fa-key me-1"></i> Ganti Sandi
             </a>
             @if(auth()->user()->is_lecturer)
@@ -139,3 +141,30 @@ for ($m = 1; $m <= 12; $m++) {
         </div>
     </div>
 </section>
+
+<!-- Toast sukses -->
+@if (session('success'))
+<div class="position-fixed top-0 end-0 p-3" style="z-index: 1080">
+    <div id="successToast" class="toast align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="4000">
+        <div class="d-flex">
+            <div class="toast-body">
+                {{ session('success') }}
+            </div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+    </div>
+</div>
+@endif
+@endsection
+
+@push('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const toastEl = document.getElementById('successToast');
+        if (toastEl) {
+            const toast = new bootstrap.Toast(toastEl);
+            toast.show();
+        }
+    });
+</script>
+@endpush

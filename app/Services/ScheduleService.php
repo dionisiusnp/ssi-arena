@@ -48,7 +48,7 @@ class ScheduleService
                     $q->where('name', 'LIKE', "%{$search}%");
                 });
             })
-            ->orderByDesc('created_at')
+            ->orderByDesc('started_at')
             ->paginate($perPage);
     }
 

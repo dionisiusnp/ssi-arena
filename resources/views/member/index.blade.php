@@ -1,16 +1,16 @@
 @extends('layouts.member.app')
 
-@section('title', 'Dashboard Member')
+@section('title', 'Daftar Kegiatan')
 
 @section('content')
 <section class="resume-section" id="schedules">
     <div class="resume-section-content">
-        <h2 class="mb-4">Daftar Acara</h2>
+        <h2 class="mb-4">Daftar Kegiatan</h2>
 
         <!-- Search Form -->
         <form method="GET" class="mb-4">
             <div class="input-group">
-                <input type="text" name="search" class="form-control" placeholder="Cari kegiatan..." value="{{ request('search') }}">
+                <input type="text" name="q" class="form-control" placeholder="Cari kegiatan..." value="{{ request('q') }}">
                 <button class="btn btn-primary text-white" type="submit">Cari</button>
             </div>
         </form>
@@ -21,19 +21,77 @@
             <!-- Carousel Container -->
             <div class="overflow-auto pb-3" style="white-space: nowrap;">
                 @foreach ($schedules as $schedule)
+                    @php
+                        $now = \Carbon\Carbon::now();
+                        $start = \Carbon\Carbon::parse($schedule->started_at);
+                        $end = \Carbon\Carbon::parse($schedule->finished_at);
+
+                        $status = 'Kadaluwarsa';
+                        $badgeClass = 'bg-danger';
+                        if ($now->isBetween($start->startOfDay(), $end->endOfDay())) {
+                            $status = 'Hari Ini';
+                            $badgeClass = 'bg-success';
+                        } elseif ($now->lt($start)) {
+                            $status = 'Akan Datang';
+                            $badgeClass = 'bg-warning';
+                        }
+
+                        $imageUrl = $schedule->hasMedia('schedule_img')
+                            ? $schedule->getFirstMediaUrl('schedule_img')
+                            : asset('assets/member/assets/img/default-image.jpg');
+
+                        $shareUrl = $schedule->url ?? url()->current();
+                        $shareText = urlencode($schedule->name . ' - ' . $shareUrl);
+                    @endphp
+
                     <div class="d-inline-block me-3" style="width: 300px;">
-                        <div class="card h-100 shadow-sm">
-                            <img src="{{ asset('assets/member/assets/img/default-image.jpg') }}" class="card-img-top" alt="No poster">
-                            <div class="card-body">
-                                <h5 class="card-title">{{ $schedule->name }}</h5>
-                                <p class="card-text">
-                                    <small class="text-muted">Diposting: {{ $schedule->created_at->format('d M Y') }}</small>
-                                </p>
-                                @if ($schedule->url)
-                                    <a href="{{ $schedule->url }}" class="btn btn-sm btn-outline-primary" target="_blank">
-                                        Detail Acara
+                        <div class="card h-100 shadow-sm position-relative">
+                            <!-- Badge -->
+                            <span class="position-absolute top-0 start-0 m-2 badge {{ $badgeClass }}">
+                                {{ $status }}
+                            </span>
+
+                            <!-- Gambar -->
+                            <div style="height: 180px; overflow: hidden; cursor: pointer;" onclick="showImageModal('{{ $imageUrl }}')">
+                                <img 
+                                    src="{{ $imageUrl }}" 
+                                    class="card-img-top w-100 h-100 object-fit-cover" 
+                                    alt="Poster Acara">
+                            </div>
+
+                            <div class="card-body d-flex flex-column justify-content-between">
+                                <div>
+                                    <h5 class="card-title">{{ $schedule->name }}</h5>
+                                    <p class="card-text">
+                                        <small class="text-muted">
+                                            Tanggal Acara: {{ $schedule->started_at_formatted . ' - ' . $schedule->finished_at_formatted }}
+                                        </small>
+                                    </p>
+
+                                    @if ($schedule->url)
+                                        <a href="{{ $schedule->url }}" class="btn btn-sm btn-outline-primary mb-2" target="_blank">
+                                            Detail Acara
+                                        </a>
+                                    @endif
+                                </div>
+
+                                <!-- Tombol Share -->
+                                <div class="d-flex justify-content-start gap-2 mt-2">
+                                    <!-- WhatsApp Share -->
+                                    <a href="https://wa.me/?text={{ $shareText }}" 
+                                       target="_blank"
+                                       class="btn btn-sm btn-light border d-flex align-items-center">
+                                        <i class="fab fa-whatsapp text-success me-1"></i> WhatsApp
                                     </a>
-                                @endif
+
+                                    <!-- Copy URL -->
+                                    <button 
+                                        type="button" 
+                                        class="btn btn-sm btn-light border d-flex align-items-center" 
+                                        onclick="copyToClipboard('{{ $shareUrl }}')">
+                                        <i class="fas fa-copy me-1 text-secondary"></i> Salin
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -42,4 +100,50 @@
         @endif
     </div>
 </section>
+
+<!-- Modal Gambar -->
+<div class="modal fade" id="imageModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content bg-transparent border-0">
+            <div class="modal-body text-center p-0">
+                <img id="modalImage" src="" class="img-fluid rounded shadow" alt="Gambar Acara">
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Toast Notifikasi -->
+<div class="position-fixed top-0 end-0 p-3" style="z-index: 1080">
+    <div id="copyToast" class="toast align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="d-flex">
+            <div class="toast-body">
+                Link berhasil disalin ke clipboard!
+            </div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+    </div>
+</div>
 @endsection
+
+@push('scripts')
+<!-- Font Awesome -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+
+<script>
+    function showImageModal(imageUrl) {
+        const modalImage = document.getElementById('modalImage');
+        modalImage.src = imageUrl;
+        const imageModal = new bootstrap.Modal(document.getElementById('imageModal'));
+        imageModal.show();
+    }
+
+    function copyToClipboard(text) {
+        navigator.clipboard.writeText(text).then(() => {
+            const toast = new bootstrap.Toast(document.getElementById('copyToast'));
+            toast.show();
+        }).catch(err => {
+            console.error('Gagal menyalin: ', err);
+        });
+    }
+</script>
+@endpush

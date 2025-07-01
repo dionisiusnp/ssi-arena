@@ -20,7 +20,7 @@
 
                     <div class="form-group">
                         <label for="url">URL</label>
-                        <textarea name="url" id="url" class="form-control" rows="2">{{ $schedule->url }}</textarea>
+                        <textarea name="url" id="url" class="form-control" rows="2" placeholder="Tuliskan link acara...">{{ $schedule->url }}</textarea>
                     </div>
 
                     <div class="form-row">

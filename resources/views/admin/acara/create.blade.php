@@ -18,7 +18,7 @@
 
                     <div class="form-group">
                         <label for="url">URL</label>
-                        <textarea name="url" id="url" class="form-control" rows="2">Tuliskan link acara...</textarea>
+                        <textarea name="url" id="url" class="form-control" rows="2" placeholder="Tuliskan link acara..."></textarea>
                     </div>
 
                     <div class="form-row">

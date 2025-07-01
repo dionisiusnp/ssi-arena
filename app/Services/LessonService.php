@@ -67,14 +67,25 @@ class LessonService
             ->paginate($perPage);
     }
 
-    public function paginateMember(array $filter = [], int $perPage = 10): LengthAwarePaginator
+    public function paginateMember($auth, array $filter = [], int $perPage = 10): LengthAwarePaginator
     {
         $search = $filter['search'] ?? null;
         $role = $filter['role'] ?? null;
         $language = $filter['language'] ?? null;
 
+        if ($auth) {
+            $notInClausa = [
+                VisibilityEnum::DRAFT->value,
+            ];
+        } else {
+            $notInClausa = [
+                VisibilityEnum::DRAFT->value,
+                VisibilityEnum::PUBLISHED->value,
+            ];
+        }
+
         return $this->model
-            ->whereNotIn('visibility', [VisibilityEnum::DRAFT->value])
+            ->whereNotIn('visibility', $notInClausa)
             ->when($search, function ($query) use ($search) {
                 $query->where(function ($q) use ($search) {
                     $q->where('name', 'LIKE', "%{$search}%");

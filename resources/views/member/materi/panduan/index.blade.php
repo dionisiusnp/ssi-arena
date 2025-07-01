@@ -72,12 +72,14 @@
                         </div>
                     </div>`;
 
-                // Tombol Navigasi
                 const btnPrev = document.getElementById('prevTopic');
                 const btnNext = document.getElementById('nextTopic');
 
-                if (currentIndex <= 0) btnPrev.disabled = true;
-                if (currentIndex >= topicLinks.length - 1) btnNext.disabled = true;
+                btnPrev.style.visibility = 'visible';
+                btnNext.style.visibility = 'visible';
+
+                if (currentIndex <= 0) btnPrev.style.visibility = 'hidden';
+                if (currentIndex >= topicLinks.length - 1) btnNext.style.visibility = 'hidden';
 
                 btnPrev?.addEventListener('click', function () {
                     if (currentIndex > 0) {

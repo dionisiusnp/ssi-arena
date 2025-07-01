@@ -84,7 +84,6 @@ class UserService
                     })
                     ->selectRaw('SUM(quest_details.point_total)');
             }])
-            ->orderByDesc('current_level')
             ->orderByDesc('total_point')
             ->paginate($perPage);
     }

@@ -33,9 +33,8 @@
                     <tr>
                         <th>#</th>
                         <th>Nama Pemain</th>
-                        <th>Skor</th>
-                        <th>Misi Selesai</th>
-                        <th>Bergabung</th>
+                        <th>Level</th>
+                        <th>Poin</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -51,9 +50,8 @@
                                 <strong>{{ $player->name }}</strong><br>
                                 <small class="text-muted">{{ $player->email }}</small>
                             </td>
-                            <td><span class="fw-bold">{{ $player->score ?? 0 }}</span></td>
-                            <td>{{ $player->completed_missions ?? 0 }}</td>
-                            <td>{{ $player->created_at->diffForHumans() }}</td>
+                            <td><span class="fw-bold">{{ $player->current_level }}</span></td>
+                            <td><span class="fw-bold">{{ $player->current_point }}</span></td>
                         </tr>
                     @empty
                         <tr>
