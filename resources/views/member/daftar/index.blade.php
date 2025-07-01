@@ -1,6 +1,6 @@
 @extends('layouts.member.app')
 
-@section('title', 'Registrasi Pemain')
+@section('title', 'Pendaftaran Pemain')
 
 @section('content')
 {{-- KEMBANG API --}}
@@ -12,7 +12,7 @@
 <section class="resume-section">
     <div class="resume-section-content">
         <div class="container-fluid">
-            <h1 class="h3 mb-3 text-gray-800">Registrasi Pemain</h1>
+            <h1 class="h3 mb-3 text-gray-800">Pendaftaran Pemain</h1>
 
             <div class="card shadow">
                 <div class="card-body">
@@ -137,6 +137,18 @@
 <script>
     // KEMBANG API
     window.addEventListener('DOMContentLoaded', () => {
+        const today = new Date().toISOString().split('T')[0];
+        const lastShown = localStorage.getItem('introAnimationShown');
+
+        // Jika sudah pernah tampil hari ini, langsung sembunyikan overlay dan tampilkan form
+        if (lastShown === today) {
+            document.getElementById('introOverlay').style.display = 'none';
+            const registerForm = document.getElementById('registerForm');
+            if (registerForm) registerForm.style.display = 'block';
+            return;
+        }
+
+        // Animasi akan ditampilkan
         const canvas = document.getElementById('fireworksCanvas');
         const ctx = canvas.getContext('2d');
         canvas.width = window.innerWidth;
@@ -153,7 +165,7 @@
                 x: canvas.width / 2,
                 y: canvas.height,
                 vx: 0,
-                vy: -12, // 💥 Lebih tinggi naiknya
+                vy: -12,
                 trail: [],
                 exploded: false
             };
@@ -185,7 +197,6 @@
                 rocket.y += rocket.vy;
                 rocket.vy += 0.15;
 
-                // Draw trail
                 for (let i = 0; i < rocket.trail.length; i++) {
                     const p = rocket.trail[i];
                     ctx.beginPath();
@@ -194,7 +205,6 @@
                     ctx.fill();
                 }
 
-                // Draw rocket head
                 ctx.beginPath();
                 ctx.arc(rocket.x, rocket.y, 4, 0, 2 * Math.PI);
                 ctx.fillStyle = 'white';
@@ -227,7 +237,7 @@
             update();
             count++;
 
-            if (rocket && rocket.exploded && count > 120) { // sekitar 3 detik (30ms * 120)
+            if (rocket && rocket.exploded && count > 120) {
                 clearInterval(interval);
 
                 setTimeout(() => {
@@ -235,13 +245,18 @@
 
                     setTimeout(() => {
                         document.getElementById('introOverlay').style.opacity = 0;
+
+                        // ✅ Simpan ke localStorage bahwa hari ini sudah ditampilkan
+                        localStorage.setItem('introAnimationShown', today);
+
                         setTimeout(() => {
                             document.getElementById('introOverlay').style.display = 'none';
-                            document.getElementById('registerForm').style.display = 'block';
+                            const registerForm = document.getElementById('registerForm');
+                            if (registerForm) registerForm.style.display = 'block';
                         }, 1500);
                     }, 2500);
 
-                }, 100); // muncul lebih cepat dari sebelumnya
+                }, 100);
             }
         }, 30);
     });
