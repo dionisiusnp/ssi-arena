@@ -23,8 +23,8 @@ class SettingPerkCustomSeeder extends Seeder
                 'name' => 'Membuat Clan',
                 'description' => 'Level minimal untuk membuat clan.',
                 'column_type' => FieldTypeEnum::INTEGER->value,
-                'default_value' => '1',
-                'current_value' => '10',
+                'default_value' => 0,
+                'current_value' => 0,
             ],
         ];
 
