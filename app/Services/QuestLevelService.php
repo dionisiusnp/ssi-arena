@@ -2,7 +2,10 @@
 
 namespace App\Services;
 
+use App\Enums\FieldTypeEnum;
+use App\Enums\SettingGroupEnum;
 use App\Models\QuestLevel;
+use App\Models\Setting;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -57,10 +60,29 @@ class QuestLevelService
 
     public function store(array $data, $auth)
     {
+        DB::beginTransaction();
         try {
             $data['changed_by'] = $auth->id;
-            return $this->model->create($data);
+            $ql = $this->model->create($data);
+
+            $slCount = Setting::where('group', SettingGroupEnum::PERKQUESTLEVEL->value)->count();
+
+            Setting::create([
+                'group' => SettingGroupEnum::PERKQUESTLEVEL->value,
+                'sequence' => $slCount+1,
+                'key' => 'ql_'.$ql->id,
+                'name' => 'Level Tantangan ' . $ql->name,
+                'description' => 'Nilai poin minimal untuk Level Tantangan ' . $ql->name,
+                'column_type' => FieldTypeEnum::INTEGER->value,
+                'default_value' => 0,
+                'current_value' => 0,
+                'changed_by' => $auth->id,
+            ]); 
+
+            DB::commit();
+            return $ql;
         } catch (\Throwable $th) {
+            DB::rollBack();
             throw new \ErrorException($th->getMessage());
         }
     }
@@ -72,14 +94,32 @@ class QuestLevelService
 
     public function update(array $data, $auth, QuestLevel $questLevel)
     {
+        DB::beginTransaction();
         try {
             $data['changed_by'] = $auth->id;
+            $nameChanged = isset($data['name']) && $data['name'] !== $questLevel->name;
             $questLevel->update($data);
+            if ($nameChanged) {
+                $settingKey = 'ql_' . $questLevel->id;
+                $setting = Setting::where('key', $settingKey)
+                    ->where('group', SettingGroupEnum::PERKQUESTLEVEL->value)
+                    ->first();
+                if ($setting) {
+                    $setting->update([
+                        'name' => 'Level Tantangan ' . $questLevel->name,
+                        'description' => 'Nilai poin minimal untuk Level Tantangan ' . $questLevel->name,
+                        'changed_by' => $auth->id,
+                    ]);
+                }
+            }
+            DB::commit();
             return $questLevel;
         } catch (\Throwable $th) {
+            DB::rollBack();
             throw new \ErrorException($th->getMessage());
         }
     }
+
 
     public function isActive($auth, QuestLevel $questLevel): bool
     {

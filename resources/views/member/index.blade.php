@@ -8,10 +8,11 @@
         <h2 class="mb-4">Daftar Kegiatan</h2>
 
         <!-- Search Form -->
-        <form method="GET" class="mb-4">
+        <form method="GET" action="{{ auth()->user() ? route('member.schedule') : route('guest.schedule') }}" class="mb-4">
             <div class="input-group">
                 <input type="text" name="q" class="form-control" placeholder="Cari kegiatan..." value="{{ request('q') }}">
                 <button class="btn btn-primary text-white" type="submit">Cari</button>
+                <a href="{{ auth()->user() ? route('member.schedule') : route('guest.schedule') }}" class="btn btn-secondary text-white">Reset</a>
             </div>
         </form>
 
