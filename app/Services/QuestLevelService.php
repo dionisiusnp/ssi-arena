@@ -72,10 +72,10 @@ class QuestLevelService
                 'sequence' => $slCount+1,
                 'key' => 'ql_'.$ql->id,
                 'name' => 'Level Tantangan ' . $ql->name,
-                'description' => 'Nilai poin minimal untuk Level Tantangan ' . $ql->name,
+                'description' => 'Nilai level minimal untuk Level Tantangan ' . $ql->name,
                 'column_type' => FieldTypeEnum::INTEGER->value,
                 'default_value' => 0,
-                'current_value' => 0,
+                'current_value' => 0, // dari level
                 'changed_by' => $auth->id,
             ]); 
 
@@ -107,7 +107,7 @@ class QuestLevelService
                 if ($setting) {
                     $setting->update([
                         'name' => 'Level Tantangan ' . $questLevel->name,
-                        'description' => 'Nilai poin minimal untuk Level Tantangan ' . $questLevel->name,
+                        'description' => 'Nilai level minimal untuk Level Tantangan ' . $questLevel->name,
                         'changed_by' => $auth->id,
                     ]);
                 }
