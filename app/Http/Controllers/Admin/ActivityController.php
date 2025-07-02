@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Enums\QuestEnum;
 use App\Http\Controllers\Controller;
 use App\Models\Activity;
 use App\Services\ActivityService;
@@ -35,19 +36,39 @@ class ActivityController extends Controller
         $seasons = $this->seasonService->model()->all();
         $user = $this->userService->model()->find($filters['claimed_by']);
 
+        $clear = [
+            QuestEnum::PLUS->value,
+            QuestEnum::MINUS->value,
+        ];
+
+        $unClear = [
+            QuestEnum::CLAIMED->value,
+            QuestEnum::TESTING->value,
+            QuestEnum::PENDING->value,
+        ];
+
         $baseQuery = $this->activityService->model()->with('detail')
             ->when($filters['claimed_by'], fn($q) => $q->where('claimed_by', $filters['claimed_by']))
             ->when($filters['season_id'], function ($q) use ($filters) {
                 $q->whereHas('detail', function ($q2) use ($filters) {
                     $q2->where('season_id', $filters['season_id']);
                 });
+            })
+            ->when($filters['search'], function ($q) use ($filters) {
+                $q->whereHas('detail', function ($q2) use ($filters) {
+                    $q2->where('name', 'like', '%' . $filters['search'] . '%');
+                });
             });
 
-        $taskClear   = (clone $baseQuery)->where('status', true)->get();
-        $taskUnclear = (clone $baseQuery)->where('status', false)->get();
+        $taskClear   = (clone $baseQuery)->whereIn('status', $clear)->get();
+        $taskUnclear = (clone $baseQuery)->whereIn('status', $unClear)->get();
 
-        $totalSelesai = $taskClear->sum(fn($activity) => $activity->detail->point + $activity->detail->point_additional);
-        $totalBelum   = $taskUnclear->sum(fn($activity) => $activity->detail->point + $activity->detail->point_additional);
+        $totalSelesai = $taskClear->sum(fn($activity) =>
+            ($activity->detail?->point ?? 0) + ($activity->detail?->point_additional ?? 0)
+        );
+        $totalBelum = $taskUnclear->sum(fn($activity) =>
+            ($activity->detail?->point ?? 0) + ($activity->detail?->point_additional ?? 0)
+        );
 
         return view('admin.pemain.misi.index', compact('data', 'user', 'seasons', 'totalSelesai', 'totalBelum'));
     }
