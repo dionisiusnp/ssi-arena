@@ -71,7 +71,7 @@
                             Diubah: <strong>{{ $lesson->lastChanger->name }}</strong>
                         </p>
                         <p class="card-text">
-                            Dibuat: <strong>{!! $lesson->created_at_formatted !!}</strong>
+                            Dibuat: <strong>{{ $lesson->created_at_formatted }}</strong>
                         </p>
 
                         {{-- Dropdown Aksi --}}

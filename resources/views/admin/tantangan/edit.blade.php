@@ -15,7 +15,7 @@
                 <div class="form-row">
                     <div class="form-group col-md-4">
                         <label for="season_id">Musim</label>
-                        <select name="season_id" id="season_id" class="form-control" required>
+                        <select name="season_id" id="season_id" class="form-control">
                             <option value="{{ $quest_detail->season_id }}" selected>{{ $quest_detail->season->name }}</option>
                         </select>
                     </div>
@@ -46,14 +46,21 @@
                         </select>
                     </div>
                     <div class="form-group col-md-8">
-                        <label for="name">Nama</label>
-                        <input type="text" name="name" id="name" class="form-control" value="{{ $quest_detail->name }}" required>
+                        <label for="claimable_by">Pemain (Kosongi jika untuk semua member)</label>
+                        <select name="claimable_by[]" id="claimable_by" class="form-control" multiple>
+                            @foreach ($players as $player)
+                                <option value="{{ $player->id }}" selected>{{ $player->name }}</option>
+                            @endforeach
+                        </select>
                     </div>
                 </div>
-
+                <div class="form-group">
+                        <label for="name">Nama Tantangan</label>
+                        <input type="text" name="name" id="name" class="form-control" value="{{ $quest_detail->name }}" required>
+                    </div>
                 <div class="form-group">
                     <label for="description">Keterangan</label>
-                    <textarea name="description" id="description" class="form-control" rows="3">{{ $quest_detail->description }}</textarea>
+                    <textarea name="description" id="description" class="form-control summernote">{{ $quest_detail->description }}</textarea>
                 </div>
 
                 <div class="form-row">
@@ -66,7 +73,7 @@
                         <input type="number" name="point" class="form-control" value="{{ $quest_detail->point }}">
                     </div>
                     <div class="form-group col-md-4">
-                        <label for="point_additional">Perkalian Poin Tambahan</label>
+                        <label for="point_additional">Poin Tambahan</label>
                         <input type="number" name="point_additional" class="form-control" value="{{ $quest_detail->point_additional }}">
                     </div>
                 </div>
@@ -100,37 +107,133 @@
 
 @push('scripts')
 <script>
-    const select2Options = (url, placeholder) => ({
-        placeholder,
+    $('#season_id').select2({
+        placeholder: 'Pilih Periode',
         ajax: {
-            url,
+            url: '{{ route("season.select2") }}',
             dataType: 'json',
             delay: 250,
             data: function (params) {
-                return { q: params.term };
+                return {
+                    q: params.term
+                };
             },
             processResults: function (data) {
-                return { results: data };
+                return {
+                    results: data
+                };
             }
         }
     });
 
-    $('#season_id').select2(select2Options('{{ route("season.select2") }}', 'Pilih Season'));
-    $('#quest_type_id').select2(select2Options('{{ route("quest-type.select2") }}', 'Pilih Quest Type'));
-    $('#quest_level_id').select2(select2Options('{{ route("quest-level.select2") }}', 'Pilih Quest Level'));
+    $('#quest_type_id').select2({
+        placeholder: 'Pilih Tipe Level',
+        ajax: {
+            url: '{{ route("quest-type.select2") }}',
+            dataType: 'json',
+            delay: 250,
+            data: function (params) {
+                return {
+                    q: params.term
+                };
+            },
+            processResults: function (data) {
+                return {
+                    results: data
+                };
+            }
+        }
+    });
 
-    // $('#description').summernote({
-    //     height: 100,
-    //     toolbar: [
-    //         ['style', ['bold', 'italic', 'underline', 'clear']],
-    //         ['para', ['ul', 'ol', 'paragraph']],
-    //         ['view', ['fullscreen', 'codeview']]
-    //     ]
-    // });
+    $('#quest_level_id').select2({
+        placeholder: 'Pilih Level Tantangan',
+        ajax: {
+            url: '{{ route("quest-level.select2") }}',
+            dataType: 'json',
+            delay: 250,
+            data: function (params) {
+                return {
+                    q: params.term
+                };
+            },
+            processResults: function (data) {
+                return {
+                    results: data
+                };
+            }
+        }
+    });
+
+    $('#claimable_by').select2({
+        placeholder: 'Pilih Pemain',
+        multiple: true,
+        ajax: {
+            url: '{{ route("player.select2") }}',
+            dataType: 'json',
+            delay: 250,
+            data: function (params) {
+                return {
+                    q: params.term
+                };
+            },
+            processResults: function (data) {
+                return {
+                    results: data
+                };
+            }
+        }
+    });
+
+    $('.summernote').summernote({
+        height: 100,
+        toolbar: [
+            ['style', ['bold', 'italic', 'underline', 'clear']],
+            ['font', ['strikethrough']],
+            ['para', ['ul', 'ol', 'paragraph']],
+            ['insert', ['codeblock']],
+            ['view', ['fullscreen', 'codeview']],
+        ],
+        buttons: {
+            codeblock: function(context) {
+                const ui = $.summernote.ui;
+                return ui.button({
+                    contents: '<i class="fas fa-code"></i> <b>Code</b>',
+                    tooltip: 'Insert Code Block',
+                    click: function () {
+                        const range = context.invoke('editor.createRange');
+                        const selectedText = range.toString() || 'masukkan kodemu disini';
+                        const codeBlock = '%%\n' + selectedText + '\n%%';
+                        context.invoke('editor.insertText', codeBlock);
+                    }
+                }).render();
+            }
+        },
+        callbacks: {
+            onImageUpload: function () {
+                return false;
+            },
+            onMediaDelete: function () {
+                return false;
+            },
+            onFileUpload: function () {
+                return false;
+            },
+            onPaste: function (e) {
+                const clipboardData = (e.originalEvent || e).clipboardData;
+                if (clipboardData && clipboardData.items) {
+                    for (const item of clipboardData.items) {
+                        if (item.type.indexOf('image') !== -1 || item.type.indexOf('video') !== -1) {
+                            e.preventDefault();
+                            return false;
+                        }
+                    }
+                }
+            }
+        }
+    });
 
     $('#requirementRepeater').repeater({
         initEmpty: false,
-        defaultValues: { 'description': '' },
         show: function () {
             $(this).slideDown();
         },

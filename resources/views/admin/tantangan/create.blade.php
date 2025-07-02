@@ -13,8 +13,8 @@
 
                 <div class="form-row">
                     <div class="form-group col-md-4">
-                        <label for="season_id">Periode</label>
-                        <select name="season_id" id="season_id" class="form-control" required></select>
+                        <label for="season_id">Musim</label>
+                        <select name="season_id" id="season_id" class="form-control"></select>
                     </div>
                     <div class="form-group col-md-4">
                         <label for="quest_type_id">Tipe</label>
@@ -177,9 +177,48 @@
         placeholder: 'Tuliskan keterangan disini...',
         toolbar: [
             ['style', ['bold', 'italic', 'underline', 'clear']],
+            ['font', ['strikethrough']],
             ['para', ['ul', 'ol', 'paragraph']],
-            ['view', ['fullscreen', 'codeview']]
-        ]
+            ['insert', ['codeblock']],
+            ['view', ['fullscreen', 'codeview']],
+        ],
+        buttons: {
+            codeblock: function(context) {
+                const ui = $.summernote.ui;
+                return ui.button({
+                    contents: '<i class="fas fa-code"></i> <b>Code</b>',
+                    tooltip: 'Insert Code Block',
+                    click: function () {
+                        const range = context.invoke('editor.createRange');
+                        const selectedText = range.toString() || 'masukkan kodemu disini';
+                        const codeBlock = '%%\n' + selectedText + '\n%%';
+                        context.invoke('editor.insertText', codeBlock);
+                    }
+                }).render();
+            }
+        },
+        callbacks: {
+            onImageUpload: function () {
+                return false;
+            },
+            onMediaDelete: function () {
+                return false;
+            },
+            onFileUpload: function () {
+                return false;
+            },
+            onPaste: function (e) {
+                const clipboardData = (e.originalEvent || e).clipboardData;
+                if (clipboardData && clipboardData.items) {
+                    for (const item of clipboardData.items) {
+                        if (item.type.indexOf('image') !== -1 || item.type.indexOf('video') !== -1) {
+                            e.preventDefault();
+                            return false;
+                        }
+                    }
+                }
+            }
+        }
     });
 
     $('#requirementRepeater').repeater({

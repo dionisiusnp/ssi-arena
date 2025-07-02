@@ -26,7 +26,11 @@
                 </div>
                 <hr>
                 <div class="form-group">
-                    <label for="steps">Panduan Topik</label>
+                    <label for="steps">Panduan Topik
+                        <small class="text-muted ml-2">
+                            Gunakan tombol <strong>&lt;/&gt; Code</strong> untuk menyisipkan kode
+                        </small>
+                    </label>
                     <textarea name="steps" id="steps" class="form-control summernote2"></textarea>
                 </div>
                 <div class="mt-4 d-flex justify-content-between">
@@ -47,15 +51,46 @@
         disableDragAndDrop: true,
         toolbar: [
             ['style', ['bold', 'italic', 'underline', 'clear']],
-            ['font', ['strikethrough', 'superscript', 'subscript']],
+            ['font', ['strikethrough']],
             ['para', ['ul', 'ol', 'paragraph']],
-            ['insert', []], // Tidak ada image/video
+            ['insert', ['codeblock']],
             ['view', ['fullscreen', 'codeview']],
         ],
+        buttons: {
+            codeblock: function(context) {
+                const ui = $.summernote.ui;
+                return ui.button({
+                    contents: '<i class="fas fa-code"></i> <b>Code</b>',
+                    tooltip: 'Insert Code Block',
+                    click: function () {
+                        const range = context.invoke('editor.createRange');
+                        const selectedText = range.toString() || 'masukkan kodemu disini';
+                        const codeBlock = '%%\n' + selectedText + '\n%%';
+                        context.invoke('editor.insertText', codeBlock);
+                    }
+                }).render();
+            }
+        },
         callbacks: {
             onImageUpload: function () {
-                // Mencegah upload gambar lewat drag/drop
                 return false;
+            },
+            onMediaDelete: function () {
+                return false;
+            },
+            onFileUpload: function () {
+                return false;
+            },
+            onPaste: function (e) {
+                const clipboardData = (e.originalEvent || e).clipboardData;
+                if (clipboardData && clipboardData.items) {
+                    for (const item of clipboardData.items) {
+                        if (item.type.indexOf('image') !== -1 || item.type.indexOf('video') !== -1) {
+                            e.preventDefault();
+                            return false;
+                        }
+                    }
+                }
             }
         }
     });
@@ -66,15 +101,46 @@
         disableDragAndDrop: true,
         toolbar: [
             ['style', ['bold', 'italic', 'underline', 'clear']],
-            ['font', ['strikethrough', 'superscript', 'subscript']],
+            ['font', ['strikethrough']],
             ['para', ['ul', 'ol', 'paragraph']],
-            ['insert', []], // Tidak ada image/video
+            ['insert', ['codeblock']],
             ['view', ['fullscreen', 'codeview']],
         ],
+        buttons: {
+            codeblock: function(context) {
+                const ui = $.summernote.ui;
+                return ui.button({
+                    contents: '<i class="fas fa-code"></i> <b>Code</b>',
+                    tooltip: 'Insert Code Block',
+                    click: function () {
+                        const range = context.invoke('editor.createRange');
+                        const selectedText = range.toString() || 'masukkan kodemu disini';
+                        const codeBlock = '%%\n' + selectedText + '\n%%';
+                        context.invoke('editor.insertText', codeBlock);
+                    }
+                }).render();
+            }
+        },
         callbacks: {
             onImageUpload: function () {
-                // Mencegah upload gambar lewat drag/drop
                 return false;
+            },
+            onMediaDelete: function () {
+                return false;
+            },
+            onFileUpload: function () {
+                return false;
+            },
+            onPaste: function (e) {
+                const clipboardData = (e.originalEvent || e).clipboardData;
+                if (clipboardData && clipboardData.items) {
+                    for (const item of clipboardData.items) {
+                        if (item.type.indexOf('image') !== -1 || item.type.indexOf('video') !== -1) {
+                            e.preventDefault();
+                            return false;
+                        }
+                    }
+                }
             }
         }
     });
