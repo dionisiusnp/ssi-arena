@@ -15,7 +15,7 @@
                            class="list-group-item list-group-item-action"
                            data-topic-id="{{ $topic->id }}" 
                            data-name="{{ $topic->name }}"
-                           data-steps="{!! htmlentities($topic->steps) !!}">
+                           data-steps="{{ $topic->steps }}">
                             {{ $topic->name }}
                         </a>
                     @empty
@@ -60,11 +60,14 @@
                     return;
                 }
 
+                const decoded = decodeHtml(stepsHtml);
+                const parsed = parseCodeBlocks(decoded);
+
                 guideContent.innerHTML = `
                     <div class="card">
                         <div class="card-body">
                             <h4 class="mb-3">${topicName}</h4>
-                            <div>${decodeHtml(stepsHtml)}</div>
+                            <div>${parsed}</div>
                             <div class="d-flex justify-content-between mt-4">
                                 <button id="prevTopic" class="btn btn-secondary">&laquo; Sebelumnya</button>
                                 <button id="nextTopic" class="btn btn-secondary">Berikutnya &raquo;</button>
@@ -75,23 +78,11 @@
                 const btnPrev = document.getElementById('prevTopic');
                 const btnNext = document.getElementById('nextTopic');
 
-                btnPrev.style.visibility = 'visible';
-                btnNext.style.visibility = 'visible';
+                btnPrev.style.visibility = currentIndex > 0 ? 'visible' : 'hidden';
+                btnNext.style.visibility = currentIndex < topicLinks.length - 1 ? 'visible' : 'hidden';
 
-                if (currentIndex <= 0) btnPrev.style.visibility = 'hidden';
-                if (currentIndex >= topicLinks.length - 1) btnNext.style.visibility = 'hidden';
-
-                btnPrev?.addEventListener('click', function () {
-                    if (currentIndex > 0) {
-                        topicLinks[currentIndex - 1].click();
-                    }
-                });
-
-                btnNext?.addEventListener('click', function () {
-                    if (currentIndex < topicLinks.length - 1) {
-                        topicLinks[currentIndex + 1].click();
-                    }
-                });
+                btnPrev?.addEventListener('click', () => topicLinks[currentIndex - 1]?.click());
+                btnNext?.addEventListener('click', () => topicLinks[currentIndex + 1]?.click());
             });
         });
 
@@ -99,6 +90,27 @@
             const txt = document.createElement('textarea');
             txt.innerHTML = html;
             return txt.value;
+        }
+
+        function escapeHtml(text) {
+            return text.replace(/[&<>"']/g, function (char) {
+                const escapeMap = {
+                    '&': '&amp;',
+                    '<': '&lt;',
+                    '>': '&gt;',
+                    '"': '&quot;',
+                    "'": '&#039;',
+                };
+                return escapeMap[char];
+            });
+        }
+
+        function parseCodeBlocks(html) {
+            return html
+                .replace(/<br\s*\/?>/gi, '\n') // replace <br> with newline
+                .replace(/%%([\s\S]*?)%%/g, (_, code) => {
+                    return `<pre><code>${escapeHtml(code.trim())}</code></pre>`;
+                });
         }
     });
 </script>

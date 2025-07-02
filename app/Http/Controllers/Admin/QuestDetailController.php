@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\QuestDetail;
 use App\Models\Season;
+use App\Models\User;
 use App\Services\QuestDetailService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -76,7 +77,9 @@ class QuestDetailController extends Controller
      */
     public function edit(QuestDetail $quest_detail)
     {
-        return view('admin.tantangan.edit', compact('quest_detail'));
+        $selectedPlayers = json_decode($quest_detail->claimable_by) ?? [];
+        $players = User::whereIn('id', $selectedPlayers)->get();
+        return view('admin.tantangan.edit', compact('quest_detail', 'players'));
     }
 
     /**
