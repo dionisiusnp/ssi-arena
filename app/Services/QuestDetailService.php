@@ -71,13 +71,23 @@ class QuestDetailService
                     ->orWhere('description', 'LIKE', "%{$search}%");
                 });
             })
+            ->where(function ($query) use ($userId) {
+                $query->whereNull('claimable_by')
+                    ->orWhereJsonContains('claimable_by', (string) $userId);
+            })
             ->when($userId, function ($query) use ($userId) {
                 $query->whereDoesntHave('activities', function ($q) use ($userId) {
                     $q->where('claimed_by', $userId);
                 });
             })
             ->orderByDesc('created_at')
-            ->paginate($perPage);
+            ->paginate($perPage)
+            ->through(function ($item) {
+                // Ambil setting current_value berdasarkan quest_level_id
+                $settingKey = 'ql_' . $item->quest_level_id;
+                $item->minimum_level_setting = \App\Models\Setting::where('key', $settingKey)->value('current_value') ?? 0;
+                return $item;
+            });
     }
 
     public function store(array $data, array $reqs, $auth)
