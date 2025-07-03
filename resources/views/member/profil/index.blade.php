@@ -17,8 +17,12 @@
         </div>
 
         @if ($musim)
-        <div class="subheading mb-4">
+        <div class="subheading mb-1">
             Musim: {{ $musim->name }} | Periode: {{ $musim->started_at_formatted . '-' . $musim->finished_at_formatted }}
+        </div>
+
+        <div class="subheading mb-4">
+            Level Musim: {{ auth()->user()->season_level }} | Poin Musim: {{ auth()->user()->season_point }}
         </div>
         @endif
 
