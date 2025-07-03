@@ -56,6 +56,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('quest-detail', QuestDetailController::class);
 
     Route::get('/settings/level',[SettingController::class,'indexLevel'])->name('settings.level');
+    Route::get('/settings/rank',[SettingController::class,'indexRank'])->name('settings.rank');
     Route::get('/settings/static',[SettingController::class,'indexStatic'])->name('settings.static');
     Route::get('/settings/dynamic',[SettingController::class,'indexDynamic'])->name('settings.dynamic');
     Route::post('/settings/store',[SettingController::class,'store'])->name('settings.update');
@@ -63,6 +64,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/user/{user}/status',[UserController::class,'toggleStatus'])->name('user.status');
     Route::resource('user', UserController::class);
     Route::resource('activity', AdminActivityController::class);
+    Route::put('/activity/{activity}/point-plus',[AdminActivityController::class, 'pointPlus'])->name('activity.point.plus');
+    Route::put('/activity/{activity}/point-minus',[AdminActivityController::class, 'pointMinus'])->name('activity.point.minus');
     Route::get('/activity-checklist/{activity_checklist}/status', [ActivityChecklistController::class, 'toggleStatus'])->name('activity-checklist.status');
 
     // MEMBER

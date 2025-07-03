@@ -29,7 +29,7 @@ class SettingPerkCustomSeeder extends Seeder
         ];
 
         foreach ($settings as $data) {
-            Setting::updateOrCreate(
+            Setting::firstOrCreate(
                 ['key' => $data['key']],
                 $data
             );

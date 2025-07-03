@@ -5,6 +5,7 @@ namespace App\Enums;
 enum SettingGroupEnum: string
 {
     case LEVEL = 'level';
+    case RANKED = 'ranked';
     case PERKQUESTLEVEL = 'perk_quest_level';
     case PERKCUSTOM = 'perk_custom';
     
@@ -12,6 +13,7 @@ enum SettingGroupEnum: string
     {
         return match($this) {
             self::LEVEL => 'Level',
+            self::RANKED => 'Ranked',
             self::PERKQUESTLEVEL => 'Perk Quest Level',
             self::PERKCUSTOM => 'Perk Custom',
         };

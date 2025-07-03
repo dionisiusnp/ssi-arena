@@ -48,18 +48,6 @@
         Gamifikasi
     </div>
 
-    <li class="nav-item {{ request()->routeIs('settings.level') ? 'active' : '' }}">
-        <a class="nav-link" href="{{ route('settings.level') }}">
-            <i class="fas fa-fw fa-wrench"></i>
-            <span>Skema Level</span></a>
-    </li>
-
-    <li class="nav-item {{ request()->routeIs('settings.dynamic') ? 'active' : '' }}">
-        <a class="nav-link" href="{{ route('settings.dynamic') }}">
-            <i class="fas fa-fw fa-cog"></i>
-            <span>Keuntungan Dinamis</span></a>
-    </li>
-
     <!-- Nav Item - Charts -->
     <li class="nav-item {{ request()->routeIs('season.index') ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('season.index') }}">
@@ -85,6 +73,32 @@
         <a class="nav-link" href="{{ route('user.index') }}">
             <i class="fas fa-fw fa-trophy"></i>
             <span>Pemain</span></a>
+    </li>
+
+    <!-- Divider -->
+    <hr class="sidebar-divider">
+
+    <!-- Heading -->
+    <div class="sidebar-heading">
+        Konfigurasi
+    </div>
+
+    <li class="nav-item {{ request()->routeIs('settings.level') ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('settings.level') }}">
+            <i class="fas fa-fw fa-wrench"></i>
+            <span>Skema Level</span></a>
+    </li>
+
+    <li class="nav-item {{ request()->routeIs('settings.rank') ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('settings.rank') }}">
+            <i class="fas fa-fw fa-wrench"></i>
+            <span>Skema Rank</span></a>
+    </li>
+
+    <li class="nav-item {{ request()->routeIs('settings.dynamic') ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('settings.dynamic') }}">
+            <i class="fas fa-fw fa-cog"></i>
+            <span>Keuntungan Dinamis</span></a>
     </li>
     @endif
 

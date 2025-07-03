@@ -2,17 +2,47 @@
 
 @section('title', 'Detail Misi')
 
+@php
+    use App\Enums\QuestEnum;
+@endphp
+
 @section('content')
 <div class="container-fluid">
     <h1 class="h3 mb-3 text-gray-800">Detail Misi {{ $user->name ?? '' }}</h1>
 
-    <a href="{{ route('activity.index', ['claimed_by' => $claimed_by, 'season_id' => $season_id, 'search' => $search]) }}" class="btn btn-secondary mb-4">
-        Kembali
-    </a>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <a href="{{ route('activity.index', ['claimed_by' => $claimed_by, 'season_id' => $season_id, 'search' => $search]) }}" class="btn btn-secondary">
+            Kembali
+        </a>
+
+        @if (!in_array($activity->status, [QuestEnum::PLUS->value, QuestEnum::MINUS->value]))
+            <div class="d-flex gap-2">
+                <form id="form-plus" method="POST" action="{{ route('activity.point.plus', $activity->id) }}">
+                    @csrf
+                    @method('PUT')
+                    <input type="hidden" name="status" value="{{ QuestEnum::PLUS->value }}">
+                    <button type="button" class="btn btn-success" onclick="confirmPoint('plus')">
+                        <i class="fas fa-plus-circle me-1"></i> Tambah Poin
+                    </button>
+                </form>
+
+                <form id="form-minus" method="POST" action="{{ route('activity.point.minus', $activity->id) }}">
+                    @csrf
+                    @method('PUT')
+                    <input type="hidden" name="status" value="{{ QuestEnum::MINUS->value }}">
+                    <button type="button" class="btn btn-danger" onclick="confirmPoint('minus')">
+                        <i class="fas fa-minus-circle me-1"></i> Kurang Poin
+                    </button>
+                </form>
+            </div>
+        @endif
+    </div>
 
     <div class="card shadow mb-4">
-        <div class="card-header bg-{{ $activity->status ? 'success' : 'secondary' }} text-white">
-            Informasi Misi
+        <div class="card-header {{ in_array($activity->status, [QuestEnum::PLUS->value, QuestEnum::MINUS->value]) ? 'bg-success' : 'bg-secondary' }} text-white">
+            <div class="d-flex justify-content-between align-items-center flex-wrap">
+                <span>Informasi Misi</span>
+            </div>
         </div>
         <div class="card-body">
             <table class="table table-bordered mb-0">
@@ -33,13 +63,13 @@
                     <td>{{ $activity->detail->questLevel->name ?? '-' }}</td>
                 </tr>
                 <tr>
-                    <th>Poin</th>
+                    <th>Total Poin</th>
                     <td>{{ $activity->detail->point_total }}</td>
                 </tr>
                 <tr>
-                    <th>Status</th>
+                    <th>Status Poin</th>
                     <td>
-                        <span class="badge badge-success">
+                        <span class="badge badge-{{ in_array($activity->status, [QuestEnum::PLUS->value, QuestEnum::MINUS->value]) ? 'success' : 'secondary' }}">
                             {{ strtoupper($activity->status) }}
                         </span>
                     </td>
@@ -49,7 +79,7 @@
     </div>
 
     <div class="card shadow">
-        <div class="card-header bg-{{ $activity->status ? 'success' : 'secondary' }} text-white">
+        <div class="card-header {{ in_array($activity->status, [QuestEnum::PLUS->value, QuestEnum::MINUS->value]) ? 'bg-success' : 'bg-secondary' }} text-white">
             Daftar Tugas
         </div>
         <div class="card-body">
@@ -75,10 +105,10 @@
                                 </span>
                             </td>
                             <td>
-                                @if ($checklist->is_clear)
-                                <a href="{{ route('activity-checklist.status', $checklist->id) }}?claimed_by={{ $claimed_by }}&season_id={{ $season_id }}&search={{ $search }}" class="btn btn-sm btn-danger">
-                                    Koreksi
-                                </a>
+                                @if (!in_array($checklist->activity->status, [QuestEnum::PLUS->value, QuestEnum::MINUS->value]) && $checklist->is_clear)
+                                    <a href="{{ route('activity-checklist.status', $checklist->id) }}?claimed_by={{ $claimed_by }}&season_id={{ $season_id }}&search={{ $search }}" class="btn btn-sm btn-danger">
+                                        Koreksi
+                                    </a>
                                 @endif
                             </td>
                         </tr>
@@ -93,3 +123,23 @@
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+    function confirmPoint(action) {
+        let actionLabel = action === 'plus' ? 'beri nilai (PLUS)' : 'kurangi nilai (MINUS)';
+        Swal.fire({
+            title: `Yakin ingin ${actionLabel}?`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Ya, Lanjutkan!',
+            cancelButtonText: 'Batal',
+            confirmButtonColor: action === 'plus' ? '#28a745' : '#dc3545'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                document.getElementById(`form-${action}`).submit();
+            }
+        });
+    }
+</script>
+@endpush
