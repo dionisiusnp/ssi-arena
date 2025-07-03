@@ -1,141 +1,120 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="author" content="">
+    <meta charset="UTF-8">
+    <title>SSI Arena</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Halaman Masuk | SSI Arena</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
 
-    <!-- Custom fonts for this template-->
-    <link href="{{ asset('assets/admin/vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet" type="text/css">
-    <link href="https://fonts.googleapis.com/css?family=Nunito:200,300,400,600,700,800,900" rel="stylesheet">
-
-    <!-- Custom styles for this template-->
-    <link href="{{ asset('assets/admin/css/sb-admin-2.min.css') }}" rel="stylesheet">
-
-    <style>
-        .password-wrapper {
-            position: relative;
-        }
-
-        .toggle-password {
-            position: absolute;
-            top: 50%;
-            right: 15px;
-            transform: translateY(-50%);
-            cursor: pointer;
-            color: #6c757d;
-        }
-    </style>
+    <!-- Vue 3 CDN -->
+    <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
 </head>
+<body class="m-0 p-0 overflow-hidden bg-black">
 
-<body class="bg-gradient-primary">
+<div id="app" class="relative w-full h-screen overflow-hidden">
+    <!-- Whirlpool Background Canvas -->
+    <canvas ref="canvas" class="absolute inset-0 w-full h-full z-10"></canvas>
 
-    <div class="container min-vh-100 d-flex align-items-center justify-content-center"">
-
-        <!-- Outer Row -->
-        <div class="row w-100 justify-content-center">
-
-            <div class="col-xl-6 col-lg-8 col-md-9">
-
-                <div class="card o-hidden border-0 shadow-lg my-5">
-                    <div class="card-body p-0">
-                        <!-- Nested Row within Card Body -->
-                        <div class="p-5">
-                            <div class="text-center mb-4">
-                                <h1 class="h4 text-gray-900">Halaman Masuk SSI Arena</h1>
-                            </div>
-
-                            @if ($errors->any())
-                                <div class="alert alert-danger">
-                                    <ul class="mb-0">
-                                        @foreach ($errors->all() as $error)
-                                            <li>{{ $error }}</li>
-                                        @endforeach
-                                    </ul>
-                                </div>
-                            @endif
-
-                            <form class="user" method="POST" action="{{ route('login') }}">
-                                @csrf
-                                <div class="form-group">
-                                    <input type="email" name="email" class="form-control form-control-user"
-                                        placeholder="Masukkan email" required autofocus>
-                                </div>
-
-                                <div class="form-group password-wrapper">
-                                    <input type="password" name="password" id="password" class="form-control form-control-user"
-                                        placeholder="Masukkan sandi" required>
-                                    <span toggle="#password" class="fas fa-eye toggle-password"></span>
-                                </div>
-
-                                <button type="submit" class="btn btn-primary btn-user btn-block">
-                                    Masuk
-                                </button>
-                            </form>
-
-                            <hr>
-                            {{-- <div class="text-center">
-                                <a class="small" href="#!">Lupa sandi?</a>
-                            </div> --}}
-                            <div class="text-center">
-                                {{-- <a class="small" href="#!">Mendaftar SSI Academy</a> |  --}}
-                                <a class="small" href="{{ route('guest.schedule') }}">Kunjungi SSI Arena</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-
+    <!-- Content -->
+    <div class="relative z-20 flex flex-col items-center justify-center h-full text-white text-center px-4">
+        <h1 class="text-4xl font-bold mb-4">Selamat Datang di SSI Arena</h1>
+        <p class="text-lg mb-6 max-w-xl">
+            Bergabunglah dalam SSI Arena — platform gamifikasi seru yang menginspirasi komunitas IT Universitas Dinamika untuk belajar, berkompetisi, dan tumbuh bersama!
+        </p>
+        <div class="flex gap-4">
+            <a href="{{ route('login') }}" class="px-6 py-3 bg-white text-black rounded-full font-semibold hover:bg-gray-200 transition">Masuk</a>
+            <a href="{{ route('guest.schedule') }}" class="px-6 py-3 border border-white text-white rounded-full font-semibold hover:bg-white hover:text-black transition">Tamu Arena</a>
         </div>
-
     </div>
+</div>
 
-    <!-- Bootstrap core JavaScript-->
-    <script src="{{ asset('assets/admin/vendor/jquery/jquery.min.js') }}"></script>
-    <script src="{{ asset('assets/admin/vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+<script>
+const { createApp, onMounted, ref } = Vue;
 
-    <!-- Core plugin JavaScript-->
-    <script src="{{ asset('assets/admin/vendor/jquery-easing/jquery.easing.min.js') }}"></script>
+createApp({
+    setup() {
+        const canvas = ref(null);
+        let ctx;
+        let particles = [];
 
-    <!-- Custom scripts for all pages-->
-    <script src="{{ asset('assets/admin/js/sb-admin-2.min.js') }}"></script>
-
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-    <!-- Toggle Password Script -->
-    <script>
-        $(document).on('click', '.toggle-password', function () {
-            let input = $("#password");
-            let icon = $(this);
-
-            if (input.attr("type") === "password") {
-                input.attr("type", "text");
-                icon.removeClass("fa-eye").addClass("fa-eye-slash");
-            } else {
-                input.attr("type", "password");
-                icon.removeClass("fa-eye-slash").addClass("fa-eye");
+        class Particle {
+            constructor(cx, cy, width, height) {
+                this.angle = Math.random() * 2 * Math.PI;
+                this.radius = Math.random() * (Math.min(width, height) / 2);
+                this.size = Math.random() * 2 + 1;
+                this.speed = Math.random() * 0.003 + 0.001;
+                this.opacity = Math.random() * 0.5 + 0.3;
             }
+
+            update() {
+                this.angle += this.speed;
+            }
+
+            draw(ctx, cx, cy, color) {
+                const x = cx + this.radius * Math.cos(this.angle);
+                const y = cy + this.radius * Math.sin(this.angle);
+
+                ctx.beginPath();
+                ctx.arc(x, y, this.size, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(${color.r}, ${color.g}, ${color.b}, ${this.opacity})`;
+                ctx.fill();
+            }
+        }
+
+        function hexToRgb(hex) {
+            hex = hex.replace(/^#/, '');
+            if (hex.length === 3) hex = hex.split('').map(c => c + c).join('');
+            const bigint = parseInt(hex, 16);
+            return {
+                r: (bigint >> 16) & 255,
+                g: (bigint >> 8) & 255,
+                b: bigint & 255,
+            };
+        }
+
+        function resize(canvasEl) {
+            canvasEl.width = window.innerWidth;
+            canvasEl.height = window.innerHeight;
+        }
+
+        function animate(canvasEl) {
+            const cx = canvasEl.width / 2;
+            const cy = canvasEl.height / 2;
+            const rgb = hexToRgb('#ffffff');
+
+            ctx.clearRect(0, 0, canvasEl.width, canvasEl.height);
+
+            particles.forEach(p => {
+                p.update();
+                p.draw(ctx, cx, cy, rgb);
+            });
+
+            requestAnimationFrame(() => animate(canvasEl));
+        }
+
+        onMounted(() => {
+            const canvasEl = canvas.value;
+            ctx = canvasEl.getContext('2d');
+
+            resize(canvasEl);
+
+            const cx = canvasEl.width / 2;
+            const cy = canvasEl.height / 2;
+
+            // create 150 particles
+            for (let i = 0; i < 150; i++) {
+                particles.push(new Particle(cx, cy, canvasEl.width, canvasEl.height));
+            }
+
+            animate(canvasEl);
+            window.addEventListener('resize', () => resize(canvasEl));
         });
 
-        @if(session('success'))
-            Swal.fire({
-                icon: 'success',
-                title: 'Berhasil!',
-                text: '{{ session('success') }}',
-                timer: 2500,
-                showConfirmButton: false,
-                toast: true,
-                position: 'top-end'
-            });
-        @endif
-    </script>
-
+        return { canvas };
+    }
+}).mount('#app');
+</script>
 </body>
-
 </html>
