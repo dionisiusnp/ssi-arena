@@ -81,6 +81,8 @@ Route::middleware('auth')->group(function () {
 
 
         Route::get('/activity',[MemberActivityController::class, 'index'])->name('activity');
+        Route::get('/activity/{activity}/checklists', [MemberActivityController::class, 'checklists'])->name('activity.checklist');
+        Route::put('/activity/{activity}/update',[MemberActivityController::class, 'update'])->name('activity.update');
 
         Route::get('/schedule',      [MemberDashboardController::class, 'index'])->name('schedule');
     });

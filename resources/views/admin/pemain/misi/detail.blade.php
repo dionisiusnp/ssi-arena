@@ -39,8 +39,8 @@
                 <tr>
                     <th>Status</th>
                     <td>
-                        <span class="badge badge-{{ $activity->status ? 'success' : 'secondary' }}">
-                            {{ $activity->status ? 'Selesai' : 'Belum' }}
+                        <span class="badge badge-success">
+                            {{ strtoupper($activity->status) }}
                         </span>
                     </td>
                 </tr>
@@ -70,14 +70,14 @@
                             <td>{{ $index + 1 }}.</td>
                             <td>{{ $checklist->questRequirement->description ?? '-' }}</td>
                             <td>
-                                <span class="badge badge-{{ $checklist->status ? 'success' : 'secondary' }}">
-                                    {{ $checklist->status ? 'Selesai' : 'Belum' }}
+                                <span class="badge badge-{{ $checklist->is_clear ? 'success' : 'secondary' }}">
+                                    {{ $checklist->is_clear ? 'Benar' : 'Salah' }}
                                 </span>
                             </td>
                             <td>
-                                @if ($checklist->status == 1)
+                                @if ($checklist->is_clear)
                                 <a href="{{ route('activity-checklist.status', $checklist->id) }}?claimed_by={{ $claimed_by }}&season_id={{ $season_id }}&search={{ $search }}" class="btn btn-sm btn-danger">
-                                    Batalkan
+                                    Koreksi
                                 </a>
                                 @endif
                             </td>

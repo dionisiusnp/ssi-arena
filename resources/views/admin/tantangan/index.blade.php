@@ -110,7 +110,7 @@
                                 </td>
                             </tr>
                             <tr class="collapse bg-light" id="requirements-{{ $quest->id }}">
-                                <td colspan="8">
+                                <td colspan="10">
                                     <strong>Daftar Tugas:</strong>
                                     @if($quest->requirements->count())
                                         <ul class="mb-0">
