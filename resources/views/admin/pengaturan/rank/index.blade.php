@@ -1,16 +1,16 @@
 @extends('layouts.admin.app')
 
-@section('title', 'Pengaturan Level')
+@section('title', 'Pengaturan Rank')
 
 @section('content')
 <div class="container-fluid">
-    <h1 class="h3 mb-4 text-gray-800">Pengaturan Level</h1>
+    <h1 class="h3 mb-4 text-gray-800">Pengaturan Rank</h1>
     <div class="row mb-3">
         <div class="col-lg-8">
-            <form method="GET" action="{{ route('settings.level') }}" class="d-flex gap-2">
+            <form method="GET" action="{{ route('settings.rank') }}" class="d-flex gap-2">
                 <input type="text" name="search" class="form-control" placeholder="Cari nama atau deskripsi..." value="{{ request('search') }}">
                 <button type="submit" class="btn btn-primary">Filter</button>
-                <a href="{{ route('settings.level') }}" class="btn btn-secondary">Reset</a>
+                <a href="{{ route('settings.rank') }}" class="btn btn-secondary">Reset</a>
             </form>
         </div>
     </div>
@@ -21,7 +21,7 @@
                 <div class="card-body">
                     @if ($settings->isEmpty())
                         <div class="alert alert-warning mb-0" role="alert">
-                            Belum ada data pengaturan level.
+                            Belum ada data pengaturan rank.
                         </div>
                     @else
                         <form action="{{ route('settings.update') }}" method="POST">

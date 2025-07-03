@@ -80,7 +80,7 @@ class ActivityChecklistService
             $activity->update([
                 'status' => QuestEnum::PENDING->value,
             ]);
-            $activityChecklist->status = !$activityChecklist->status;
+            $activityChecklist->is_clear = !$activityChecklist->is_clear;
             $activityChecklist->changed_by = $auth->id ?? null;
             $activityChecklist->save();
             return true;

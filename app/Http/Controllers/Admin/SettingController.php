@@ -6,15 +6,17 @@ use App\Enums\SettingGroupEnum;
 use App\Http\Controllers\Controller;
 use App\Models\Setting;
 use App\Services\SettingService;
+use App\Services\UserService;
 use Illuminate\Http\Request;
 
 class SettingController extends Controller
 {
-    public $settingService;
+    public $settingService, $userService;
 
-    public function __construct(SettingService $settingService)
+    public function __construct(SettingService $settingService, UserService $userService)
     {
         $this->settingService = $settingService;
+        $this->userService = $userService;
     }
     /**
      * Display a listing of the resource.
@@ -23,8 +25,16 @@ class SettingController extends Controller
     {
         $search = $request->input('search');
         $settings = $this->settingService->getSettings(SettingGroupEnum::LEVEL->value, $search);
+        $topScore = $this->userService->topScorePlayer();
+        return view('admin.pengaturan.level.index', compact('settings','topScore'));
+    }
 
-        return view('admin.pengaturan.level.index', compact('settings'));
+    public function indexRank(Request $request)
+    {
+        $search = $request->input('search');
+        $settings = $this->settingService->getSettings(SettingGroupEnum::RANKED->value, $search);
+        $topScore = $this->userService->topScoreRanked();
+        return view('admin.pengaturan.rank.index', compact('settings','topScore'));
     }
 
     public function indexStatic(Request $request)

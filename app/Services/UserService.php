@@ -88,6 +88,22 @@ class UserService
             ->paginate($perPage);
     }
 
+    public function topScorePlayer()
+    {
+        return $this->model
+        ->where('is_active', true)
+        ->orderByDesc('current_point')
+        ->first();
+    }
+
+    public function topScoreRanked()
+    {
+        return $this->model
+        ->where('is_active', true)
+        ->orderByDesc('season_point')
+        ->first();
+    }
+
     public function store(array $data)
     {
         try {

@@ -6,20 +6,23 @@ use App\Enums\QuestEnum;
 use App\Http\Controllers\Controller;
 use App\Models\Activity;
 use App\Services\ActivityService;
+use App\Services\RewardLogService;
 use App\Services\SeasonService;
 use App\Services\UserService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class ActivityController extends Controller
 {
-    public $activityService, $seasonService, $userService;
+    public $activityService, $seasonService, $userService, $rewardLogService;
 
-    public function __construct(ActivityService $activityService, SeasonService $seasonService, UserService $userService)
+    public function __construct(ActivityService $activityService, SeasonService $seasonService, UserService $userService, RewardLogService $rewardLogService)
     {
         $this->activityService = $activityService;
         $this->seasonService = $seasonService;
         $this->userService = $userService;
+        $this->rewardLogService = $rewardLogService;
     }
     /**
      * Display a listing of the resource.
@@ -141,6 +144,34 @@ class ActivityController extends Controller
                 'data'    => $data,
             ]);
         } catch (\Throwable $th) {
+            throw new \ErrorException($th->getMessage());
+        }
+    }
+
+    public function pointPlus(Request $request, Activity $activity)
+    {
+        try {
+            $auth = Auth::user();
+            $this->activityService->update($request->toArray(), $auth, $activity);
+            $activity->checklists()->update(['is_clear' => true]);
+            $this->rewardLogService->levelAndPoint($activity->quest_detail_id, $activity->id, $activity->claimed_by, QuestEnum::PLUS->value);
+            return redirect()->back()->with('success', 'Nilai ditambahkan (PLUS)!');
+        } catch (\Throwable $th) {
+            Log::error('Gagal proses PLUS: ' . $th->getMessage());
+            throw new \ErrorException($th->getMessage());
+        }
+    }
+
+    public function pointMinus(Request $request, Activity $activity)
+    {
+        try {
+            $auth = Auth::user();
+            $this->activityService->update($request->toArray(), $auth, $activity);
+            $activity->checklists()->update(['is_clear' => true]);
+            $this->rewardLogService->levelAndPoint($activity->quest_detail_id, $activity->id, $activity->claimed_by, QuestEnum::MINUS->value);
+            return redirect()->back()->with('success', 'Nilai dikurangi (MINUS)!');
+        } catch (\Throwable $th) {
+            Log::error('Gagal proses MINUS: ' . $th->getMessage());
             throw new \ErrorException($th->getMessage());
         }
     }
