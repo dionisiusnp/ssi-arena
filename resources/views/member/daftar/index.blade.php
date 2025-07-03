@@ -102,7 +102,9 @@
                         </div>
 
                         <div class="mt-4 d-flex justify-content-between">
-                            <a href="{{ url('/') }}" class="btn btn-secondary text-white">Halaman Masuk</a>
+                            <a href="{{ url('/') }}" class="btn btn-secondary text-white">
+                                <i class="fas fa-arrow-left mr-1"></i> Halaman Utama
+                            </a>
                             <button type="submit" class="btn btn-primary text-white">Daftar</button>
                         </div>
                     </form>
