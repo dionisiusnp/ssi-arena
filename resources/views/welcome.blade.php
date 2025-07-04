@@ -10,6 +10,9 @@
 
     <!-- Vue 3 CDN -->
     <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+
+    <!-- UMAMI -->
+    <script defer src="https://cloud.umami.is/script.js" data-website-id="d7b63d18-a8c8-49da-b882-63be452caf42"></script>
 </head>
 <body class="m-0 p-0 overflow-hidden bg-black">
 
