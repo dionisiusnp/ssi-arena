@@ -74,6 +74,10 @@ class LessonController extends Controller
      */
     public function edit(Lesson $lesson)
     {
+        $auth = Auth::user();
+        if ($lesson->changed_by !== $auth->id) {
+            abort(403, 'Akses tidak diizinkan untuk lesson ini.');
+        }
         return view('admin.materi.edit', compact('lesson'));
     }
 
