@@ -28,7 +28,7 @@ class LessonController extends Controller
             'role' => $request->query('role') ?? null,
             'visibility' => $request->query('visibility') ?? null,
         ];
-        $data = $this->lessonService->paginate($auth,$filters);
+        $data = $this->lessonService->paginate($auth,$filters,9);
         return view('admin.materi.index', compact('data'));
     }
 

@@ -12,7 +12,9 @@
     <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
 
     <!-- UMAMI -->
-    <script defer src="https://cloud.umami.is/script.js" data-website-id="d7b63d18-a8c8-49da-b882-63be452caf42"></script>
+    @if (app()->environment('production'))
+        <script defer src="https://cloud.umami.is/script.js" data-website-id="d7b63d18-a8c8-49da-b882-63be452caf42"></script>
+    @endif
 </head>
 <body class="m-0 p-0 overflow-hidden bg-black">
 
@@ -27,7 +29,15 @@
             Bergabunglah dalam SSI Arena — platform gamifikasi seru yang menginspirasi komunitas IT Universitas Dinamika untuk belajar, berkompetisi, dan tumbuh bersama!
         </p>
         <div class="flex gap-4">
-            <a href="{{ route('login') }}" class="px-6 py-3 bg-white text-black rounded-full font-semibold hover:bg-gray-200 transition">Masuk</a>
+            @auth
+                @if (auth()->user()->is_lecturer)
+                    <a href="{{ route('admin-panel') }}" class="px-6 py-3 bg-white text-black rounded-full font-semibold hover:bg-gray-200 transition">Masuk</a>
+                @else
+                    <a href="{{ route('member-schedule') }}" class="px-6 py-3 bg-white text-black rounded-full font-semibold hover:bg-gray-200 transition">Masuk</a>
+                @endif
+            @else
+                <a href="{{ route('login') }}" class="px-6 py-3 bg-white text-black rounded-full font-semibold hover:bg-gray-200 transition">Masuk</a>
+            @endauth
             <a href="{{ route('guest.schedule') }}" class="px-6 py-3 border border-white text-white rounded-full font-semibold hover:bg-white hover:text-black transition">Tamu Arena</a>
         </div>
     </div>
