@@ -11,11 +11,11 @@
         <form method="GET" class="mb-4">
             <div class="row g-2 align-items-center">
                 <div class="col-auto">
-                    <label for="season_id" class="col-form-label">Pilih Season:</label>
+                    <label for="season_id" class="col-form-label">Pilih Musim:</label>
                 </div>
                 <div class="col-auto">
                     <select name="season_id" id="season_id" class="form-select" onchange="this.form.submit()">
-                        <option value="">Semua Season</option>
+                        <option value="">Semua Musim</option>
                         @foreach ($seasons as $season)
                             <option value="{{ $season->id }}" {{ request('season_id') == $season->id ? 'selected' : '' }}>
                                 {{ $season->name }}

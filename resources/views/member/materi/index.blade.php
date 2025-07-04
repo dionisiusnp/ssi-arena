@@ -8,10 +8,10 @@
         <h2 class="mb-4">Daftar Materi</h2>
 
         <!-- Search Form -->
-        <form method="GET" action="{{ auth()->user() ? route('member.lesson') : route('guest.lesson') }}" class="input-group mb-4">
+        <form method="GET" action="{{ auth()->check() ? route('member.lesson') : route('guest.lesson') }}" class="input-group mb-4">
             <input type="text" name="q" class="form-control" placeholder="Cari materi..." value="{{ request('q') }}">
             <button class="btn btn-primary text-white" type="submit">Filter</button>
-            <a href="{{ auth()->user() ? route('member.lesson') : route('guest.lesson') }}" class="btn btn-secondary text-white">Reset</a>
+            <a href="{{ auth()->check() ? route('member.lesson') : route('guest.lesson') }}" class="btn btn-secondary text-white">Reset</a>
         </form>
 
         <!-- Cards -->

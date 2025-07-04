@@ -29,7 +29,7 @@
             </div>
             <div class="col-md-4">
                 <select name="season_id" class="form-select">
-                    <option value="">-- Semua Musim --</option>
+                    <option value="">Semua Musim</option>
                     @foreach ($seasons as $season)
                         <option value="{{ $season->id }}" {{ request('season_id') == $season->id ? 'selected' : '' }}>
                             {{ $season->name }}
