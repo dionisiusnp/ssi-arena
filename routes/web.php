@@ -40,6 +40,28 @@ Route::prefix('guest')->name('guest.')->group(function () {
     Route::post('/register/store',[RegisterController::class, 'register'])->middleware('throttle:register')->name('register.store');
 });
 
+// MEMBER
+Route::middleware(['auth'])->prefix('member')->name('member.')->group(function () {
+        Route::get('/lesson',[MemberLessonController::class, 'index'])->name('lesson');
+        Route::get('/lesson/{lesson}',[MemberLessonController::class, 'show'])->name('lesson.show');
+        
+        Route::get('/quest',         [QuestController::class, 'index'])->name('quest');
+        Route::get('/quest/{id}/claim', [QuestController::class, 'claim'])->name('quest.claim');
+
+        Route::get('/leaderboard',[LeaderboardController::class, 'index'])->name('leaderboard');
+        
+        Route::get('/profile',[MemberController::class, 'index'])->name('profile');
+        Route::get('/reset',[MemberController::class, 'reset'])->name('reset');
+        Route::put('/reset', [MemberController::class, 'update'])->name('reset.password');
+
+
+        Route::get('/activity',[MemberActivityController::class, 'index'])->name('activity');
+        Route::get('/activity/{activity}/checklists', [MemberActivityController::class, 'checklists'])->name('activity.checklist');
+        Route::put('/activity/{activity}/update',[MemberActivityController::class, 'update'])->name('activity.update');
+
+        Route::get('/schedule',      [MemberDashboardController::class, 'index'])->name('schedule');
+});
+
 // LECTURER
 Route::middleware(['auth', EnsureUserIsLecturer::class])->group(function () {
     Route::get('/admin-panel',[AdminDashboardController::class,'index'])->name('admin-panel');
@@ -73,28 +95,6 @@ Route::middleware(['auth', EnsureUserIsLecturer::class, EnsureUserIsNotMember::c
     Route::put('/activity/{activity}/point-plus',[AdminActivityController::class, 'pointPlus'])->name('activity.point.plus');
     Route::put('/activity/{activity}/point-minus',[AdminActivityController::class, 'pointMinus'])->name('activity.point.minus');
     Route::get('/activity-checklist/{activity_checklist}/status', [ActivityChecklistController::class, 'toggleStatus'])->name('activity-checklist.status');
-});
-
-// MEMBER
-Route::middleware(['auth'])->prefix('member')->name('member.')->group(function () {
-        Route::get('/lesson',[MemberLessonController::class, 'index'])->name('lesson');
-        Route::get('/lesson/{lesson}',[MemberLessonController::class, 'show'])->name('lesson.show');
-        
-        Route::get('/quest',         [QuestController::class, 'index'])->name('quest');
-        Route::get('/quest/{id}/claim', [QuestController::class, 'claim'])->name('quest.claim');
-
-        Route::get('/leaderboard',[LeaderboardController::class, 'index'])->name('leaderboard');
-        
-        Route::get('/profile',[MemberController::class, 'index'])->name('profile');
-        Route::get('/reset',[MemberController::class, 'reset'])->name('reset');
-        Route::put('/reset', [MemberController::class, 'update'])->name('reset.password');
-
-
-        Route::get('/activity',[MemberActivityController::class, 'index'])->name('activity');
-        Route::get('/activity/{activity}/checklists', [MemberActivityController::class, 'checklists'])->name('activity.checklist');
-        Route::put('/activity/{activity}/update',[MemberActivityController::class, 'update'])->name('activity.update');
-
-        Route::get('/schedule',      [MemberDashboardController::class, 'index'])->name('schedule');
 });
 
 require __DIR__.'/auth.php';
