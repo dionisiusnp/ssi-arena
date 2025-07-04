@@ -13,7 +13,7 @@
         </div>
 
         <div class="subheading mb-1">
-            Level: {{ auth()->user()->current_level }} | Poin: {{ auth()->user()->current_point }}
+            Level Terkini: {{ auth()->user()->current_level }} | Poin Terkini: {{ auth()->user()->current_point }}
         </div>
 
         @if ($musim)

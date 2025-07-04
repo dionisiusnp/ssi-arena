@@ -63,7 +63,9 @@ class UserService
             ->when(!is_null($isActive), fn($query) =>
                 $query->where('is_active', $isActive)
             )
-            ->withCount('activities')
+            ->withCount(['activities as activities_count' => function ($query) {
+                $query->where('status', 'testing');
+            }])
             ->orderBy('name')
             ->paginate($perPage);
     }
@@ -74,7 +76,7 @@ class UserService
 
         return $this->model
             ->where('is_member', true)
-            ->where('is_active', true)
+            // ->where('is_active', true)
             ->withCount(['activities as total_point' => function ($query) use ($seasonId) {
                 $query->where('status', QuestEnum::PLUS->value)
                     ->whereColumn('activities.claimed_by', 'users.id')
