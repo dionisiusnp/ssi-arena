@@ -39,7 +39,7 @@ class LessonService
         return $data;
     }
 
-    public function paginate(array $filter = [], int $perPage = 10): LengthAwarePaginator
+    public function paginate($auth, array $filter = [], int $perPage = 10): LengthAwarePaginator
     {
         $search = $filter['search'] ?? null;
         $role = $filter['role'] ?? null;
@@ -47,6 +47,9 @@ class LessonService
         $visibility = $filter['visibility'] ?? null;
 
         return $this->model
+            ->when($auth->is_member !== null, function ($query) use ($auth) {
+                $query->where('changed_by', $auth->id);
+            })
             ->when($search, function ($query) use ($search) {
                 $query->where(function ($q) use ($search) {
                     $q->where('name', 'LIKE', "%{$search}%")
