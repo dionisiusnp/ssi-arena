@@ -3,7 +3,6 @@
 @section('title', 'Profil')
 
 @section('content')
-<!-- About -->
 <section class="resume-section" id="profil">
     <div class="resume-section-content">
         <h1 class="mb-0">{{ auth()->user()->name }}</h1>
@@ -17,19 +16,24 @@
         </div>
 
         @if ($musim)
-        <div class="subheading mb-1">
-            Musim: {{ $musim->name }} | Periode: {{ $musim->started_at_formatted . '-' . $musim->finished_at_formatted }}
-        </div>
+            <div class="subheading mb-1">
+                Musim: {{ $musim->name }} | Periode: {{ $musim->started_at_formatted . ' - ' . $musim->finished_at_formatted }}
+            </div>
 
-        <div class="subheading mb-4">
-            Level Musim: {{ auth()->user()->season_level }} | Poin Musim: {{ auth()->user()->season_point }}
-        </div>
+            <div class="subheading mb-4">
+                Level Musim: {{ auth()->user()->season_level }} | Poin Musim: {{ auth()->user()->season_point }}
+            </div>
         @endif
 
         <div class="d-flex flex-wrap align-items-center gap-2 mt-3">
+            <a href="#" class="btn btn-outline-secondary">
+                <i class="fas fa-user-edit me-1"></i> Ubah Akun
+            </a>
+
             <a href="{{ route('member.reset') }}" class="btn btn-outline-primary">
                 <i class="fas fa-key me-1"></i> Ganti Sandi
             </a>
+
             @if(auth()->user()->is_lecturer)
                 <a href="{{ route('admin-panel') }}" class="btn btn-outline-dark">
                     <i class="fas fa-tools me-1"></i> CMS Materi
@@ -43,8 +47,6 @@
                 </button>
             </form>
         </div>
-
-
     </div>
 </section>
 <hr class="m-0">

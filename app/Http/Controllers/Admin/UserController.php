@@ -80,7 +80,7 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, User $user)
+    public function update(CreateUserRequest $request, User $user)
     {
         try {
             $data = $this->userService->update($request->toArray(), $user);
