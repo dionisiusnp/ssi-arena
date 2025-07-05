@@ -65,7 +65,12 @@
                                     <h5 class="card-title">{{ $schedule->name }}</h5>
                                     <p class="card-text">
                                         <small class="text-muted">
-                                            Tanggal Acara: {{ $schedule->started_at_formatted . ' - ' . $schedule->finished_at_formatted }}
+                                            Tanggal Acara:
+                                            @if ($schedule->started_at_formatted === $schedule->finished_at_formatted)
+                                                {{ $schedule->started_at_formatted }}
+                                            @else
+                                                {{ $schedule->started_at_formatted . ' - ' . $schedule->finished_at_formatted }}
+                                            @endif
                                         </small>
                                     </p>
 

@@ -20,7 +20,7 @@
                 <div class="col-md-6 col-lg-4 mb-4 lesson-card">
                     <div class="card shadow-sm h-100">
                         <div class="card-body">
-                            <span class="badge bg-primary mb-2">{{ strtoupper($lesson->role) ?? '-' }}</span>
+                            <span class="badge bg-primary mb-2">{{ strtoupper($lesson->language) ?? '-' }}</span>
                             <h5 class="card-title">{{ $lesson->name }}</h5>
                             <p class="mb-1"><strong>Pemateri:</strong> {{ $lesson->lastChanger->name ?? '-' }}</p>
                             <p class="mb-1"><i class="fas fa-layer-group me-1"></i> {{ $lesson->topics_count }} Topik</p>

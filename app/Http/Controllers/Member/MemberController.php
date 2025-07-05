@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Member;
 
+use App\Enums\QuestEnum;
 use App\Http\Controllers\Controller;
 use App\Models\Activity;
 use App\Models\Season;
@@ -21,7 +22,40 @@ class MemberController extends Controller
     public function index(Request $request)
     {
         $musim = $this->seasonService->lastSeason();
-        return view('member.profil.index', compact('musim'));
+        $year = $request->input('year', now()->year);
+        $userId = Auth::id();
+
+        $years = Season::selectRaw('YEAR(started_at) as year')
+        ->union(
+            Season::selectRaw('YEAR(finished_at) as year')
+        )
+        ->distinct()
+        ->orderByDesc('year')
+        ->pluck('year');
+
+        $counted = [
+            QuestEnum::CLAIMED->value,
+        ];
+
+        $activityCounts = Activity::selectRaw('DATE(created_at) as date, COUNT(*) as total')
+            ->whereYear('created_at', $year)
+            ->where('claimed_by', $userId)
+            ->whereNotIn('status', $counted)
+            ->groupByRaw('DATE(created_at)')
+            ->pluck('total', 'date');
+
+        $activityLevels = [];
+        foreach ($activityCounts as $date => $count) {
+            $activityLevels[$date] = match (true) {
+                $count >= 4 => 4,
+                $count == 3 => 3,
+                $count == 2 => 2,
+                $count == 1 => 1,
+                default => 0,
+            };
+        }
+
+        return view('member.profil.index', compact('musim', 'year', 'activityLevels', 'years'));
     }
 
     public function reset(Request $request)
