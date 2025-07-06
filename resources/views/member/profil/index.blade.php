@@ -26,7 +26,7 @@
         @endif
 
         <div class="d-flex flex-wrap align-items-center gap-2 mt-3">
-            <a href="#" class="btn btn-outline-secondary">
+            <a href="{{ route('member.edit') }}" class="btn btn-outline-primary">
                 <i class="fas fa-user-edit me-1"></i> Ubah Akun
             </a>
 
@@ -35,7 +35,7 @@
             </a>
 
             @if(auth()->user()->is_lecturer)
-                <a href="{{ route('admin-panel') }}" class="btn btn-outline-dark">
+                <a href="{{ route('admin-panel') }}" class="btn btn-outline-secondary">
                     <i class="fas fa-tools me-1"></i> CMS Materi
                 </a>
             @endif

@@ -52,7 +52,9 @@ Route::middleware(['auth'])->prefix('member')->name('member.')->group(function (
         
         Route::get('/profile',[MemberController::class, 'index'])->name('profile');
         Route::get('/reset',[MemberController::class, 'reset'])->name('reset');
-        Route::put('/reset', [MemberController::class, 'update'])->name('reset.password');
+        Route::put('/reset', [MemberController::class, 'updatePassword'])->name('reset.password');
+        Route::get('/edit',[MemberController::class, 'edit'])->name('edit');
+        Route::put('/update/{user}/member', [MemberController::class, 'update'])->name('update');
 
 
         Route::get('/activity',[MemberActivityController::class, 'index'])->name('activity');
