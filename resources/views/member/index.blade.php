@@ -42,7 +42,6 @@
                             : asset('assets/member/assets/img/default-image.jpg');
 
                         $shareUrl = $schedule->url ?? url()->current();
-                        $shareText = urlencode($schedule->name . ' - ' . $shareUrl);
                     @endphp
 
                     <div class="d-inline-block me-3" style="width: 300px;">
@@ -83,13 +82,6 @@
 
                                 <!-- Tombol Share -->
                                 <div class="d-flex justify-content-start gap-2 mt-2">
-                                    <!-- WhatsApp Share -->
-                                    <a href="https://wa.me/?text={{ $shareText }}" 
-                                       target="_blank"
-                                       class="btn btn-sm btn-light border d-flex align-items-center">
-                                        <i class="fab fa-whatsapp text-success me-1"></i> WhatsApp
-                                    </a>
-
                                     <!-- Copy URL -->
                                     <button 
                                         type="button" 
