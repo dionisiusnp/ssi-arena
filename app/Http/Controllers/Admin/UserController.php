@@ -29,7 +29,7 @@ class UserController extends Controller
             'is_lecturer' => $request->query('is_lecturer'),
             'is_active' => $request->query('is_active'),
         ];
-        $data = $this->userService->paginate($filters);
+        $data = $this->userService->paginate($filters, 9);
         return view('admin.pemain.index', compact('data'));
     }
 
@@ -80,7 +80,7 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, User $user)
+    public function update(CreateUserRequest $request, User $user)
     {
         try {
             $data = $this->userService->update($request->toArray(), $user);

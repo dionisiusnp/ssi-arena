@@ -1,18 +1,18 @@
 @extends('layouts.member.app')
 
-@section('title', 'Daftar Kegiatan')
+@section('title', 'Daftar Acara')
 
 @section('content')
 <section class="resume-section" id="schedules">
     <div class="resume-section-content">
-        <h2 class="mb-4">Daftar Kegiatan</h2>
+        <h2 class="mb-4">Daftar Acara</h2>
 
         <!-- Search Form -->
-        <form method="GET" action="{{ auth()->user() ? route('member.schedule') : route('guest.schedule') }}" class="mb-4">
+        <form method="GET" action="{{ auth()->check() ? route('member.schedule') : route('guest.schedule') }}" class="mb-4">
             <div class="input-group">
                 <input type="text" name="q" class="form-control" placeholder="Cari kegiatan..." value="{{ request('q') }}">
                 <button class="btn btn-primary text-white" type="submit">Cari</button>
-                <a href="{{ auth()->user() ? route('member.schedule') : route('guest.schedule') }}" class="btn btn-secondary text-white">Reset</a>
+                <a href="{{ auth()->check() ? route('member.schedule') : route('guest.schedule') }}" class="btn btn-secondary text-white">Reset</a>
             </div>
         </form>
 
@@ -42,7 +42,6 @@
                             : asset('assets/member/assets/img/default-image.jpg');
 
                         $shareUrl = $schedule->url ?? url()->current();
-                        $shareText = urlencode($schedule->name . ' - ' . $shareUrl);
                     @endphp
 
                     <div class="d-inline-block me-3" style="width: 300px;">
@@ -65,7 +64,12 @@
                                     <h5 class="card-title">{{ $schedule->name }}</h5>
                                     <p class="card-text">
                                         <small class="text-muted">
-                                            Tanggal Acara: {{ $schedule->started_at_formatted . ' - ' . $schedule->finished_at_formatted }}
+                                            Tanggal Acara:
+                                            @if ($schedule->started_at_formatted === $schedule->finished_at_formatted)
+                                                {{ $schedule->started_at_formatted }}
+                                            @else
+                                                {{ $schedule->started_at_formatted . ' - ' . $schedule->finished_at_formatted }}
+                                            @endif
                                         </small>
                                     </p>
 
@@ -78,13 +82,6 @@
 
                                 <!-- Tombol Share -->
                                 <div class="d-flex justify-content-start gap-2 mt-2">
-                                    <!-- WhatsApp Share -->
-                                    <a href="https://wa.me/?text={{ $shareText }}" 
-                                       target="_blank"
-                                       class="btn btn-sm btn-light border d-flex align-items-center">
-                                        <i class="fab fa-whatsapp text-success me-1"></i> WhatsApp
-                                    </a>
-
                                     <!-- Copy URL -->
                                     <button 
                                         type="button" 

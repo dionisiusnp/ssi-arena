@@ -3,7 +3,6 @@
 @section('title', 'Profil')
 
 @section('content')
-<!-- About -->
 <section class="resume-section" id="profil">
     <div class="resume-section-content">
         <h1 class="mb-0">{{ auth()->user()->name }}</h1>
@@ -13,25 +12,30 @@
         </div>
 
         <div class="subheading mb-1">
-            Level: {{ auth()->user()->current_level }} | Poin: {{ auth()->user()->current_point }}
+            Level Terkini: {{ auth()->user()->current_level }} | Poin Terkini: {{ auth()->user()->current_point }}
         </div>
 
         @if ($musim)
-        <div class="subheading mb-1">
-            Musim: {{ $musim->name }} | Periode: {{ $musim->started_at_formatted . '-' . $musim->finished_at_formatted }}
-        </div>
+            <div class="subheading mb-1">
+                Musim: {{ $musim->name }} | Periode: {{ $musim->started_at_formatted . ' - ' . $musim->finished_at_formatted }}
+            </div>
 
-        <div class="subheading mb-4">
-            Level Musim: {{ auth()->user()->season_level }} | Poin Musim: {{ auth()->user()->season_point }}
-        </div>
+            <div class="subheading mb-4">
+                Level Musim: {{ auth()->user()->season_level }} | Poin Musim: {{ auth()->user()->season_point }}
+            </div>
         @endif
 
         <div class="d-flex flex-wrap align-items-center gap-2 mt-3">
+            <a href="{{ route('member.edit') }}" class="btn btn-outline-primary">
+                <i class="fas fa-user-edit me-1"></i> Ubah Akun
+            </a>
+
             <a href="{{ route('member.reset') }}" class="btn btn-outline-primary">
                 <i class="fas fa-key me-1"></i> Ganti Sandi
             </a>
+
             @if(auth()->user()->is_lecturer)
-                <a href="{{ route('admin-panel') }}" class="btn btn-outline-dark">
+                <a href="{{ route('admin-panel') }}" class="btn btn-outline-secondary">
                     <i class="fas fa-tools me-1"></i> CMS Materi
                 </a>
             @endif
@@ -43,15 +47,11 @@
                 </button>
             </form>
         </div>
-
-
     </div>
 </section>
 <hr class="m-0">
 @php
 use Illuminate\Support\Carbon;
-
-$year = request('year', now()->year);
 
 $levelColors = [
     0 => 'bg-light border',
@@ -64,16 +64,6 @@ $levelColors = [
 $levelRanges = [
     0 => '0', 1 => '1', 2 => '2', 3 => '3', 4 => '≥4'
 ];
-
-// Simulasi data aktivitas harian (ganti dari database jika tersedia)
-$activityLevels = [];
-for ($m = 1; $m <= 12; $m++) {
-    $days = Carbon::create($year, $m)->daysInMonth;
-    for ($d = 1; $d <= $days; $d++) {
-        $date = Carbon::create($year, $m, $d);
-        $activityLevels[$date->format('Y-m-d')] = rand(0, 4);
-    }
-}
 @endphp
 
 <section class="resume-section mt-5" id="heatmap">
@@ -84,32 +74,32 @@ for ($m = 1; $m <= 12; $m++) {
         <form method="GET" action="#heatmap" class="mb-4">
             <label for="year" class="form-label">Pilih Tahun:</label>
             <select name="year" id="year" class="form-select form-select-sm w-auto d-inline-block ms-2" onchange="this.form.submit()">
-                @for ($y = now()->year; $y >= now()->year - 2; $y--)
+                @foreach ($years as $y)
                     <option value="{{ $y }}" {{ $year == $y ? 'selected' : '' }}>{{ $y }}</option>
-                @endfor
+                @endforeach
             </select>
         </form>
 
         <!-- Header Tanggal (1-31) -->
-        <div class="d-flex align-items-center">
-            <div style="width: 100px;" class="text-end pe-2 small text-muted">&nbsp;</div>
-            <div class="d-flex flex-wrap gap-1">
+        <div class="d-flex align-items-center mb-2">
+            <div style="width: 100px;" class="text-right pr-2 small text-muted">&nbsp;</div>
+            <div class="d-flex flex-wrap">
                 @for ($d = 1; $d <= 31; $d++)
                     <div class="text-center small text-muted" style="width: 20px;">{{ $d }}</div>
                 @endfor
             </div>
         </div>
 
-        <!-- Grid Heatmap per Bulan -->
+        <!-- Grid per Bulan -->
         <div class="d-flex flex-column gap-2">
             @for ($month = 1; $month <= 12; $month++)
                 @php
                     $monthName = Carbon::create($year, $month)->translatedFormat('F');
                     $daysInMonth = Carbon::create($year, $month)->daysInMonth;
                 @endphp
-                <div class="d-flex align-items-center">
-                    <div style="width: 100px;" class="text-end pe-2 small text-muted">{{ $monthName }}</div>
-                    <div class="d-flex flex-wrap gap-1">
+                <div class="d-flex align-items-center mb-1">
+                    <div style="width: 100px;" class="text-right pr-2 small text-muted">{{ $monthName }}</div>
+                    <div class="d-flex flex-wrap">
                         @for ($day = 1; $day <= 31; $day++)
                             @php
                                 $dateObj = Carbon::create($year, $month, 1)->setDay($day);
@@ -120,8 +110,8 @@ for ($m = 1; $m <= 12; $m++) {
 
                             @if ($level !== null)
                                 <div class="{{ $levelColors[$level] }} rounded"
-                                     style="width: 20px; height: 20px;"
-                                     title="{{ $dateStr }}: {{ $level * 2 }} aktivitas">
+                                    style="width: 20px; height: 20px;"
+                                    title="{{ $dateStr }}: {{ $level }} aktivitas">
                                 </div>
                             @else
                                 <div style="width: 20px; height: 20px; opacity: 0;"></div>
@@ -133,13 +123,10 @@ for ($m = 1; $m <= 12; $m++) {
         </div>
 
         <!-- Legend -->
-        <div class="d-flex align-items-center gap-2 mt-4 flex-wrap">
+        <div class="d-flex align-items-center flex-wrap mt-4 gap-2">
             <span class="small text-muted">Lebih sedikit</span>
             @foreach ($levelColors as $level => $class)
-                <div class="{{ $class }} rounded"
-                    style="width: 14px; height: 14px;"
-                    title="Aktivitas: {{ $levelRanges[$level] }}">
-                </div>
+                <div class="{{ $class }} rounded" style="width: 14px; height: 14px;" title="Aktivitas: {{ $levelRanges[$level] }}"></div>
             @endforeach
             <span class="small text-muted">Lebih banyak</span>
         </div>

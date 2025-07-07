@@ -71,8 +71,10 @@
                             @endif
                         </p>
 
-                        <p class="card-text mb-1"><strong>NIM:</strong> {{ $user->nim ?? '-' }}</p>
-                        <p class="card-text mb-1"><strong>Total Misi:</strong> {{ $user->activities_count }}</p>
+                        <p class="card-text mb-1">{{ $user->email ?? '-' }} | {{ $user->nim ?? '-' }}</p>
+                        <p class="card-text mb-1"><strong>Level Musim:</strong> {{ $user->season_level }} | <strong>Poin Musim:</strong> {{ $user->season_point }}</p>
+                        <p class="card-text mb-1"><strong>Level Terkini:</strong> {{ $user->current_level }} | <strong>Poin Terkini:</strong> {{ $user->current_point }}</p>
+                        <p class="card-text mb-1"><strong>Total Misi Belum Dicek:</strong> {{ $user->activities_count }}</p>
                         <p class="card-text mt-2"><strong>Dibuat:</strong> {{ $user->created_at_formatted }}</p>
 
                         <div class="dropdown position-absolute" style="top: 10px; right: 10px;">
@@ -98,7 +100,7 @@
             </div>
         @empty
             <div class="col-12">
-                <div class="alert alert-info">Data aktivitas tidak ditemukan.</div>
+                <div class="alert alert-info">Data pemain tidak ditemukan.</div>
             </div>
         @endforelse
     </div>

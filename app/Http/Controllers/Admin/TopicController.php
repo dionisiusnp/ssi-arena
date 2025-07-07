@@ -31,7 +31,16 @@ class TopicController extends Controller
             'visibility' => $request->query('visibility') ?? null,
         ];
         $lessons = Lesson::all();
-        $lesson = $this->lessonService->model()->find($filters['lesson_id']);
+        $lesson = null;
+        if ($filters['lesson_id']) {
+            $lesson = $this->lessonService->model()->find($filters['lesson_id']);
+            if (!$lesson) {
+                abort(404, 'Lesson not found');
+            }
+            if ($lesson->changed_by !== $auth->id) {
+                abort(403, 'Unauthorized access to lesson');
+            }
+        }
         $data = $this->topicService->paginate($filters);
         return view('admin.materi.topik.index', compact('data', 'lesson', 'lessons'));
     }
@@ -41,9 +50,25 @@ class TopicController extends Controller
      */
     public function create(Request $request)
     {
+        $auth = Auth::user();
         $lessonId = $request->query('lesson_id');
+
+        if (!$lessonId) {
+            abort(400, 'Parameter lesson_id dibutuhkan.');
+        }
+
+        $lesson = $this->lessonService->model()->find($lessonId);
+        if (!$lesson) {
+            abort(404, 'Lesson tidak ditemukan.');
+        }
+
+        if ($lesson->changed_by !== $auth->id) {
+            abort(403, 'Akses tidak diizinkan untuk lesson ini.');
+        }
+
         $getSequence = $this->topicService->byLesson($lessonId);
         $recentSequence = $getSequence->count() + 1;
+
         return view('admin.materi.topik.create', compact('recentSequence'));
     }
 
@@ -81,6 +106,10 @@ class TopicController extends Controller
      */
     public function edit(Topic $topic)
     {
+        $auth = Auth::user();
+        if ($topic->changed_by !== $auth->id) {
+            abort(403, 'Akses tidak diizinkan untuk lesson ini.');
+        }
         $getSequence = $this->topicService->byLesson($topic->lesson_id);
         $recentSequence = $getSequence->count() + 1;
         return view('admin.materi.topik.edit', compact('topic', 'recentSequence'));

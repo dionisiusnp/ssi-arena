@@ -120,16 +120,6 @@
 </div>
 
 @push('scripts')
-<style>
-    .fade-in {
-        animation: fadeIn 2s ease forwards;
-    }
-
-    @keyframes fadeIn {
-        from { opacity: 0; transform: scale(0.9); }
-        to { opacity: 1; transform: scale(1); }
-    }
-</style>
 <script>
     function togglePassword(id) {
         const input = document.getElementById(id);
@@ -165,7 +155,6 @@
         });
     }
 
-    // Sembunyikan NIM jika pengajar = Ya
     document.querySelectorAll('input[name="is_lecturer"]').forEach(el => {
         el.addEventListener('change', function () {
             const nimGroup = document.getElementById('nimGroup');
@@ -177,7 +166,6 @@
         });
     });
 
-    // Inisialisasi
     window.addEventListener('DOMContentLoaded', () => {
         const checked = document.querySelector('input[name="is_lecturer"]:checked');
         if (checked && checked.value === '1') {

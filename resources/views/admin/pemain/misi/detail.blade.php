@@ -15,7 +15,7 @@
             Kembali
         </a>
 
-        @if (!in_array($activity->status, [QuestEnum::PLUS->value, QuestEnum::MINUS->value]))
+        @if (in_array($activity->status, [QuestEnum::TESTING->value, QuestEnum::PENDING->value]))
             <div class="d-flex gap-2">
                 <form id="form-plus" method="POST" action="{{ route('activity.point.plus', $activity->id) }}">
                     @csrf

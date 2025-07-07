@@ -11,11 +11,11 @@
         <form method="GET" class="mb-4">
             <div class="row g-2 align-items-center">
                 <div class="col-auto">
-                    <label for="season_id" class="col-form-label">Pilih Season:</label>
+                    <label for="season_id" class="col-form-label">Pilih Musim:</label>
                 </div>
                 <div class="col-auto">
-                    <select name="season_id" id="season_id" class="form-select" onchange="this.form.submit()">
-                        <option value="">Semua Season</option>
+                    <select name="season_id" id="season_id" class="form-control" onchange="this.form.submit()">
+                        <option value="">Semua Musim</option>
                         @foreach ($seasons as $season)
                             <option value="{{ $season->id }}" {{ request('season_id') == $season->id ? 'selected' : '' }}>
                                 {{ $season->name }}
@@ -26,10 +26,34 @@
             </div>
         </form>
 
-        <!-- Tabel Peringkat -->
+        {{-- Top 3 Cards --}}
+        @if ($players->count())
+        <div class="row mb-4">
+            @foreach ($players->take(3) as $index => $player)
+            <div class="col-md-4 mb-3">
+                <div class="card h-100 shadow border-0 text-center position-relative {{ $index == 0 ? 'bg-warning text-dark' : ($index == 1 ? 'bg-secondary text-white' : 'bg-orange text-white') }}">
+                    <div class="card-body py-4">
+                        <div class="mb-2">
+                            <img src="{{ Avatar::create($player->name)->toBase64() }}" alt="{{ $player->name }}" class="rounded-circle" width="64" height="64">
+                        </div>
+                        <h5 class="card-title mb-0">{{ $player->name }}</h5>
+                        <small class="d-block">{{ $player->email }}</small>
+                        <hr class="my-3" style="border-color: rgba(255,255,255,0.3);">
+                        <p class="mb-1"><strong>Level:</strong> {{ $player->current_level }}</p>
+                        <p class="mb-0"><strong>Poin:</strong> {{ $player->current_point }}</p>
+                    </div>
+                    <span class="position-absolute top-0 start-0 m-2 badge badge-pill badge-dark">#{{ $index + 1 }}</span>
+                </div>
+            </div>
+            @endforeach
+        </div>
+        @endif
+
+        {{-- Remaining Leaderboard --}}
+        @if ($players->count() > 3)
         <div class="table-responsive">
-            <table class="table table-hover align-middle">
-                <thead class="table-light">
+            <table class="table table-striped table-hover align-middle">
+                <thead class="thead-light">
                     <tr>
                         <th>#</th>
                         <th>Nama Pemain</th>
@@ -38,29 +62,23 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @forelse ($players as $index => $player)
+                    @foreach ($players->slice(3) as $index => $player)
                         <tr>
-                            <td>
-                                <span class="badge 
-                                    {{ $index === 0 ? 'bg-warning text-dark' : ($index === 1 ? 'bg-secondary' : ($index === 2 ? 'bg-orange text-white' : 'bg-light text-dark')) }}">
-                                    {{ $index + 1 }}
-                                </span>
-                            </td>
+                            <td><span class="badge badge-light">{{ $index + 4 }}</span></td>
                             <td>
                                 <strong>{{ $player->name }}</strong><br>
                                 <small class="text-muted">{{ $player->email }}</small>
                             </td>
-                            <td><span class="fw-bold">{{ $player->current_level }}</span></td>
-                            <td><span class="fw-bold">{{ $player->current_point }}</span></td>
+                            <td><strong>{{ $player->current_level }}</strong></td>
+                            <td><strong>{{ $player->current_point }}</strong></td>
                         </tr>
-                    @empty
-                        <tr>
-                            <td colspan="5" class="text-center">Belum ada data pemain tersedia.</td>
-                        </tr>
-                    @endforelse
+                    @endforeach
                 </tbody>
             </table>
         </div>
+        @elseif($players->count() == 0)
+            <div class="alert alert-info">Belum ada data pemain tersedia.</div>
+        @endif
     </div>
 </section>
 @endsection

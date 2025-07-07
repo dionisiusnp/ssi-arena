@@ -65,9 +65,13 @@
                                     @endif
                                 </td>
                                 <td>
-                                    <span class="d-block">{{ $schedule->started_at_formatted }}</span>
-                                    <span class="d-block">s.d.</span>
-                                    <span class="d-block">{{ $schedule->finished_at_formatted }}</span>
+                                    @if ($schedule->started_at_formatted === $schedule->finished_at_formatted)
+                                        <span class="d-block">{{ $schedule->started_at_formatted }}</span>
+                                    @else
+                                        <span class="d-block">{{ $schedule->started_at_formatted }}</span>
+                                        <span class="d-block">s.d.</span>
+                                        <span class="d-block">{{ $schedule->finished_at_formatted }}</span>
+                                    @endif
                                 </td>
                                 <td class="text-center">
                                     <span class="badge bg-{{ $schedule->is_active ? 'success' : 'secondary' }} text-white">

@@ -63,7 +63,9 @@ class UserService
             ->when(!is_null($isActive), fn($query) =>
                 $query->where('is_active', $isActive)
             )
-            ->withCount('activities')
+            ->withCount(['activities as activities_count' => function ($query) {
+                $query->where('status', 'testing');
+            }])
             ->orderBy('name')
             ->paginate($perPage);
     }
@@ -74,15 +76,18 @@ class UserService
 
         return $this->model
             ->where('is_member', true)
-            ->where('is_active', true)
             ->withCount(['activities as total_point' => function ($query) use ($seasonId) {
-                $query->where('status', QuestEnum::PLUS->value)
-                    ->whereColumn('activities.claimed_by', 'users.id')
+                $query->whereColumn('activities.claimed_by', 'users.id')
                     ->join('quest_details', 'activities.quest_detail_id', '=', 'quest_details.id')
                     ->when(!is_null($seasonId), function ($q) use ($seasonId) {
                         $q->where('quest_details.season_id', $seasonId);
                     })
-                    ->selectRaw('SUM(quest_details.point_total)');
+                    ->selectRaw("
+                        SUM(CASE
+                            WHEN activities.status = ? THEN quest_details.point_total
+                            WHEN activities.status = ? THEN -quest_details.point_total
+                            ELSE 0
+                        END)", [QuestEnum::PLUS->value, QuestEnum::MINUS->value]);
             }])
             ->orderByDesc('total_point')
             ->paginate($perPage);
