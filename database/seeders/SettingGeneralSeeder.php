@@ -33,7 +33,7 @@ class SettingGeneralSeeder extends Seeder
                 'name' => 'Jumlah Pemenang',
                 'description' => 'Menentukan jumlah pemenang dari daftar peringkat.',
                 'column_type' => FieldTypeEnum::NUMBER->value,
-                'default_value' => 3,
+                'default_value' => 0,
                 'current_value' => 0,
             ],
         ];
