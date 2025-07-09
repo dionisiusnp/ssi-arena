@@ -8,6 +8,7 @@ enum SettingGroupEnum: string
     case RANKED = 'ranked';
     case PERKQUESTLEVEL = 'perk_quest_level';
     case PERKCUSTOM = 'perk_custom';
+    case GENERAL = 'general';
     
     public function label(): string
     {
@@ -16,6 +17,7 @@ enum SettingGroupEnum: string
             self::RANKED => 'Ranked',
             self::PERKQUESTLEVEL => 'Perk Quest Level',
             self::PERKCUSTOM => 'Perk Custom',
+            self::GENERAL => 'General',
         };
     }
 

@@ -22,7 +22,7 @@ class SettingLevelSeeder extends Seeder
                 'key' => 'level_1',
                 'name' => 'Level 1',
                 'description' => 'Nilai poin minimal untuk Level 1',
-                'column_type' => FieldTypeEnum::INTEGER->value,
+                'column_type' => FieldTypeEnum::NUMBER->value,
                 'default_value' => 0,
                 'current_value' => 0, // dari poin
             ],
@@ -32,7 +32,7 @@ class SettingLevelSeeder extends Seeder
                 'key' => 'level_2',
                 'name' => 'Level 2',
                 'description' => 'Nilai poin minimal untuk Level 2',
-                'column_type' => FieldTypeEnum::INTEGER->value,
+                'column_type' => FieldTypeEnum::NUMBER->value,
                 'default_value' => 0,
                 'current_value' => 0, // dari poin
             ],
@@ -42,7 +42,7 @@ class SettingLevelSeeder extends Seeder
                 'key' => 'level_3',
                 'name' => 'Level 3',
                 'description' => 'Nilai poin minimal untuk Level 3',
-                'column_type' => FieldTypeEnum::INTEGER->value,
+                'column_type' => FieldTypeEnum::NUMBER->value,
                 'default_value' => 0,
                 'current_value' => 0, // dari poin
             ],
@@ -52,7 +52,7 @@ class SettingLevelSeeder extends Seeder
                 'key' => 'level_4',
                 'name' => 'Level 4',
                 'description' => 'Nilai poin minimal untuk Level 4',
-                'column_type' => FieldTypeEnum::INTEGER->value,
+                'column_type' => FieldTypeEnum::NUMBER->value,
                 'default_value' => 0,
                 'current_value' => 0, // dari poin
             ],
@@ -62,7 +62,7 @@ class SettingLevelSeeder extends Seeder
                 'key' => 'level_5',
                 'name' => 'Level 5',
                 'description' => 'Nilai poin minimal untuk Level 5',
-                'column_type' => FieldTypeEnum::INTEGER->value,
+                'column_type' => FieldTypeEnum::NUMBER->value,
                 'default_value' => 0,
                 'current_value' => 0, // dari poin
             ],
@@ -72,7 +72,7 @@ class SettingLevelSeeder extends Seeder
                 'key' => 'level_6',
                 'name' => 'Level 6',
                 'description' => 'Nilai poin minimal untuk Level 6',
-                'column_type' => FieldTypeEnum::INTEGER->value,
+                'column_type' => FieldTypeEnum::NUMBER->value,
                 'default_value' => 0,
                 'current_value' => 0, // dari poin
             ],
@@ -82,7 +82,7 @@ class SettingLevelSeeder extends Seeder
                 'key' => 'level_7',
                 'name' => 'Level 7',
                 'description' => 'Nilai poin minimal untuk Level 7',
-                'column_type' => FieldTypeEnum::INTEGER->value,
+                'column_type' => FieldTypeEnum::NUMBER->value,
                 'default_value' => 0,
                 'current_value' => 0, // dari poin
             ],
@@ -92,7 +92,7 @@ class SettingLevelSeeder extends Seeder
                 'key' => 'level_8',
                 'name' => 'Level 8',
                 'description' => 'Nilai poin minimal untuk Level 8',
-                'column_type' => FieldTypeEnum::INTEGER->value,
+                'column_type' => FieldTypeEnum::NUMBER->value,
                 'default_value' => 0,
                 'current_value' => 0, // dari poin
             ],
@@ -102,7 +102,7 @@ class SettingLevelSeeder extends Seeder
                 'key' => 'level_9',
                 'name' => 'Level 9',
                 'description' => 'Nilai poin minimal untuk Level 9',
-                'column_type' => FieldTypeEnum::INTEGER->value,
+                'column_type' => FieldTypeEnum::NUMBER->value,
                 'default_value' => 0,
                 'current_value' => 0, // dari poin
             ],
@@ -112,7 +112,7 @@ class SettingLevelSeeder extends Seeder
                 'key' => 'level_10',
                 'name' => 'Level 10',
                 'description' => 'Nilai poin minimal untuk Level 10',
-                'column_type' => FieldTypeEnum::INTEGER->value,
+                'column_type' => FieldTypeEnum::NUMBER->value,
                 'default_value' => 0,
                 'current_value' => 0, // dari poin
             ],
@@ -122,7 +122,7 @@ class SettingLevelSeeder extends Seeder
                 'key' => 'level_11',
                 'name' => 'Level 11',
                 'description' => 'Nilai poin minimal untuk Level 11',
-                'column_type' => FieldTypeEnum::INTEGER->value,
+                'column_type' => FieldTypeEnum::NUMBER->value,
                 'default_value' => 0,
                 'current_value' => 0, // dari poin
             ],
@@ -132,7 +132,7 @@ class SettingLevelSeeder extends Seeder
                 'key' => 'level_12',
                 'name' => 'Level 12',
                 'description' => 'Nilai poin minimal untuk Level 12',
-                'column_type' => FieldTypeEnum::INTEGER->value,
+                'column_type' => FieldTypeEnum::NUMBER->value,
                 'default_value' => 0,
                 'current_value' => 0, // dari poin
             ],
@@ -142,7 +142,7 @@ class SettingLevelSeeder extends Seeder
                 'key' => 'level_13',
                 'name' => 'Level 13',
                 'description' => 'Nilai poin minimal untuk Level 13',
-                'column_type' => FieldTypeEnum::INTEGER->value,
+                'column_type' => FieldTypeEnum::NUMBER->value,
                 'default_value' => 0,
                 'current_value' => 0, // dari poin
             ],
@@ -152,7 +152,7 @@ class SettingLevelSeeder extends Seeder
                 'key' => 'level_14',
                 'name' => 'Level 14',
                 'description' => 'Nilai poin minimal untuk Level 14',
-                'column_type' => FieldTypeEnum::INTEGER->value,
+                'column_type' => FieldTypeEnum::NUMBER->value,
                 'default_value' => 0,
                 'current_value' => 0, // dari poin
             ],
@@ -162,7 +162,7 @@ class SettingLevelSeeder extends Seeder
                 'key' => 'level_15',
                 'name' => 'Level 15',
                 'description' => 'Nilai poin minimal untuk Level 15',
-                'column_type' => FieldTypeEnum::INTEGER->value,
+                'column_type' => FieldTypeEnum::NUMBER->value,
                 'default_value' => 0,
                 'current_value' => 0, // dari poin
             ],

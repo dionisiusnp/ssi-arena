@@ -57,7 +57,7 @@
 
     <li class="nav-item {{ request()->routeIs('settings.static') ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('settings.static') }}">
-            <i class="fas fa-fw fa-cog"></i>
+            <i class="fas fa-fw fa-wrench"></i>
             <span>Keuntungan Statis</span></a>
     </li>
 
@@ -83,6 +83,12 @@
         Konfigurasi
     </div>
 
+    <li class="nav-item {{ request()->routeIs('settings.general') ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('settings.general') }}">
+            <i class="fas fa-fw fa-cog"></i>
+            <span>Umum</span></a>
+    </li>
+
     <li class="nav-item {{ request()->routeIs('settings.level') ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('settings.level') }}">
             <i class="fas fa-fw fa-wrench"></i>
@@ -97,7 +103,7 @@
 
     <li class="nav-item {{ request()->routeIs('settings.dynamic') ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('settings.dynamic') }}">
-            <i class="fas fa-fw fa-cog"></i>
+            <i class="fas fa-fw fa-wrench"></i>
             <span>Keuntungan Dinamis</span></a>
     </li>
     @endif

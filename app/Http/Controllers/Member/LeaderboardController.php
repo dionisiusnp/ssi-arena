@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\Member;
 
+use App\Enums\SettingGroupEnum;
 use App\Http\Controllers\Controller;
 use App\Models\Season;
+use App\Models\Setting;
 use App\Services\SeasonService;
 use App\Services\UserService;
 use Illuminate\Http\Request;
@@ -26,6 +28,7 @@ class LeaderboardController extends Controller
         ];
         $players = $this->userService->paginateDashboard($filters);
         $seasons = Season::all();
-        return view('member.peringkat.index', compact('players', 'seasons'));
+        $winnersCount = Setting::where('group', SettingGroupEnum::GENERAL->value)->where('key','winner_counter')->first();
+        return view('member.peringkat.index', compact('players', 'seasons', 'winnersCount'));
     }
 }

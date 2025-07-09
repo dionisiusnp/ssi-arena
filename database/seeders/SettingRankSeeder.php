@@ -22,7 +22,7 @@ class SettingRankSeeder extends Seeder
                 'key' => 'rank_1',
                 'name' => 'Rank 1',
                 'description' => 'Nilai poin minimal untuk Rank 1',
-                'column_type' => FieldTypeEnum::INTEGER->value,
+                'column_type' => FieldTypeEnum::NUMBER->value,
                 'default_value' => 0,
                 'current_value' => 0, // dari poin
             ],
@@ -32,7 +32,7 @@ class SettingRankSeeder extends Seeder
                 'key' => 'rank_2',
                 'name' => 'Rank 2',
                 'description' => 'Nilai poin minimal untuk Rank 2',
-                'column_type' => FieldTypeEnum::INTEGER->value,
+                'column_type' => FieldTypeEnum::NUMBER->value,
                 'default_value' => 0,
                 'current_value' => 0, // dari poin
             ],
@@ -42,7 +42,7 @@ class SettingRankSeeder extends Seeder
                 'key' => 'rank_3',
                 'name' => 'Rank 3',
                 'description' => 'Nilai poin minimal untuk Rank 3',
-                'column_type' => FieldTypeEnum::INTEGER->value,
+                'column_type' => FieldTypeEnum::NUMBER->value,
                 'default_value' => 0,
                 'current_value' => 0, // dari poin
             ],
@@ -52,7 +52,7 @@ class SettingRankSeeder extends Seeder
                 'key' => 'rank_4',
                 'name' => 'Rank 4',
                 'description' => 'Nilai poin minimal untuk Rank 4',
-                'column_type' => FieldTypeEnum::INTEGER->value,
+                'column_type' => FieldTypeEnum::NUMBER->value,
                 'default_value' => 0,
                 'current_value' => 0, // dari poin
             ],
@@ -62,7 +62,7 @@ class SettingRankSeeder extends Seeder
                 'key' => 'rank_5',
                 'name' => 'Rank 5',
                 'description' => 'Nilai poin minimal untuk Rank 5',
-                'column_type' => FieldTypeEnum::INTEGER->value,
+                'column_type' => FieldTypeEnum::NUMBER->value,
                 'default_value' => 0,
                 'current_value' => 0, // dari poin
             ],
@@ -72,7 +72,7 @@ class SettingRankSeeder extends Seeder
                 'key' => 'rank_6',
                 'name' => 'Rank 6',
                 'description' => 'Nilai poin minimal untuk Rank 6',
-                'column_type' => FieldTypeEnum::INTEGER->value,
+                'column_type' => FieldTypeEnum::NUMBER->value,
                 'default_value' => 0,
                 'current_value' => 0, // dari poin
             ],
@@ -82,7 +82,7 @@ class SettingRankSeeder extends Seeder
                 'key' => 'rank_7',
                 'name' => 'Rank 7',
                 'description' => 'Nilai poin minimal untuk Rank 7',
-                'column_type' => FieldTypeEnum::INTEGER->value,
+                'column_type' => FieldTypeEnum::NUMBER->value,
                 'default_value' => 0,
                 'current_value' => 0, // dari poin
             ],
@@ -92,7 +92,7 @@ class SettingRankSeeder extends Seeder
                 'key' => 'rank_8',
                 'name' => 'Rank 8',
                 'description' => 'Nilai poin minimal untuk Rank 8',
-                'column_type' => FieldTypeEnum::INTEGER->value,
+                'column_type' => FieldTypeEnum::NUMBER->value,
                 'default_value' => 0,
                 'current_value' => 0, // dari poin
             ],
@@ -102,7 +102,7 @@ class SettingRankSeeder extends Seeder
                 'key' => 'rank_9',
                 'name' => 'Rank 9',
                 'description' => 'Nilai poin minimal untuk Rank 9',
-                'column_type' => FieldTypeEnum::INTEGER->value,
+                'column_type' => FieldTypeEnum::NUMBER->value,
                 'default_value' => 0,
                 'current_value' => 0, // dari poin
             ],
@@ -112,7 +112,7 @@ class SettingRankSeeder extends Seeder
                 'key' => 'rank_10',
                 'name' => 'Rank 10',
                 'description' => 'Nilai poin minimal untuk Rank 10',
-                'column_type' => FieldTypeEnum::INTEGER->value,
+                'column_type' => FieldTypeEnum::NUMBER->value,
                 'default_value' => 0,
                 'current_value' => 0, // dari poin
             ],

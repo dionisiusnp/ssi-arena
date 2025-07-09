@@ -45,7 +45,7 @@
                                     <div class="col-md-6">
                                         @if ($isLocked)
                                             <input
-                                                type="number"
+                                                type="{{ $setting->column_type }}"
                                                 id="setting_{{ $setting->key }}"
                                                 class="form-control"
                                                 value="{{ $inputValue }}"
@@ -56,7 +56,7 @@
                                             <small class="text-danger">Batasan poin tidak dapat diubah karena telah dicapai oleh pemain.</small>
                                         @else
                                             <input
-                                                type="number"
+                                                type="{{ $setting->column_type }}"
                                                 name="settings[{{ $setting->key }}]"
                                                 id="setting_{{ $setting->key }}"
                                                 class="form-control"

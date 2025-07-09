@@ -40,7 +40,7 @@
                                     <!-- Input -->
                                     <div class="col-md-6">
                                         <input
-                                            type="number"
+                                            type="{{ $setting->column_type }}"
                                             name="settings[{{ $setting->key }}]"
                                             id="setting_{{ $setting->key }}"
                                             class="form-control"

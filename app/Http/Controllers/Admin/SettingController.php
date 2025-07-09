@@ -51,6 +51,13 @@ class SettingController extends Controller
         return view('admin.pengaturan.keuntungan-dinamis.index', compact('settings'));
     }
 
+    public function indexGeneral(Request $request)
+    {
+        $search = $request->input('search');
+        $settings = $this->settingService->getSettings(SettingGroupEnum::GENERAL->value, $search);
+        return view('admin.pengaturan.umum.index', compact('settings'));
+    }
+
     /**
      * Show the form for creating a new resource.
      */
