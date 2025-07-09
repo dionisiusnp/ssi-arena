@@ -45,7 +45,6 @@
                                             id="setting_{{ $setting->key }}"
                                             class="form-control"
                                             value="{{ old('settings.' . $setting->key, $setting->current_value) }}"
-                                            required
                                         >
                                     </div>
                                 </div>

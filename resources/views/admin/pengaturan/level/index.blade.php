@@ -61,7 +61,6 @@
                                                 id="setting_{{ $setting->key }}"
                                                 class="form-control"
                                                 value="{{ $inputValue }}"
-                                                required
                                             >
                                         @endif
                                     </div>
