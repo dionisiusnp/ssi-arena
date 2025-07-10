@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Enums\SettingGroupEnum;
 use App\Enums\VisibilityEnum;
 use App\Http\Controllers\Controller;
 use App\Models\Lesson;
 use App\Models\QuestDetail;
 use App\Models\Schedule;
+use App\Models\Setting;
 use App\Services\LessonService;
 use App\Services\QuestDetailService;
 use App\Services\ScheduleService;
@@ -36,7 +38,7 @@ class DashboardController extends Controller
 
         $players = $this->userService->paginateDashboard($filters);
         $events = Schedule::where('is_active', true)->get();
-        $lessons = Lesson::where('visibility', [VisibilityEnum::DRAFT->value])->get();
+        $lessons = Lesson::whereNotIn('visibility', [VisibilityEnum::DRAFT->value])->get();
 
         // Ambil quest detail tergantung season_id
         $detailsActiveQuery = QuestDetail::where('is_editable', false);
@@ -46,19 +48,20 @@ class DashboardController extends Controller
             $detailsInActiveQuery->where('season_id', $seasonId);
         }
         $detailsActive = $detailsActiveQuery->get();
-        $detailsInActive = $detailsActiveQuery->get();
+        $detailsInActive = $detailsInActiveQuery->get();
 
         $activeChallenges = $detailsActive->count();
         $inactiveChallenges = $detailsInActive->count();
         $totalLessons = $lessons->count();
         $totalEvents = $events->count();
-
+        $winnersCount = Setting::where('group', SettingGroupEnum::GENERAL->value)->where('key','winner_counter')->value('current_value') ?? 0;
         return view('admin.index', compact(
             'activeChallenges',
             'inactiveChallenges',
             'totalLessons',
             'totalEvents',
-            'players'
+            'players',
+            'winnersCount'
         ));
     }
 }

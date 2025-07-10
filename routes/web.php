@@ -89,6 +89,7 @@ Route::middleware(['auth', EnsureUserIsLecturer::class, EnsureUserIsNotMember::c
     Route::get('/settings/rank',[SettingController::class,'indexRank'])->name('settings.rank');
     Route::get('/settings/static',[SettingController::class,'indexStatic'])->name('settings.static');
     Route::get('/settings/dynamic',[SettingController::class,'indexDynamic'])->name('settings.dynamic');
+    Route::get('/settings/general',[SettingController::class,'indexGeneral'])->name('settings.general');
     Route::post('/settings/store',[SettingController::class,'store'])->name('settings.update');
 
     Route::get('/user/{user}/status',[UserController::class,'toggleStatus'])->name('user.status');

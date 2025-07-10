@@ -15,6 +15,10 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             UserSeeder::class,
+            SettingLevelSeeder::class,
+            SettingPerkCustomSeeder::class,
+            SettingRankSeeder::class,
+            SettingGeneralSeeder::class,
         ]);
     }
 }

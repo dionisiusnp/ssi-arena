@@ -1,10 +1,10 @@
 @extends('layouts.admin.app')
 
-@section('title', 'Pengaturan Level')
+@section('title', 'Pengaturan Perks Dinamis')
 
 @section('content')
 <div class="container-fluid">
-    <h1 class="h3 mb-4 text-gray-800">Pengaturan Level</h1>
+    <h1 class="h3 mb-4 text-gray-800">Pengaturan Perks Dinamis</h1>
     <div class="row mb-3">
         <div class="col-lg-8">
             <form method="GET" action="{{ route('settings.dynamic') }}" class="d-flex gap-2">
@@ -40,12 +40,11 @@
                                     <!-- Input -->
                                     <div class="col-md-6">
                                         <input
-                                            type="number"
+                                            type="{{ $setting->column_type }}"
                                             name="settings[{{ $setting->key }}]"
                                             id="setting_{{ $setting->key }}"
                                             class="form-control"
                                             value="{{ old('settings.' . $setting->key, $setting->current_value) }}"
-                                            required
                                         >
                                     </div>
                                 </div>
