@@ -28,7 +28,7 @@ class LeaderboardController extends Controller
         ];
         $players = $this->userService->paginateDashboard($filters);
         $seasons = Season::all();
-        $winnersCount = Setting::where('group', SettingGroupEnum::GENERAL->value)->where('key','winner_counter')->first();
+        $winnersCount = Setting::where('group', SettingGroupEnum::GENERAL->value)->where('key','winner_counter')->value('current_value') ?? 0;
         return view('member.peringkat.index', compact('players', 'seasons', 'winnersCount'));
     }
 }

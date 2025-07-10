@@ -25,7 +25,7 @@
 
         <form method="GET" action="{{ route('member.activity') }}" class="row g-3 mb-3">
             <div class="col-md-6">
-                <input type="text" name="search" class="form-control" placeholder="Cari tantangan..." value="{{ request('search') }}">
+                <input type="text" name="search" class="form-control" placeholder="Cari misi..." value="{{ request('search') }}">
             </div>
             <div class="col-md-4">
                 <select name="season_id" class="form-select">
@@ -85,7 +85,7 @@
 
             {{ $activities->withQueryString()->links('pagination::bootstrap-4') }}
         @else
-            <div class="alert alert-info">Belum ada tantangan yang diambil.</div>
+            <div class="alert alert-info">Belum ada misi yang diambil.</div>
         @endif
     </div>
 </section>

@@ -12,13 +12,13 @@
     <div class="collapse navbar-collapse" id="navbarResponsive">
         <ul class="navbar-nav">
             @if (!auth()->user())
-                <li class="nav-item"><a class="nav-link {{ request()->routeIs('guest.schedule') ? 'active' : '' }}" href="{{ route('guest.schedule') }}">Kegiatan</a></li><!-- Events, Ads (Public)-->
+                <li class="nav-item"><a class="nav-link {{ request()->routeIs('guest.schedule') ? 'active' : '' }}" href="{{ route('guest.schedule') }}">Acara</a></li><!-- Events, Ads (Public)-->
                 <li class="nav-item"><a class="nav-link {{ request()->routeIs('guest.lesson') ? 'active' : '' }}" href="{{ route('guest.lesson') }}">Materi</a></li><!-- Lessons, Roadmaps (Private)-->
                 <li class="nav-item"><a class="nav-link {{ request()->routeIs('guest.register') ? 'active' : '' }}" href="{{ route('guest.register') }}">Daftar</a></li>
             @endif
             
             @if (auth()->user())
-                <li class="nav-item"><a class="nav-link {{ request()->routeIs('member.schedule') ? 'active' : '' }}" href="{{ route('member.schedule') }}">Kegiatan</a></li><!-- Events, Ads (Public)-->
+                <li class="nav-item"><a class="nav-link {{ request()->routeIs('member.schedule') ? 'active' : '' }}" href="{{ route('member.schedule') }}">Acara</a></li><!-- Events, Ads (Public)-->
                 <li class="nav-item"><a class="nav-link {{ request()->routeIs('member.leaderboard') ? 'active' : '' }}" href="{{ route('member.leaderboard') }}">Peringkat</a></li><!-- Leaderboards, Logs (Public)-->
                 <li class="nav-item"><a class="nav-link {{ request()->routeIs('member.activity') ? 'active' : '' }}" href="{{ route('member.activity') }}">Misi dan Tugas</a></li><!--Job Vacancy (Private)-->
                 <li class="nav-item"><a class="nav-link {{ request()->routeIs('member.quest') ? 'active' : '' }}" href="{{ route('member.quest') }}">Tantangan</a></li><!-- Tasks, Guides, Helpers (Private)-->

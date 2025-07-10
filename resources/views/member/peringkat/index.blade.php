@@ -29,7 +29,7 @@
         {{-- Top 3 Cards --}}
         @if ($players->count())
         <div class="row mb-4">
-            @foreach ($players->take($winnersCount->current_value) as $index => $player)
+            @foreach ($players->take($winnersCount) as $index => $player)
             <div class="col-md-4 mb-3">
                 <div class="card h-100 shadow border-0 text-center position-relative bg-warning text-dark">
                     <div class="card-body py-4">
@@ -50,7 +50,7 @@
         @endif
 
         {{-- Remaining Leaderboard --}}
-        @if ($players->count() > $winnersCount->current_value)
+        @if ($players->count() > $winnersCount)
         <div class="table-responsive">
             <table class="table table-striped table-hover align-middle">
                 <thead class="thead-light">
@@ -62,9 +62,9 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($players->slice($winnersCount->current_value)->values() as $index => $player)
+                    @foreach ($players->slice($winnersCount)->values() as $index => $player)
                         <tr>
-                            <td><span class="badge badge-light text-dark">{{ $index + 1 + $winnersCount->current_value }}</span></td>
+                            <td><span class="badge badge-light text-dark">{{ $index + 1 + $winnersCount }}</span></td>
                             <td>
                                 <strong>{{ $player->name }}</strong><br>
                                 <small class="text-muted">{{ $player->email }}</small>

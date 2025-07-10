@@ -48,13 +48,13 @@ class DashboardController extends Controller
             $detailsInActiveQuery->where('season_id', $seasonId);
         }
         $detailsActive = $detailsActiveQuery->get();
-        $detailsInActive = $detailsActiveQuery->get();
+        $detailsInActive = $detailsInActiveQuery->get();
 
         $activeChallenges = $detailsActive->count();
         $inactiveChallenges = $detailsInActive->count();
         $totalLessons = $lessons->count();
         $totalEvents = $events->count();
-        $winnersCount = Setting::where('group', SettingGroupEnum::GENERAL->value)->where('key','winner_counter')->first();
+        $winnersCount = Setting::where('group', SettingGroupEnum::GENERAL->value)->where('key','winner_counter')->value('current_value') ?? 0;
         return view('admin.index', compact(
             'activeChallenges',
             'inactiveChallenges',

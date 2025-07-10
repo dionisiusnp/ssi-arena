@@ -72,16 +72,10 @@
                                             @endif
                                         </small>
                                     </p>
-
-                                    @if ($schedule->url)
-                                        <a href="{{ $schedule->url }}" class="btn btn-sm btn-outline-primary mb-2" target="_blank">
-                                            Detail Acara
-                                        </a>
-                                    @endif
                                 </div>
 
                                 <!-- Tombol Share -->
-                                <div class="d-flex justify-content-start gap-2 mt-2">
+                                <div class="d-flex justify-content-between gap-2 mt-2 flex-wrap">
                                     <!-- Copy URL -->
                                     <button 
                                         type="button" 
@@ -89,6 +83,12 @@
                                         onclick="copyToClipboard('{{ $shareUrl }}')">
                                         <i class="fas fa-copy me-1 text-secondary"></i> Salin
                                     </button>
+
+                                    @if ($schedule->url)
+                                        <a href="{{ $schedule->url }}" class="btn btn-sm btn-outline-primary" target="_blank">
+                                            Link Acara
+                                        </a>
+                                    @endif
                                 </div>
                             </div>
                         </div>

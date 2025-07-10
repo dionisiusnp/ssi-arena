@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
 class UpdateSettingByGroup extends Command
 {
@@ -12,17 +13,14 @@ class UpdateSettingByGroup extends Command
      *
      * @var string
      */
-    protected $signature = 'setting:update-column 
-                            {group : Nama group setting} 
-                            {column : Nama kolom yang ingin diubah} 
-                            {value : Nilai baru untuk kolom tersebut}';
+    protected $signature = 'setting:update-column {group : Nama group setting} {column : Nama kolom yang ingin diubah} {value : Nilai baru untuk kolom tersebut}';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Ubah nilai kolom berdasarkan grup';
+    protected $description = 'Ubah nilai data pada kolom setting berdasarkan grup';
 
     /**
      * Execute the console command.
@@ -33,7 +31,7 @@ class UpdateSettingByGroup extends Command
         $column = $this->argument('column');
         $value = $this->argument('value');
 
-        if (!\Schema::hasColumn('settings', $column)) {
+        if (!Schema::hasColumn('settings', $column)) {
             $this->error("Kolom '{$column}' tidak ditemukan di tabel settings.");
             return 1;
         }
