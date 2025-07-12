@@ -51,7 +51,7 @@
                     <td>{{ $activity->detail->name ?? '-' }}</td>
                 </tr>
                 <tr>
-                    <th>Periode</th>
+                    <th>Musim</th>
                     <td>{{ $activity->detail->season->name ?? '-' }}</td>
                 </tr>
                 <tr>

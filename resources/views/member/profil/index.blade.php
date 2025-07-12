@@ -7,25 +7,99 @@
     <div class="resume-section-content">
         <h1 class="mb-0">{{ auth()->user()->name }}</h1>
 
-        <div class="subheading mb-1">
-            Email: {{ auth()->user()->email ?? '-' }} | NIM: {{ auth()->user()->nim ?? '-' }}
-        </div>
+        <div class="row g-3 mt-4">
 
-        <div class="subheading mb-1">
-            Level Terkini: {{ auth()->user()->current_level }} | Poin Terkini: {{ auth()->user()->current_point }}
-        </div>
-
-        @if ($musim)
-            <div class="subheading mb-1">
-                Musim: {{ $musim->name }} | Periode: {{ $musim->started_at_formatted . ' - ' . $musim->finished_at_formatted }}
+            {{-- Card 1: Email --}}
+            <div class="col-12">
+                <div class="card shadow-sm h-100">
+                    <div class="card-body d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center">
+                        <div class="d-flex align-items-start">
+                            <i class="fas fa-envelope text-primary fs-4 me-3 mt-1"></i>
+                            <div>
+                                <div class="fw-semibold">Email</div>
+                                <div id="emailDisplay" class="text-muted">
+                                    {{ auth()->user()->masked_email }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-3 mt-md-0 d-flex gap-2">
+                            <button type="button" class="btn btn-outline-secondary btn-sm" onclick="toggleEmail()">
+                                <i class="fas fa-eye" id="toggleEmailIcon"></i>
+                            </button>
+                            <button type="button" class="btn btn-outline-primary btn-sm" onclick="copyEmail()">
+                                <i class="fas fa-copy me-1"></i> Salin
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            <div class="subheading mb-4">
-                Level Musim: {{ auth()->user()->season_level }} | Poin Musim: {{ auth()->user()->season_point }}
+            {{-- Card 2: Level Terkini & Poin Terkini --}}
+            <div class="col-md-6">
+                <div class="card shadow-sm h-100">
+                    <div class="card-body d-flex align-items-center">
+                        <i class="fas fa-layer-group text-success fs-4 me-3"></i>
+                        <div>
+                            <div class="fw-semibold">Level Terkini</div>
+                            <div class="text-muted">{{ auth()->user()->current_level }}</div>
+                        </div>
+                    </div>
+                </div>
             </div>
-        @endif
+            <div class="col-md-6">
+                <div class="card shadow-sm h-100">
+                    <div class="card-body d-flex align-items-center">
+                        <i class="fas fa-star text-warning fs-4 me-3"></i>
+                        <div>
+                            <div class="fw-semibold">Poin Terkini</div>
+                            <div class="text-muted">{{ auth()->user()->current_point }}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-        <div class="d-flex flex-wrap align-items-center gap-2 mt-3">
+            {{-- Card 3: Musim Aktif --}}
+            @if ($musim)
+            <div class="col-12">
+                <div class="card shadow-sm h-100">
+                    <div class="card-body d-flex align-items-start">
+                        <i class="fas fa-calendar-alt text-info fs-4 me-3 mt-1"></i>
+                        <div>
+                            <div class="fw-semibold">{{ $musim->name }}</div>
+                            <div class="text-muted small">{{ $musim->started_at_formatted }} – {{ $musim->finished_at_formatted }}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {{-- Card 4: Level Musim & Poin Musim --}}
+            <div class="col-md-6">
+                <div class="card shadow-sm h-100">
+                    <div class="card-body d-flex align-items-center">
+                        <i class="fas fa-signal text-success fs-4 me-3"></i>
+                        <div>
+                            <div class="fw-semibold">Level Musim</div>
+                            <div class="text-muted">{{ auth()->user()->season_level }}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card shadow-sm h-100">
+                    <div class="card-body d-flex align-items-center">
+                        <i class="fas fa-coins text-warning fs-4 me-3"></i>
+                        <div>
+                            <div class="fw-semibold">Poin Musim</div>
+                            <div class="text-muted">{{ auth()->user()->season_point }}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @endif
+        </div>
+
+        {{-- Tombol Aksi --}}
+        <div class="d-flex flex-wrap align-items-center gap-2 mt-4">
             <a href="{{ route('member.edit') }}" class="btn btn-outline-primary">
                 <i class="fas fa-user-edit me-1"></i> Ubah Akun
             </a>
@@ -136,12 +210,12 @@ $levelRanges = [
 <!-- Toast sukses -->
 @if (session('success'))
 <div class="position-fixed top-0 end-0 p-3" style="z-index: 1080">
-    <div id="successToast" class="toast align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="4000">
+    <div id="successToast" class="toast align-items-center text-bg-success border-0" role="alert"
+        aria-live="assertive" aria-atomic="true" data-bs-delay="4000">
         <div class="d-flex">
-            <div class="toast-body">
-                {{ session('success') }}
-            </div>
-            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            <div class="toast-body" id="successToastMessage">Berhasil!</div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
+                aria-label="Close"></button>
         </div>
     </div>
 </div>
@@ -150,12 +224,39 @@ $levelRanges = [
 
 @push('scripts')
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
+    function showSuccessToast(message = 'Berhasil!') {
         const toastEl = document.getElementById('successToast');
-        if (toastEl) {
+        const toastBody = document.getElementById('successToastMessage');
+        if (toastEl && toastBody) {
+            toastBody.textContent = message;
             const toast = new bootstrap.Toast(toastEl);
             toast.show();
         }
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        @if(session('success'))
+            showSuccessToast(@json(session('success')));
+        @endif
     });
+
+    const masked = @json(auth()->user()->masked_email);
+    const full = @json(auth()->user()->email);
+    let showFull = false;
+
+    function toggleEmail() {
+        const display = document.getElementById('emailDisplay');
+        const icon = document.getElementById('toggleEmailIcon');
+        showFull = !showFull;
+        display.innerText = showFull ? full : masked;
+        icon.classList.toggle('fa-eye');
+        icon.classList.toggle('fa-eye-slash');
+    }
+
+    function copyEmail() {
+        navigator.clipboard.writeText(full).then(() => {
+            showSuccessToast('Email berhasil disalin!');
+        });
+    }
 </script>
 @endpush

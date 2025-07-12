@@ -36,7 +36,7 @@ class CreateUserRequest extends FormRequest
                 Rule::unique('users', 'nim')->ignore($userId)
             ],
             'password' => [$isUpdate ? 'nullable' : 'required', 'string', 'min:6', 'confirmed'],
-            'is_member' => ['required', 'boolean'],
+            'is_member' => ['nullable', 'boolean'],
             'is_lecturer' => ['required', 'boolean'],
         ];
     }

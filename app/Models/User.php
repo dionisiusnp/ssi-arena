@@ -74,4 +74,27 @@ class User extends Authenticatable
     {
         return $this->hasMany(Activity::class, 'claimed_by');
     }
+
+    public function getMaskedEmailAttribute(): string
+    {
+        $email = $this->attributes['email'];
+        $parts = explode('@', $email);
+
+        $localPart = $parts[0];
+        $domainPart = $parts[1] ?? '';
+
+        if (strlen($localPart) <= 2) {
+            $maskedLocal = str_repeat('*', strlen($localPart));
+        } else {
+            $maskedLocal = substr($localPart, 0, 2) . str_repeat('*', strlen($localPart) - 2);
+        }
+
+        return $maskedLocal . '@' . $domainPart;
+    }
+
+    public function getEmailWithoutDomainAttribute(): string
+    {
+        return strstr($this->attributes['email'], '@', true);
+    }
+
 }

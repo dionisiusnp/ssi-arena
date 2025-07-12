@@ -26,7 +26,7 @@
             </div>
         </form>
 
-        {{-- Top 3 Cards --}}
+        {{-- Top Cards --}}
         @if ($players->count())
         <div class="row mb-4">
             @foreach ($players->take($winnersCount) as $index => $player)
@@ -37,10 +37,10 @@
                             <img src="{{ Avatar::create($player->name)->toBase64() }}" alt="{{ $player->name }}" class="rounded-circle" width="64" height="64">
                         </div>
                         <h5 class="card-title mb-0">{{ $player->name }}</h5>
-                        <small class="d-block text-muted">{{ $player->email }}</small>
+                        <small class="d-block text-muted">{{ $player->masked_email }}</small>
                         <hr class="my-3" style="border-color: rgba(0,0,0,0.2);">
                         <p class="mb-1"><strong>Level:</strong> {{ request()->query('season_id') ? $player->season_level : $player->current_level }}</p>
-                        <p class="mb-0"><strong>Poin:</strong> {{ $player->current_point }}</p>
+                        <p class="mb-0"><strong>Poin:</strong> {{ $player->total_point }}</p>
                     </div>
                     <span class="position-absolute top-0 start-0 m-2 badge badge-pill badge-dark">#{{ $index + 1 }}</span>
                 </div>
@@ -67,10 +67,10 @@
                             <td><span class="badge badge-light text-dark">{{ $index + 1 + $winnersCount }}</span></td>
                             <td>
                                 <strong>{{ $player->name }}</strong><br>
-                                <small class="text-muted">{{ $player->email }}</small>
+                                <small class="text-muted">{{ $player->masked_email }}</small>
                             </td>
                             <td><strong>{{ request()->query('season_id') ? $player->season_level : $player->current_level }}</strong></td>
-                            <td><strong>{{ $player->current_point }}</strong></td>
+                            <td><strong>{{ $player->total_point }}</strong></td>
                         </tr>
                     @endforeach
                 </tbody>
