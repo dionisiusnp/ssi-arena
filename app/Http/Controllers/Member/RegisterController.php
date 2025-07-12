@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Member;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CreateUserRequest;
 use App\Services\UserService;
-use Illuminate\Http\Request;
 
 class RegisterController extends Controller
 {
@@ -22,6 +21,6 @@ class RegisterController extends Controller
     public function register(CreateUserRequest $request)
     {
         $this->userService->store($request->toArray());
-        return redirect('/')->with('success','Akun pemain telah berhasil didaftarkan.');
+        return redirect()->route('login')->with('success','Akun pemain telah berhasil didaftarkan.');
     }
 }
