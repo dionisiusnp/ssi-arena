@@ -34,9 +34,12 @@
                 <div class="card h-100 shadow border-0 text-center position-relative bg-warning text-dark">
                     <div class="card-body py-4">
                         <div class="mb-2">
-                            <img src="{{ Avatar::create($player->name)->toBase64() }}" alt="{{ $player->name }}" class="rounded-circle" width="64" height="64">
+                            @php
+                            $shortName = strtok($player->name,' ');
+                            @endphp
+                            <img src="{{ Avatar::create($shortName)->toBase64() }}" class="rounded-circle" width="64" height="64">
                         </div>
-                        <h5 class="card-title mb-0">{{ $player->name }}</h5>
+                        <h5 class="card-title mb-0">{{ strtok($player->name,' ') }}</h5>
                         <small class="d-block text-muted">{{ $player->masked_email }}</small>
                         <hr class="my-3" style="border-color: rgba(0,0,0,0.2);">
                         <p class="mb-1"><strong>Level:</strong> {{ request()->query('season_id') ? $player->season_level : $player->current_level }}</p>
@@ -66,7 +69,7 @@
                         <tr>
                             <td><span class="badge badge-light text-dark">{{ $index + 1 + $winnersCount }}</span></td>
                             <td>
-                                <strong>{{ $player->name }}</strong><br>
+                                <strong>{{ strtok($player->name,' ') }}</strong><br>
                                 <small class="text-muted">{{ $player->masked_email }}</small>
                             </td>
                             <td><strong>{{ request()->query('season_id') ? $player->season_level : $player->current_level }}</strong></td>
