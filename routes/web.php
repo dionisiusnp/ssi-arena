@@ -21,6 +21,7 @@ use App\Http\Controllers\Member\ActivityController as MemberActivityController;
 use App\Http\Controllers\Member\RegisterController;
 use App\Http\Controllers\Guest\LessonController as GuestLessonController;
 use App\Http\Controllers\Guest\DashboardController as GuestDashboardController;
+use App\Http\Controllers\Member\GuideController;
 use App\Http\Middleware\EnsureUserIsLecturer;
 use App\Http\Middleware\EnsureUserIsNotMember;
 use Illuminate\Support\Facades\Route;
@@ -33,6 +34,7 @@ Route::get('/', function () {
 
 // GUEST
 Route::prefix('guest')->name('guest.')->group(function () {
+    Route::get('/wiki',      [GuideController::class, 'index'])->name('wiki');
     Route::get('/schedule',[GuestDashboardController::class, 'index'])->name('schedule');
     Route::get('/lesson',[GuestLessonController::class, 'index'])->name('lesson');
     Route::get('/lesson/{lesson}',[GuestLessonController::class, 'show'])->name('lesson.show');
