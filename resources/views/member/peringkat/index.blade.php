@@ -37,13 +37,13 @@
                             @php
                             $shortName = strtok($player->name,' ');
                             @endphp
-                            <img src="{{ Avatar::create($shortName)->toBase64() }}" class="rounded-circle" width="64" height="64">
+                            <img src="{{ Avatar::create($shortName)->toBase64() }}" alt="{{ $player->name }}" class="rounded-circle" width="64" height="64">
                         </div>
                         <h5 class="card-title mb-0">{{ strtok($player->name,' ') }}</h5>
                         <small class="d-block text-muted">{{ $player->masked_email }}</small>
                         <hr class="my-3" style="border-color: rgba(0,0,0,0.2);">
                         <p class="mb-1"><strong>Level:</strong> {{ request()->query('season_id') ? $player->season_level : $player->current_level }}</p>
-                        <p class="mb-0"><strong>Poin:</strong> {{ $player->total_point }}</p>
+                        <p class="mb-0"><strong>Poin:</strong> {{ request()->query('season_id') ? $player->total_point : $player->current_point }}</p>
                     </div>
                     <span class="position-absolute top-0 start-0 m-2 badge badge-pill badge-dark">#{{ $index + 1 }}</span>
                 </div>
@@ -73,7 +73,7 @@
                                 <small class="text-muted">{{ $player->masked_email }}</small>
                             </td>
                             <td><strong>{{ request()->query('season_id') ? $player->season_level : $player->current_level }}</strong></td>
-                            <td><strong>{{ $player->total_point }}</strong></td>
+                            <td><strong>{{ request()->query('season_id') ? $player->total_point : $player->current_point }}</strong></td>
                         </tr>
                     @endforeach
                 </tbody>
