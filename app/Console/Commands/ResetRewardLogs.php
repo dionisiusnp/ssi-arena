@@ -28,15 +28,11 @@ class ResetRewardLogs extends Command
     public function handle()
     {
         try {
-            DB::statement('SET FOREIGN_KEY_CHECKS=0');
-
-            DB::table('reward_logs')->delete();
+            DB::table('reward_logs')->truncate();
             $this->info('Table reward_logs has been cleared.');
 
             DB::statement('ALTER TABLE reward_logs AUTO_INCREMENT = 1');
             $this->info('Auto increment reward_logs has been reset.');
-
-            DB::statement('SET FOREIGN_KEY_CHECKS=1');
 
             DB::table('activities')
                 ->where('status', QuestEnum::PLUS->value)
@@ -46,6 +42,8 @@ class ResetRewardLogs extends Command
         } catch (\Throwable $e) {
             $this->error("Error: " . $e->getMessage());
             return self::FAILURE;
+        } finally {
+            DB::statement('SET FOREIGN_KEY_CHECKS=1');
         }
 
         return self::SUCCESS;
