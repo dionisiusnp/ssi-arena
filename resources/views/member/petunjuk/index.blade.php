@@ -5,10 +5,10 @@
 @section('content')
 <section class="resume-section" id="wiki">
     <div class="resume-section-content">
-        <h1 class="mb-4">📘 Wiki SSI Arena</h1>
+        <h2 class="mb-4">📘 Wiki SSI Arena</h2>
 
         <div class="mb-4">
-            <input type="text" id="wikiSearch" class="form-control" placeholder="🔍 Cari petunjuk wiki...">
+            <input type="text" id="wikiSearch" class="form-control" placeholder="🔍 Cari topik wiki...">
         </div>
 
         <div id="wikiList" class="row row-cols-1 row-cols-md-2 g-4">
@@ -49,18 +49,6 @@
                 </div>
             </div>
 
-            {{-- Level dan Poin --}}
-            <div class="col wiki-item" data-title="Level dan Poin">
-                <div class="card shadow-sm h-100">
-                    <div class="card-body">
-                        <h5 class="card-title">Level dan Poin</h5>
-                        <p class="card-text">
-                            Setiap pengguna memiliki dua jenis level: <strong>Level Akun</strong> (permanen) dan <strong>Level Musim</strong> (reset tiap musim). Level dan poin diperoleh dari menyelesaikan tantangan. Makin aktif kamu, makin tinggi level yang bisa dicapai.
-                        </p>
-                    </div>
-                </div>
-            </div>
-
             {{-- Materi --}}
             <div class="col wiki-item" data-title="Materi">
                 <div class="card shadow-sm h-100">
@@ -68,6 +56,18 @@
                         <h5 class="card-title">Materi</h5>
                         <p class="card-text">
                             Materi belajar tersedia dalam dua tipe: <strong>Umum</strong> (bisa diakses tanpa login) dan <strong>Khusus Member</strong> (hanya untuk pengguna terdaftar). Materi disusun oleh pemateri dan dapat berupa teks, gambar, atau video.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            {{-- Level dan Poin --}}
+            <div class="col wiki-item" data-title="Level dan Poin">
+                <div class="card shadow-sm h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">Level dan Poin</h5>
+                        <p class="card-text">
+                            Setiap pengguna memiliki dua jenis level: <strong>Level Akun</strong> (permanen) dan <strong>Level Musim</strong> (reset tiap musim). Level dan poin diperoleh dari menyelesaikan tantangan. Makin aktif kamu, makin tinggi level yang bisa dicapai.
                         </p>
                     </div>
                 </div>

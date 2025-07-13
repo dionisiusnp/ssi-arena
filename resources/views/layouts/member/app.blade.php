@@ -92,25 +92,25 @@
 
     <div class="floating-wrapper d-flex flex-column-reverse align-items-end gap-2">
         <!-- Mobile Toggle -->
-        <button type="button" class="btn btn-dark shadow-sm d-sm-none floating-btn" onclick="toggleFloatingButtons()" title="Menu Bantuan">
+        <button type="button" class="btn btn-dark shadow-sm d-sm-none floating-btn" onclick="toggleFloatingButtons()">
             <i class="fas fa-cogs"></i>
         </button>
 
         <!-- Group of Floating Buttons -->
         <div id="floatingBtnGroup" class="floating-btn-group d-flex gap-2">
-            <a href="https://www.youtube.com/@ssi_dinamika" target="_blank" class="btn btn-danger shadow-sm floating-btn" title="Solusi Sistem Informasi">
+            <a href="https://www.youtube.com/@ssi_dinamika" target="_blank" class="btn btn-danger shadow-sm floating-btn">
                 <i class="fab fa-youtube"></i>
                 <span class="btn-label">Solusi Sistem Informasi</span>
             </a>
-            <a href="https://www.instagram.com/ssi_akademi" target="_blank" class="btn btn-danger shadow-sm floating-btn" title="SSI Academy">
+            <a href="https://www.instagram.com/ssi_akademi" target="_blank" class="btn btn-danger shadow-sm floating-btn">
                 <i class="fab fa-instagram"></i>
                 <span class="btn-label">SSI Academy</span>
             </a>
-            <a href="https://wa.me/6285708251737" target="_blank" class="btn btn-success shadow-sm floating-btn" title="Hubungi Admin">
+            <a href="https://wa.me/6285708251737" target="_blank" class="btn btn-success shadow-sm floating-btn">
                 <i class="fab fa-whatsapp"></i>
                 <span class="btn-label">Hubungi Admin</span>
             </a>
-            <a href="{{ route('guest.wiki') }}" class="btn btn-primary shadow-sm floating-btn" title="Panduan Arena">
+            <a href="{{ route('guest.wiki') }}" class="btn btn-primary shadow-sm floating-btn">
                 <i class="fas fa-book"></i>
                 <span class="btn-label">Wiki SSI Arena</span>
             </a>
