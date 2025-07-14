@@ -27,6 +27,10 @@ class User extends Authenticatable
         'is_member',
         'is_lecturer',
         'is_active',
+        'current_level',
+        'current_point',
+        'season_level',
+        'season_point',
     ];
 
     /**
