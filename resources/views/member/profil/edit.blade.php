@@ -13,34 +13,14 @@
                     <form id="memberForm" action="{{ route('member.update', auth()->user()->id) }}" method="POST">
                         @csrf
                         @method('PUT')
-                        {{-- is_member --}}
-                        <div class="form-group">
-                            <label class="form-label">Mendaftar SSI Academy sebagai apa?</label>
-                            <div class="d-flex flex-column flex-sm-row gap-2 mt-2">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="is_member" id="is_member1" value="1" {{ old('is_member', '1') == '1' ? 'checked' : '' }}>
-                                    <label class="form-check-label" for="is_member1">
-                                        Member
-                                    </label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="is_member" id="is_member0" value="0" {{ old('is_member') == '0' ? 'checked' : '' }}>
-                                    <label class="form-check-label" for="is_member0">
-                                        Peserta Bootcamp
-                                    </label>
-                                </div>
-                            </div>
-                            @error('is_member')
-                                <div class="text-danger mt-1 small">{{ $message }}</div>
-                            @enderror
-                        </div>
-
+                        
+                        <input type="hidden" name="is_member" id="is_member" value="{{  auth()->user()->id == 1 ? null : auth()->user()->is_member }}">
                         <input type="hidden" name="is_lecturer" id="is_lecturer" value="{{ auth()->user()->is_lecturer }}">
 
                         {{-- name --}}
                         <div class="form-group mt-3">
                             <label for="name">Nama Lengkap</label>
-                            <input type="text" name="name" class="form-control @error('name') is-invalid @enderror" required value="{{ auth()->user()->name }}" placeholder="Masukkan nama lengkap">
+                            <input type="text" name="name" class="form-control @error('name') is-invalid @enderror" value="{{ auth()->user()->name }}" placeholder="Contoh: Player SSI Arena">
                             @error('name')
                                 <div class="text-danger mt-1 small">{{ $message }}</div>
                             @enderror
@@ -58,7 +38,7 @@
                         {{-- email --}}
                         <div class="form-group mt-3">
                             <label for="email">Email</label>
-                            <input type="email" name="email" class="form-control @error('email') is-invalid @enderror" required placeholder="Masukkan email" value="{{ auth()->user()->email }}">
+                            <input type="email" name="email" class="form-control @error('email') is-invalid @enderror" placeholder="Contoh: player@gmail.com" value="{{ auth()->user()->email }}">
                             @error('email')
                                 <div class="text-danger mt-1 small">{{ $message }}</div>
                             @enderror
