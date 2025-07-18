@@ -41,6 +41,33 @@ class Schedule extends Model implements HasMedia
             ->translatedFormat("d F Y");
     }
 
+    public function getStatusAttribute()
+    {
+        $now = Carbon::now();
+        $start = Carbon::parse($this->attributes['started_at']);
+        $end = Carbon::parse($this->attributes['finished_at']);
+
+        if ($now->isBetween($start->startOfDay(), $end->endOfDay())) {
+            return 'Berlangsung';
+        } elseif ($now->lt($start)) {
+            return 'Akan Datang';
+        }
+
+        return 'Selesai';
+    }
+
+    public function getBadgeClassAttribute()
+    {
+        switch ($this->status) {
+            case 'Berlangsung':
+                return 'bg-primary';
+            case 'Akan Datang':
+                return 'bg-warning';
+            default:
+                return 'bg-danger';
+        }
+    }
+
     public function lastChanger()
     {
         return $this->belongsTo(User::class,'changed_by');

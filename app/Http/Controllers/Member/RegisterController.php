@@ -15,7 +15,7 @@ class RegisterController extends Controller
     }
     public function index()
     {
-        return view('member.daftar.index');
+        return view('guest.daftar.index');
     }
 
     public function register(CreateUserRequest $request)

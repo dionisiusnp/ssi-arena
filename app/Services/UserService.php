@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Enums\QuestEnum;
+use App\Models\Activity;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -41,7 +42,7 @@ class UserService
         return $data;
     }
 
-    public function paginate(array $filter = [], int $perPage = 10): LengthAwarePaginator
+    public function paginate(array $filter = [], int $perPage = 9): LengthAwarePaginator
     {
         $search = $filter['search'] ?? null;
         $isMember = isset($filter['is_member']) ? (filter_var($filter['is_member'], FILTER_VALIDATE_BOOLEAN) ? 1 : 0) : null;
@@ -70,25 +71,41 @@ class UserService
             ->paginate($perPage);
     }
 
-    public function paginateDashboard(array $filter = [], int $perPage = 10): LengthAwarePaginator
+    protected function basePointSubQuery(?int $seasonId)
     {
-        $seasonId = $filter['season_id'] ?? null;
+        return Activity::query()
+            ->join('quest_details', 'activities.quest_detail_id', '=', 'quest_details.id')
+            ->selectRaw("
+                SUM(CASE
+                    WHEN activities.status = ? THEN quest_details.point_total
+                    WHEN activities.status = ? THEN -quest_details.point_total
+                    ELSE 0
+                END)", [QuestEnum::PLUS->value, QuestEnum::MINUS->value])
+            ->whereColumn('activities.claimed_by', 'users.id')
+            ->when($seasonId, fn ($q) => $q->where('quest_details.season_id', $seasonId));
+    }
 
-        return $this->model
+    public function getTopPlayers(?int $seasonId, int $limit = 0)
+    {
+        $subQuery = $this->basePointSubQuery($seasonId);
+
+        return User::query()
             ->where('is_member', true)
-            ->withCount(['activities as total_point' => function ($query) use ($seasonId) {
-                $query->whereColumn('activities.claimed_by', 'users.id')
-                    ->join('quest_details', 'activities.quest_detail_id', '=', 'quest_details.id')
-                    ->when(!is_null($seasonId), function ($q) use ($seasonId) {
-                        $q->where('quest_details.season_id', $seasonId);
-                    })
-                    ->selectRaw("
-                        SUM(CASE
-                            WHEN activities.status = ? THEN quest_details.point_total
-                            WHEN activities.status = ? THEN -quest_details.point_total
-                            ELSE 0
-                        END)", [QuestEnum::PLUS->value, QuestEnum::MINUS->value]);
-            }])
+            ->select('users.*')
+            ->selectSub($subQuery, 'total_point')
+            ->orderByDesc('total_point')
+            ->when($limit > 0, fn ($q) => $q->limit($limit))
+            ->get();
+    }
+
+    public function getLeaderboardPlayers(?int $seasonId, int $perPage = 10)
+    {
+        $subQuery = $this->basePointSubQuery($seasonId);
+
+        return User::query()
+            ->where('is_member', true)
+            ->select('users.*')
+            ->selectSub($subQuery, 'total_point')
             ->orderByDesc('total_point')
             ->paginate($perPage);
     }

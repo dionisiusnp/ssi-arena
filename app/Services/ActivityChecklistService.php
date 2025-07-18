@@ -25,20 +25,6 @@ class ActivityChecklistService
         return $this->model;
     }
 
-    // public function paginate(array $filter = [], int $perPage = 10): LengthAwarePaginator
-    // {
-    //     $activity = $filter['activity'];
-    //     $status = isset($filter['status']) ? (filter_var($filter['status'], FILTER_VALIDATE_BOOLEAN) ? 1 : 0) : null;
-    //     return $this->model
-    //         ->when($activity, function ($query) use ($activity) {
-    //             $query->where(function ($q) use ($activity) {
-    //                 $q->where('activity_id', '=', $activity);
-    //             });
-    //         })
-    //         ->when(isset($status), fn($query) => $query->where('status', $status))
-    //         ->paginate($perPage);
-    // }
-
     public function byActivity($activityId)
     {
         try {

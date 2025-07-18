@@ -39,7 +39,7 @@ class LessonService
         return $data;
     }
 
-    public function paginate($auth, array $filter = [], int $perPage = 10): LengthAwarePaginator
+    public function paginate($auth, array $filter = [], int $perPage = 9): LengthAwarePaginator
     {
         $search = $filter['search'] ?? null;
         $role = $filter['role'] ?? null;
@@ -70,7 +70,7 @@ class LessonService
             ->paginate($perPage);
     }
 
-    public function paginateMember($auth, array $filter = [], int $perPage = 10): LengthAwarePaginator
+    public function paginateMember($auth, array $filter = [], int $perPage = 9): LengthAwarePaginator
     {
         $search = $filter['search'] ?? null;
         $role = $filter['role'] ?? null;

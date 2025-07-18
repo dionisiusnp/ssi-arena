@@ -27,23 +27,24 @@
         </form>
 
         {{-- Top Cards --}}
-        @if ($players->count())
+        @if ($topPlayers->count())
+        @php
+            $badgeColors = ['bg-warning text-dark'];
+        @endphp
         <div class="row mb-4">
-            @foreach ($players->take($winnersCount) as $index => $player)
+            @foreach ($topPlayers as $index => $player)
             <div class="col-md-4 mb-3">
-                <div class="card h-100 shadow border-0 text-center position-relative bg-warning text-dark">
+                <div class="card h-100 shadow border-0 text-center position-relative {{ $badgeColors[$index % count($badgeColors)] }}">
                     <div class="card-body py-4">
                         <div class="mb-2">
-                            @php
-                            $shortName = strtok($player->name,' ');
-                            @endphp
+                            @php $shortName = strtok($player->name, ' '); @endphp
                             <img src="{{ Avatar::create($shortName)->toBase64() }}" alt="{{ $player->name }}" class="rounded-circle" width="64" height="64">
                         </div>
-                        <h5 class="card-title mb-0">{{ strtok($player->name,' ') }}</h5>
+                        <h5 class="card-title mb-0">{{ $shortName }}</h5>
                         <small class="d-block text-muted">{{ $player->masked_email }}</small>
                         <hr class="my-3" style="border-color: rgba(0,0,0,0.2);">
-                        <p class="mb-1"><strong>Level:</strong> {{ request()->query('season_id') ? $player->season_level : $player->current_level }}</p>
-                        <p class="mb-0"><strong>Poin:</strong> {{ request()->query('season_id') ? $player->total_point : $player->current_point }}</p>
+                        <p class="mb-1"><strong>Level:</strong> {{ $player->current_level }}</p>
+                        <p class="mb-0"><strong>Poin:</strong> {{ $player->total_point ?? 0 }}</p>
                     </div>
                     <span class="position-absolute top-0 start-0 m-2 badge badge-pill badge-dark">#{{ $index + 1 }}</span>
                 </div>
@@ -53,7 +54,7 @@
         @endif
 
         {{-- Remaining Leaderboard --}}
-        @if ($players->count() > $winnersCount)
+        @if ($players->count())
         <div class="table-responsive">
             <table class="table table-striped table-hover align-middle">
                 <thead class="thead-light">
@@ -65,21 +66,36 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($players->slice($winnersCount)->values() as $index => $player)
-                        <tr>
-                            <td><span class="badge badge-light text-dark">{{ $index + 1 + $winnersCount }}</span></td>
+                    @foreach ($players as $index => $player)
+                        @php
+                            $globalRank = $index + 1 + ($players->currentPage() - 1) * $players->perPage();
+                            $isTopPlayer = array_key_exists($player->id, $topPlayerRanks);
+                            $rowColor = $isTopPlayer ? $badgeColors[$topPlayerRanks[$player->id] % count($badgeColors)] : '';
+                        @endphp
+                        <tr class="{{ $rowColor }}">
                             <td>
-                                <strong>{{ strtok($player->name,' ') }}</strong><br>
+                                <span class="badge {{ $isTopPlayer ? 'badge-dark' : 'badge-light text-dark' }}">
+                                    #{{ $globalRank }}
+                                    @if ($isTopPlayer)
+                                        <i class="bi bi-star-fill ms-1" title="Top Player"></i>
+                                    @endif
+                                </span>
+                            </td>
+                            <td>
+                                <strong>{{ strtok($player->name, ' ') }}</strong><br>
                                 <small class="text-muted">{{ $player->masked_email }}</small>
                             </td>
-                            <td><strong>{{ request()->query('season_id') ? $player->season_level : $player->current_level }}</strong></td>
-                            <td><strong>{{ request()->query('season_id') ? $player->total_point : $player->current_point }}</strong></td>
+                            <td><strong>{{ $player->current_level }}</strong></td>
+                            <td><strong>{{ $player->total_point ?? 0 }}</strong></td>
                         </tr>
                     @endforeach
                 </tbody>
             </table>
         </div>
-        @elseif($players->count() == 0)
+        <div class="d-flex justify-content-center mt-4">
+            {{ $players->withQueryString()->links('pagination::bootstrap-4') }}
+        </div>
+        @else
             <div class="alert alert-info">Belum ada data pemain tersedia.</div>
         @endif
     </div>

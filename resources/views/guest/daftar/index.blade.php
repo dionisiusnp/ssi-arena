@@ -36,7 +36,7 @@
                         <div class="form-group mt-3" id="nimGroup">
                             <label for="nim">NIM</label>
                             <input type="text" name="nim" id="nim" class="form-control @error('nim') is-invalid @enderror"
-                                value="{{ old('nim') }}" placeholder="Masukkan nim, jika Anda adalah mahasiswa/i aktif">
+                                value="{{ old('nim') }}" placeholder="NIM mahasiswa/i aktif">
                             @error('nim')
                                 <div class="text-danger mt-1 small">{{ $message }}</div>
                             @enderror
@@ -64,7 +64,7 @@
                                 <div class="input-group">
                                     <input type="password" name="password" id="password"
                                         class="form-control @error('password') is-invalid @enderror" minlength="6"
-                                        placeholder="Masukkan sandi">
+                                        placeholder="Terdiri dari 6 karakter">
                                     <button type="button" class="btn btn-outline-secondary"
                                         onclick="togglePassword('password')">
                                         <i class="fas fa-eye"></i>
