@@ -52,24 +52,9 @@
             ['style', ['bold', 'italic', 'underline', 'clear']],
             ['font', ['strikethrough']],
             ['para', ['ul', 'ol', 'paragraph']],
-            ['insert', ['codeblock']],
             ['view', ['fullscreen', 'codeview']],
         ],
-        buttons: {
-            codeblock: function(context) {
-                const ui = $.summernote.ui;
-                return ui.button({
-                    contents: '<i class="fas fa-code"></i> <b>Code</b>',
-                    tooltip: 'Insert Code Block',
-                    click: function () {
-                        const range = context.invoke('editor.createRange');
-                        const selectedText = range.toString() || 'masukkan kodemu disini';
-                        const codeBlock = '%%\n' + selectedText + '\n%%';
-                        context.invoke('editor.insertText', codeBlock);
-                    }
-                }).render();
-            }
-        },
+        buttons: {},
         callbacks: {
             onImageUpload: function () {
                 return false;
@@ -90,6 +75,15 @@
                         }
                     }
                 }
+
+                e.preventDefault();
+                const text = (e.originalEvent || e).clipboardData.getData('text/plain');
+                const pre = document.createElement('pre');
+                const code = document.createElement('code');
+                code.textContent = text;
+                pre.appendChild(code);
+                $(this).summernote('insertNode', pre);
+                Prism.highlightAll();
             }
         }
     });
@@ -102,24 +96,9 @@
             ['style', ['bold', 'italic', 'underline', 'clear']],
             ['font', ['strikethrough']],
             ['para', ['ul', 'ol', 'paragraph']],
-            ['insert', ['codeblock']],
             ['view', ['fullscreen', 'codeview']],
         ],
-        buttons: {
-            codeblock: function(context) {
-                const ui = $.summernote.ui;
-                return ui.button({
-                    contents: '<i class="fas fa-code"></i> <b>Code</b>',
-                    tooltip: 'Insert Code Block',
-                    click: function () {
-                        const range = context.invoke('editor.createRange');
-                        const selectedText = range.toString() || 'masukkan kodemu disini';
-                        const codeBlock = '%%\n' + selectedText + '\n%%';
-                        context.invoke('editor.insertText', codeBlock);
-                    }
-                }).render();
-            }
-        },
+        buttons: {},
         callbacks: {
             onImageUpload: function () {
                 return false;
@@ -140,6 +119,15 @@
                         }
                     }
                 }
+
+                e.preventDefault();
+                const text = (e.originalEvent || e).clipboardData.getData('text/plain');
+                const pre = document.createElement('pre');
+                const code = document.createElement('code');
+                code.textContent = text;
+                pre.appendChild(code);
+                $(this).summernote('insertNode', pre);
+                Prism.highlightAll();
             }
         }
     });
