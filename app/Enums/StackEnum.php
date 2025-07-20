@@ -12,6 +12,7 @@ enum StackEnum: string
     case MACOS = 'macos';
     case PYTHON = 'python';
     case WINDOWS = 'windows';
+    case NEXT = 'next';
 
     public function label(): string
     {
@@ -24,6 +25,7 @@ enum StackEnum: string
             self::MACOS => 'macOS',
             self::PYTHON => 'Python',
             self::WINDOWS => 'Windows',
+            self::NEXT => 'Next',
         };
     }
 

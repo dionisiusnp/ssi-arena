@@ -35,10 +35,10 @@ class TopicController extends Controller
         if ($filters['lesson_id']) {
             $lesson = $this->lessonService->model()->find($filters['lesson_id']);
             if (!$lesson) {
-                abort(404, 'Lesson not found');
+                abort(404, 'Materi tidak ditemukan.');
             }
             if ($lesson->changed_by !== $auth->id) {
-                abort(403, 'Unauthorized access to lesson');
+                abort(403, 'Akses tidak diizinkan untuk lesson ini.');
             }
         }
         $data = $this->topicService->paginate($filters);
@@ -54,16 +54,16 @@ class TopicController extends Controller
         $lessonId = $request->query('lesson_id');
 
         if (!$lessonId) {
-            abort(400, 'Parameter lesson_id dibutuhkan.');
+            abort(400, 'Parameter materi dibutuhkan.');
         }
 
         $lesson = $this->lessonService->model()->find($lessonId);
         if (!$lesson) {
-            abort(404, 'Lesson tidak ditemukan.');
+            abort(404, 'Materi tidak ditemukan.');
         }
 
         if ($lesson->changed_by !== $auth->id) {
-            abort(403, 'Akses tidak diizinkan untuk lesson ini.');
+            abort(403, 'Akses tidak diizinkan untuk materi ini.');
         }
 
         $getSequence = $this->topicService->byLesson($lessonId);
@@ -98,6 +98,10 @@ class TopicController extends Controller
      */
     public function show(Topic $topic)
     {
+        $auth = Auth::user();
+        if ($topic->changed_by !== $auth->id) {
+            abort(403, 'Akses tidak diizinkan untuk lesson ini.');
+        }
         return view('admin.materi.topik.detail', compact('topic'));
     }
 
@@ -108,7 +112,7 @@ class TopicController extends Controller
     {
         $auth = Auth::user();
         if ($topic->changed_by !== $auth->id) {
-            abort(403, 'Akses tidak diizinkan untuk lesson ini.');
+            abort(403, 'Akses tidak diizinkan untuk materi ini.');
         }
         $getSequence = $this->topicService->byLesson($topic->lesson_id);
         $recentSequence = $getSequence->count() + 1;
