@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Member;
+namespace App\Http\Controllers\Guest;
 
 use App\Enums\SettingGroupEnum;
 use App\Http\Controllers\Controller;
@@ -20,18 +20,7 @@ class LeaderboardController extends Controller
         $this->userService = $userService;
         $this->seasonService = $seasonService;
     }
-    // public function index(Request $request)
-    // {
-    //     $auth = Auth::user();
-    //     $lastSeason = $this->seasonService->lastSeason() ?? null;
-    //     $filters = [
-    //         'season_id' => $request->query('season_id') ?? optional($lastSeason)->id,
-    //     ];
-    //     $players = $this->userService->paginateDashboard($filters);
-    //     $seasons = Season::all();
-    //     $winnersCount = Setting::where('group', SettingGroupEnum::GENERAL->value)->where('key','winner_counter')->value('current_value') ?? 0;
-    //     return view('member.peringkat.index', compact('players', 'seasons', 'winnersCount'));
-    // }
+    
     public function index(Request $request)
     {
         $seasonId = $request->input('season_id');
@@ -43,14 +32,12 @@ class LeaderboardController extends Controller
         }
         $players = $this->userService->getLeaderboardPlayers($seasonId);
         $seasons = Season::all();
-        $player = $this->userService->myRanking($seasonId, Auth::user());
-        return view('member.peringkat.index', compact(
+        return view('guest.peringkat.index', compact(
             'topPlayers',
             'players',
             'topPlayerRanks',
             'seasonId',
             'seasons',
-            'player',
         ));
     }
 }
