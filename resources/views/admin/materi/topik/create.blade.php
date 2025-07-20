@@ -11,7 +11,7 @@
             <form id="topicForm" action="{{ route('topic.store') }}" method="POST">
                 @csrf
                 <input type="hidden" name="lesson_id" id="lesson_id" value="{{ request('lesson_id') }}">
-                <input type="hidden" name="visibility" id="visibility" value="{{ \App\Enums\VisibilityEnum::PUBLISHED->value }}">
+                <input type="hidden" name="visibility" id="visibility" value="{{ \App\Enums\VisibilityEnum::DRAFT->value }}">
                 <div class="form-group">
                     <label for="sequence">Urutan Topik</label>
                     <input type="number" name="sequence" id="sequence" class="form-control" value="{{ $recentSequence }}" min="1" max="{{ $recentSequence }}">
