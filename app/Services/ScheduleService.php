@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Schedule;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
@@ -38,18 +39,40 @@ class ScheduleService
             ->paginate($perPage);
     }
 
-    public function paginateMember(array $filter = [], int $perPage = 10): LengthAwarePaginator
+    public function paginateMember(array $filter = [], int $perPage = 9): LengthAwarePaginator
     {
         $search = $filter['search'] ?? null;
+    $isActive = isset($filter['is_active']) ? (filter_var($filter['is_active'], FILTER_VALIDATE_BOOLEAN) ? 1 : 0) : null;
+    $year = $filter['year'] ?? null;
+
+    $today = Carbon::today()->toDateString();
+
+    return $this->model
+        ->when($search, function ($query) use ($search) {
+            $query->where('name', 'LIKE', "%{$search}%");
+        })
+        ->when(isset($isActive), fn($query) => $query->where('is_active', $isActive))
+        ->when($year, function ($query) use ($year) {
+            $query->whereYear('started_at', $year);
+        })
+        ->orderByRaw("
+            CASE 
+                WHEN '$today' BETWEEN started_at AND finished_at THEN 0
+                WHEN started_at > '$today' THEN 1
+                ELSE 2
+            END
+        ")
+        ->orderBy('started_at')
+        ->paginate($perPage);
+    }
+
+    public function getAvailableYears()
+    {
         return $this->model
-            ->where('is_active', true)
-            ->when($search, function ($query) use ($search) {
-                $query->where(function ($q) use ($search) {
-                    $q->where('name', 'LIKE', "%{$search}%");
-                });
-            })
-            ->orderByDesc('started_at')
-            ->paginate($perPage);
+            ->selectRaw('YEAR(started_at) as year')
+            ->distinct()
+            ->orderByDesc('year')
+            ->pluck('year');
     }
 
     public function store(array $data, $auth)

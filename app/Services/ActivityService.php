@@ -26,7 +26,7 @@ class ActivityService
         return $this->model;
     }
 
-    public function paginate(array $filter = [], int $perPage = 10): LengthAwarePaginator
+    public function paginate(array $filter = [], int $perPage = 9): LengthAwarePaginator
     {
         $playerId  = $filter['claimed_by'] ?? null;
         $seasonId  = $filter['season_id'] ?? null;

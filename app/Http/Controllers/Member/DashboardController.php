@@ -19,8 +19,11 @@ class DashboardController extends Controller
         $auth = Auth::user();
         $filters = [
             'search' => $request->query('q') ?? null,
+            'is_active' => $request->query('is_active') ?? null,
+            'year' => $request->query('year') ?? now()->year,
         ];
         $schedules = $this->scheduleService->paginateMember($filters);
-        return view('member.index', compact('schedules'));
+        $availableYears = $this->scheduleService->getAvailableYears();
+        return view('member.acara.index', compact('schedules', 'availableYears'));
     }
 }

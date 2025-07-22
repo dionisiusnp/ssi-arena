@@ -56,8 +56,11 @@
             <h6 class="m-0 font-weight-bold">Peringkat Pemain</h6>
             <!-- Filter Select -->
             <form method="GET" action="{{ route('admin-panel') }}">
-                <select name="status" onchange="this.form.submit()" class="form-control form-control-sm">
+                <select name="season_id" onchange="this.form.submit()" class="form-control form-control-sm">
                     <option value="">Semua Musim</option>
+                    @foreach ($seasons as $musim)
+                        <option value="{{ $musim->id }}">{{ $musim->name }}</option>
+                    @endforeach
                 </select>
             </form>
         </div>
@@ -78,7 +81,7 @@
                                 <td>{{ $index+1 }}.</td>
                                 <td>{{ $player->name }} <span class="badge badge-primary">{{ $player->is_lecturer ? 'Pemateri' : 'Member' }}</span></td>
                                 <td>{{ $player->current_level }}</td>
-                                <td>{{ $player->current_point }}</td>
+                                <td>{{ $player->total_point ?? 0 }}</td>
                             </tr>
                         @endforeach
                         @if (empty($players))
@@ -88,6 +91,9 @@
                         @endif
                     </tbody>
                 </table>
+            </div>
+            <div class="d-flex justify-content-center mt-4">
+                {{ $players->withQueryString()->links('pagination::bootstrap-4') }}
             </div>
         </div>
     </div>

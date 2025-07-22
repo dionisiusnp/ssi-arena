@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Lesson;
 use App\Models\QuestDetail;
 use App\Models\Schedule;
+use App\Models\Season;
 use App\Models\Setting;
 use App\Services\LessonService;
 use App\Services\QuestDetailService;
@@ -35,8 +36,8 @@ class DashboardController extends Controller
         $filters = [
             'season_id' => $seasonId,
         ];
-
-        $players = $this->userService->paginateDashboard($filters);
+        $seasons = Season::all();
+        $players = $this->userService->getLeaderboardPlayers($filters['season_id']);
         $events = Schedule::where('is_active', true)->get();
         $lessons = Lesson::whereNotIn('visibility', [VisibilityEnum::DRAFT->value])->get();
 
@@ -61,7 +62,8 @@ class DashboardController extends Controller
             'totalLessons',
             'totalEvents',
             'players',
-            'winnersCount'
+            'winnersCount',
+            'seasons',
         ));
     }
 }
