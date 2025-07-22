@@ -39,7 +39,7 @@ class ScheduleService
             ->paginate($perPage);
     }
 
-    public function paginateMember(array $filter = [], int $perPage = 9)
+    public function paginateMember(array $filter = [], int $perPage = 9): LengthAwarePaginator
     {
         $search = $filter['search'] ?? null;
     $isActive = isset($filter['is_active']) ? (filter_var($filter['is_active'], FILTER_VALIDATE_BOOLEAN) ? 1 : 0) : null;
