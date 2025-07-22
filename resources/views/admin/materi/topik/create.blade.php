@@ -97,40 +97,94 @@
             ['style', ['bold', 'italic', 'underline', 'clear']],
             ['font', ['strikethrough']],
             ['para', ['ul', 'ol', 'paragraph']],
+            ['insert', ['codeBlockBtn']], // New button for inserting code blocks
             ['view', ['fullscreen', 'codeview']],
         ],
-        buttons: {},
-        callbacks: {
-            onImageUpload: function () {
-                return false;
-            },
-            onMediaDelete: function () {
-                return false;
-            },
-            onFileUpload: function () {
-                return false;
-            },
-            onPaste: function (e) {
-                const clipboardData = (e.originalEvent || e).clipboardData;
-                if (clipboardData && clipboardData.items) {
-                    for (const item of clipboardData.items) {
-                        if (item.type.indexOf('image') !== -1 || item.type.indexOf('video') !== -1) {
-                            e.preventDefault();
-                            return false;
-                        }
+        buttons: {
+            codeBlockBtn: function(context) {
+                const ui = $.summernote.ui;
+                return ui.button({
+                    contents: '<i class="fas fa-code"></i> Insert Code Block',
+                    tooltip: 'Insert Code Block from Library',
+                    click: function () {
+                        // Open the modal to select a code block
+                        $('#selectCodeBlockModal').modal('show');
+                        loadCodeBlocks(); // Load initial code blocks
                     }
+                }).render();
+            }
+        },
+        callbacks: {
+            onImageUpload: function () { return false; },
+            onMediaDelete: function () { return false; },
+            onFileUpload: function () { return false; },
+            // Remove onPaste callback as we are no longer pasting raw code
+        }
+    });
+
+    // Include the modal for selecting code blocks
+    @include('admin.code_blocks.select_modal')
+
+    // JavaScript for handling code block selection modal
+    let currentPage = 1;
+    let lastPage = 1;
+    let currentSearch = '';
+
+    function loadCodeBlocks(page = 1, search = '') {
+        $.ajax({
+            url: '{{ route('code-blocks.index') }}',
+            method: 'GET',
+            data: { page: page, q: search, per_page: 10 },
+            success: function(response) {
+                const codeBlockList = $('#codeBlockList');
+                if (page === 1) {
+                    codeBlockList.empty();
+                }
+                lastPage = response.last_page;
+
+                if (response.data.length === 0 && page === 1) {
+                    codeBlockList.append('<div class="list-group-item">No code blocks found.</div>');
+                } else {
+                    response.data.forEach(block => {
+                        const listItem = `
+                            <a href="#" class="list-group-item list-group-item-action" data-id="${block.id}">
+                                <strong>${block.description || 'No Description'}</strong><br>
+                                <small>Language: ${block.language || 'N/A'}</small><br>
+                                <pre style="white-space: pre-wrap; word-break: break-all;"><code>${block.code_content.substring(0, 100)}...</code></pre>
+                            </a>
+                        `;
+                        codeBlockList.append(listItem);
+                    });
                 }
 
-                e.preventDefault();
-                const text = (e.originalEvent || e).clipboardData.getData('text/plain');
-                const pre = document.createElement('pre');
-                const code = document.createElement('code');
-                code.textContent = text;
-                pre.appendChild(code);
-                $(this).summernote('insertNode', pre);
-                Prism.highlightAll();
+                if (currentPage < lastPage) {
+                    $('#loadMoreCodeBlocks').show();
+                } else {
+                    $('#loadMoreCodeBlocks').hide();
+                }
             }
+        });
+    }
+
+    $('#codeBlockSearch').on('keyup', function() {
+        currentSearch = $(this).val();
+        currentPage = 1;
+        loadCodeBlocks(currentPage, currentSearch);
+    });
+
+    $('#loadMoreCodeBlocks').on('click', function() {
+        if (currentPage < lastPage) {
+            currentPage++;
+            loadCodeBlocks(currentPage, currentSearch);
         }
+    });
+
+    $('#codeBlockList').on('click', '.list-group-item', function(e) {
+        e.preventDefault();
+        const codeBlockId = $(this).data('id');
+        const placeholder = `[CODE_BLOCK_ID:${codeBlockId}]`;
+        $('.summernote2').summernote('insertText', placeholder);
+        $('#selectCodeBlockModal').modal('hide');
     });
 
     $('#topicForm').on('submit', function(e) {

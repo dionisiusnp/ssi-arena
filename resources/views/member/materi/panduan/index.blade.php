@@ -60,29 +60,58 @@
                     return;
                 }
 
-                const decoded = decodeHtml(stepsHtml);
-                const parsed = parseCodeBlocks(decoded);
+                // Replace [CODE_BLOCK_ID:X] placeholders with actual code content
+                let processedStepsHtml = stepsHtml;
+                const codeBlockPlaceholders = stepsHtml.match(/[\[]CODE_BLOCK_ID:(\d+)[\]]/g);
 
-                guideContent.innerHTML = `
-                    <div class="card">
-                        <div class="card-body">
-                            <h4 class="mb-3">${topicName}</h4>
-                            <div>${parsed}</div>
-                            <div class="d-flex justify-content-between mt-4">
-                                <button id="prevTopic" class="btn btn-secondary">&laquo; Sebelumnya</button>
-                                <button id="nextTopic" class="btn btn-secondary">Berikutnya &raquo;</button>
+                if (codeBlockPlaceholders) {
+                    const fetchPromises = codeBlockPlaceholders.map(placeholder => {
+                        const codeBlockId = placeholder.match(/\d+/)[0];
+                        return $.ajax({
+                            url: `/code-blocks/${codeBlockId}`,
+                            method: 'GET',
+                            dataType: 'json',
+                        }).then(response => {
+                            return { placeholder: placeholder, code: response.code_content, language: response.language };
+                        }).fail(() => {
+                            return { placeholder: placeholder, code: '<div class="alert alert-danger">Failed to load code block.</div>', language: null };
+                        });
+                    });
+
+                    Promise.all(fetchPromises).then(results => {
+                        results.forEach(result => {
+                            const codeTag = result.language ? `<pre><code class="language-${result.language}">${result.code}</code></pre>` : `<pre><code>${result.code}</code></pre>`;
+                            processedStepsHtml = processedStepsHtml.replace(result.placeholder, codeTag);
+                        });
+
+                        renderGuideContent(processedStepsHtml);
+                    });
+                } else {
+                    renderGuideContent(processedStepsHtml);
+                }
+
+                function renderGuideContent(htmlContent) {
+                    guideContent.innerHTML = `
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="mb-3">${topicName}</h4>
+                                <div>${htmlContent}</div>
+                                <div class="d-flex justify-content-between mt-4">
+                                    <button id="prevTopic" class="btn btn-secondary">&laquo; Sebelumnya</button>
+                                    <button id="nextTopic" class="btn btn-secondary">Berikutnya &raquo;</button>
+                                </div>
                             </div>
-                        </div>
-                    </div>`;
+                        </div>`;
 
-                const btnPrev = document.getElementById('prevTopic');
-                const btnNext = document.getElementById('nextTopic');
+                    const btnPrev = document.getElementById('prevTopic');
+                    const btnNext = document.getElementById('nextTopic');
 
-                btnPrev.style.visibility = currentIndex > 0 ? 'visible' : 'hidden';
-                btnNext.style.visibility = currentIndex < topicLinks.length - 1 ? 'visible' : 'hidden';
+                    btnPrev.style.visibility = currentIndex > 0 ? 'visible' : 'hidden';
+                    btnNext.style.visibility = currentIndex < topicLinks.length - 1 ? 'visible' : 'hidden';
 
-                btnPrev?.addEventListener('click', () => topicLinks[currentIndex - 1]?.click());
-                btnNext?.addEventListener('click', () => topicLinks[currentIndex + 1]?.click());
+                    btnPrev?.addEventListener('click', () => topicLinks[currentIndex - 1]?.click());
+                    btnNext?.addEventListener('click', () => topicLinks[currentIndex + 1]?.click());
+                }
             });
         });
 
@@ -92,26 +121,28 @@
             return txt.value;
         }
 
-        function escapeHtml(text) {
-            return text.replace(/[&<>"']/g, function (char) {
-                const escapeMap = {
-                    '&': '&amp;',
-                    '<': '&lt;',
-                    '>': '&gt;',
-                    '"': '&quot;',
-                    "'": '&#039;',
-                };
-                return escapeMap[char];
-            });
-        }
+        // No longer need escapeHtml as content is already escaped on paste
+        // function escapeHtml(text) {
+        //     return text.replace(/[&<>"]/g, function (char) {
+        //         const escapeMap = {
+        //             '&': '&amp;',
+        //             '<': '&lt;',
+        //             '>': '&gt;',
+        //             '"': '&quot;',
+        //             "'": '&#039;',
+        //         };
+        //         return escapeMap[char];
+        //     });
+        // }
 
-        function parseCodeBlocks(html) {
-            return html
-                .replace(/<br\s*\/?>/gi, '\n') // replace <br> with newline
-                .replace(/%%([\s\S]*?)%%/g, (_, code) => {
-                    return `<pre><code>${escapeHtml(code.trim())}</code></pre>`;
-                });
-        }
+        // parseCodeBlocks is no longer needed as we are directly replacing placeholders
+        // function parseCodeBlocks(html) {
+        //     return html
+        //         .replace(/<br\s*\/?>/gi, '\n') // replace <br> with newline
+        //         .replace(/%%([\s\S]*?)%%/g, (_, code) => {
+        //             return `<pre><code>${escapeHtml(code.trim())}</code></pre>`;
+        //         });
+        // }
     });
 </script>
 @endpush

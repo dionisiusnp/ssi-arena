@@ -12,6 +12,7 @@ use App\Http\Controllers\Admin\SeasonController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\TopicController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\CodeBlockController as AdminCodeBlockController;
 use App\Http\Controllers\Member\DashboardController as MemberDashboardController;
 use App\Http\Controllers\Member\LeaderboardController as MemberLeaderboardController;
 use App\Http\Controllers\Member\QuestController;
@@ -102,6 +103,7 @@ Route::middleware(['auth', EnsureUserIsLecturer::class, EnsureUserIsNotMember::c
     Route::put('/activity/{activity}/point-plus',[AdminActivityController::class, 'pointPlus'])->name('activity.point.plus');
     Route::put('/activity/{activity}/point-minus',[AdminActivityController::class, 'pointMinus'])->name('activity.point.minus');
     Route::get('/activity-checklist/{activity_checklist}/status', [ActivityChecklistController::class, 'toggleStatus'])->name('activity-checklist.status');
+    Route::resource('code-blocks', AdminCodeBlockController::class);
 });
 
 require __DIR__.'/auth.php';

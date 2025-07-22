@@ -63,7 +63,11 @@
                         @forelse($data as $index => $topic)
                             <tr>
                                 <td>{{ $data->firstItem() + $index }}.</td>
-                                <td>{{ $topic->name ?? '-' }}</td>
+                                <td>
+                                    <pre><code>
+                                    {{ $topic->name }}
+                                    </code></pre>
+                                </td>
                                 <td><strong class="badge badge-{{ $topic->visibility !== \App\Enums\VisibilityEnum::DRAFT->value ? 'success' : 'danger' }}">{{ strtoupper($topic->visibility) }}</strong></td>
                                 <td>{{ $topic->lastChanger->name }}</td>
                                 <td>{{ $topic->created_at_formatted }}</td>
