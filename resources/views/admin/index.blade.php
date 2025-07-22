@@ -59,7 +59,9 @@
                 <select name="season_id" onchange="this.form.submit()" class="form-control form-control-sm">
                     <option value="">Semua Musim</option>
                     @foreach ($seasons as $musim)
-                        <option value="{{ $musim->id }}">{{ $musim->name }}</option>
+                        <option value="{{ $musim->id }}" {{ request('season_id') == $musim->id ? 'selected' : '' }}>
+                            {{ $musim->name }}
+                        </option>
                     @endforeach
                 </select>
             </form>
