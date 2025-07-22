@@ -27,38 +27,35 @@
         </form>
 
         <div class="row">
-            <!-- Column 4: Info Player Login -->
-            <div class="col-md-4 mb-4">
-                @if (auth()->check())
-                    <div class="card shadow-sm border-0 text-center bg-primary text-white">
-                        <div class="card-body py-4">
-                            <h6 class="text-uppercase fw-bold text-white mb-3">PERINGKATMU</h6>
-                            <div class="mb-3">
-                                @php $shortName = strtok(auth()->user()->name, ' '); @endphp
-                                <img src="{{ Avatar::create($shortName)->toBase64() }}" alt="{{ auth()->user()->name }}" class="rounded-circle shadow" width="80" height="80">
+            <!-- Column 8: Leaderboard -->
+            <div class="col-md-12 mb-4">
+                @if (isset($topPlayers) && $topPlayers->count())
+                    @php
+                        $badgeColors = ['bg-warning text-dark', 'bg-secondary text-white', 'bg-info text-dark'];
+                    @endphp
+                    <div class="row mb-4">
+                        @foreach ($topPlayers as $index => $player)
+                            <div class="col-sm-6 col-md-4 mb-3">
+                                <div class="card h-100 shadow-sm border-0 text-center position-relative {{ $badgeColors[$index % count($badgeColors)] }}">
+                                    <div class="card-body py-4">
+                                        <div class="mb-2">
+                                            @php $shortName = strtok($player->name, ' '); @endphp
+                                            <img src="{{ Avatar::create($shortName)->toBase64() }}" alt="{{ $player->name }}" class="rounded-circle shadow" width="64" height="64">
+                                        </div>
+                                        <h5 class="card-title mb-0 fw-bold">{{ $shortName }}</h5>
+                                        <small class="d-block text-truncate">{{ $player->masked_email }}</small>
+                                        <hr class="my-3" style="border-color: rgba(0,0,0,0.2);">
+                                        <p class="mb-1"><strong>Level:</strong> {{ $player->current_level }}</p>
+                                        <p class="mb-0"><strong>Poin:</strong> {{ $player->total_point ?? 0 }}</p>
+                                    </div>
+                                    <span class="position-absolute top-0 start-0 m-2 badge bg-dark rounded-pill px-3 py-1 shadow-sm">#{{ $index + 1 }}</span>
+                                </div>
                             </div>
-                            <h5 class="card-title fw-bold mb-1">{{ $shortName }}</h5>
-                            <small class="text-white d-block mb-2 text-truncate">{{ auth()->user()->masked_email }}</small>
-                            <hr class="my-3">
-                            <p class="mb-1"><strong>Level:</strong> {{ auth()->user()->current_level }}</p>
-                            <p class="mb-1"><strong>Poin:</strong> {{ $player->total_point ?? 0 }}</p>
-                            <p class="mb-0"><strong>Peringkat:</strong>
-                                <span class="badge bg-dark">#{{ $player->rank ?? '-' }}</span>
-                            </p>
-                        </div>
-                    </div>
-                @else
-                    <div class="card shadow-sm border-0 text-center h-100 d-flex align-items-center justify-content-center">
-                        <div class="card-body">
-                            <p class="text-muted">Silakan masuk untuk melihat peringkat Anda.</p>
-                            <a href="{{ route('login') }}" class="btn btn-primary">Masuk</a>
-                        </div>
+                        @endforeach
                     </div>
                 @endif
-            </div>
 
-            <!-- Column 8: Leaderboard -->
-            <div class="col-md-8 mb-4">
+                {{-- Remaining Leaderboard --}}
                 @if (isset($players) && $players->count())
                     <div class="table-responsive">
                         <table class="table table-striped table-hover align-middle">

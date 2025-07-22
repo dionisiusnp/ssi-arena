@@ -87,6 +87,10 @@ class UserService
 
     public function getTopPlayers(?int $seasonId, int $limit = 0)
     {
+        if ($limit === 0) {
+            return collect();
+        }
+
         $subQuery = $this->basePointSubQuery($seasonId);
 
         return User::query()
@@ -94,7 +98,7 @@ class UserService
             ->select('users.*')
             ->selectSub($subQuery, 'total_point')
             ->orderByDesc('total_point')
-            ->when($limit > 0, fn ($q) => $q->limit($limit))
+            ->limit($limit)
             ->get();
     }
 
@@ -108,6 +112,25 @@ class UserService
             ->selectSub($subQuery, 'total_point')
             ->orderByDesc('total_point')
             ->paginate($perPage);
+    }
+
+    public function myRanking(?int $seasonId, $auth)
+    {
+        $subQuery = $this->basePointSubQuery($seasonId);
+
+        $users = User::query()
+            ->where('is_member', true)
+            ->select('users.*')
+            ->selectSub($subQuery, 'total_point')->get();
+        $users = $users->sortByDesc('total_point')->values();
+        $rankedUsers = $users->map(function ($user, $index) use ($users) {
+            $user->rank = $index + 1;
+            if ($index > 0 && $user->total_point == $users[$index - 1]->total_point) {
+                $user->rank = $users[$index - 1]->rank;
+            }
+            return $user;
+        });
+        return $rankedUsers->firstWhere('id', $auth->id);
     }
 
     public function topScorePlayer()

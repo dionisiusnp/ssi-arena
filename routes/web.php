@@ -13,15 +13,16 @@ use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\TopicController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Member\DashboardController as MemberDashboardController;
-use App\Http\Controllers\Member\LeaderboardController;
+use App\Http\Controllers\Member\LeaderboardController as MemberLeaderboardController;
 use App\Http\Controllers\Member\QuestController;
 use App\Http\Controllers\Member\LessonController as MemberLessonController;
 use App\Http\Controllers\Member\MemberController;
 use App\Http\Controllers\Member\ActivityController as MemberActivityController;
-use App\Http\Controllers\Member\RegisterController;
-use App\Http\Controllers\Guest\LessonController as GuestLessonController;
+use App\Http\Controllers\Guest\GuideController;
 use App\Http\Controllers\Guest\DashboardController as GuestDashboardController;
-use App\Http\Controllers\Member\GuideController;
+use App\Http\Controllers\Guest\LeaderboardController as GuestLeaderboardController;
+use App\Http\Controllers\Guest\LessonController as GuestLessonController;
+use App\Http\Controllers\Guest\RegisterController;
 use App\Http\Middleware\EnsureUserIsLecturer;
 use App\Http\Middleware\EnsureUserIsNotMember;
 use Illuminate\Support\Facades\Route;
@@ -36,6 +37,7 @@ Route::get('/', function () {
 Route::prefix('guest')->name('guest.')->group(function () {
     Route::get('/wiki',      [GuideController::class, 'index'])->name('wiki');
     Route::get('/schedule',[GuestDashboardController::class, 'index'])->name('schedule');
+    Route::get('/leaderboard',[GuestLeaderboardController::class, 'index'])->name('leaderboard');
     Route::get('/lesson',[GuestLessonController::class, 'index'])->name('lesson');
     Route::get('/lesson/{lesson}',[GuestLessonController::class, 'show'])->name('lesson.show');
     Route::get('/register',[RegisterController::class, 'index'])->name('register');
@@ -50,7 +52,7 @@ Route::middleware(['auth'])->prefix('member')->name('member.')->group(function (
         Route::get('/quest',         [QuestController::class, 'index'])->name('quest');
         Route::get('/quest/{id}/claim', [QuestController::class, 'claim'])->name('quest.claim');
 
-        Route::get('/leaderboard',[LeaderboardController::class, 'index'])->name('leaderboard');
+        Route::get('/leaderboard',[MemberLeaderboardController::class, 'index'])->name('leaderboard');
         
         Route::get('/profile',[MemberController::class, 'index'])->name('profile');
         Route::get('/reset',[MemberController::class, 'reset'])->name('reset');
