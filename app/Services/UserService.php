@@ -98,6 +98,7 @@ class UserService
             ->select('users.*')
             ->selectSub($subQuery, 'total_point')
             ->orderByDesc('total_point')
+            ->orderBy('users.name')
             ->limit($limit)
             ->get();
     }
@@ -111,26 +112,44 @@ class UserService
             ->select('users.*')
             ->selectSub($subQuery, 'total_point')
             ->orderByDesc('total_point')
+            ->orderBy('users.name')
             ->paginate($perPage);
     }
 
-    public function myRanking(?int $seasonId, $auth)
+    public function getLeaderboardContext(?int $seasonId, User $auth)
     {
         $subQuery = $this->basePointSubQuery($seasonId);
 
-        $users = User::query()
+        // Get all ranked users first
+        $allRankedUsers = User::query()
             ->where('is_member', true)
             ->select('users.*')
-            ->selectSub($subQuery, 'total_point')->get();
-        $users = $users->sortByDesc('total_point')->values();
-        $rankedUsers = $users->map(function ($user, $index) use ($users) {
-            $user->rank = $index + 1;
-            if ($index > 0 && $user->total_point == $users[$index - 1]->total_point) {
-                $user->rank = $users[$index - 1]->rank;
-            }
-            return $user;
-        });
-        return $rankedUsers->firstWhere('id', $auth->id);
+            ->selectSub($subQuery, 'total_point')
+            ->get()
+            ->sortBy([
+                ['total_point', 'desc'],
+                ['name', 'asc'],
+            ])
+            ->values()
+            ->map(function ($user, $index) {
+                $user->rank = $index + 1;
+                return $user;
+            });
+
+        // Find the index of the logged-in user
+        $userIndex = $allRankedUsers->search(fn($user) => $user->id === $auth->id);
+
+        // If the user is not found, return an empty collection
+        if ($userIndex === false) {
+            return collect();
+        }
+
+        // Determine the slice range
+        $startIndex = max(0, $userIndex - 1);
+        $endIndex = min($allRankedUsers->count() - 1, $userIndex + 1);
+
+        // Return the slice of players (user above, user, user below)
+        return $allRankedUsers->slice($startIndex, $endIndex - $startIndex + 1);
     }
 
     public function topScorePlayer()

@@ -32,6 +32,14 @@
             <span>Acara</span></a>
     </li>
     @endif
+
+    <!-- Nav Item - Charts -->
+    <li class="nav-item {{ request()->routeIs('syntax.index') ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('syntax.index') }}">
+            <i class="fas fa-fw fa-code"></i>
+            <span>Sintak</span></a>
+    </li>
+    
     <!-- Nav Item - Charts -->
     <li class="nav-item {{ request()->routeIs('lesson.index') ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('lesson.index') }}">

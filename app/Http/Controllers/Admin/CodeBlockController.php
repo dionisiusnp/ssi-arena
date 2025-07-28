@@ -22,12 +22,12 @@ class CodeBlockController extends Controller
      */
     public function index(Request $request)
     {
+        $auth = Auth::user();
         $filters = [
             'search' => $request->query('q') ?? null,
-            'user_id' => Auth::id(), // Only show code blocks for the current user
         ];
-        $data = $this->codeBlockService->paginate($filters);
-        return view('admin.code_blocks.index', compact('data'));
+        $data = $this->codeBlockService->paginate($filters, $auth);
+        return view('admin.sintaks.index', compact('data'));
     }
 
     /**
@@ -35,7 +35,7 @@ class CodeBlockController extends Controller
      */
     public function create()
     {
-        return view('admin.code_blocks.create');
+        return view('admin.sintaks.create');
     }
 
     /**
@@ -43,91 +43,76 @@ class CodeBlockController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'code_content' => 'required',
-            'language' => 'nullable|string|max:255',
-            'description' => 'nullable|string|max:255',
-        ]);
-
         try {
-            $this->codeBlockService->store($request->all(), Auth::user());
-            return redirect()->route('code-blocks.index')->with('success', 'Code block created successfully.');
-        } catch (\Throwable $th) {
-            return back()->withInput()->withErrors(['error' => $th->getMessage()]);
+            $auth = Auth::user();
+            $data = $this->codeBlockService->store($request->all(), $auth);
+            return response()->json([
+                'success' => true,
+                'message' => 'Data berhasil dibuat',
+                'data'    => $data,
+            ]);
+        } catch (\Throwable $th) {            
+            throw new \ErrorException($th->getMessage());
         }
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(CodeBlock $codeBlock)
+    public function show(CodeBlock $syntax)
     {
-        // Ensure user owns the code block
-        if ($codeBlock->user_id !== Auth::id()) {
+        if ($syntax->changed_by !== Auth::id()) {
             abort(403);
         }
-        return view('admin.code_blocks.show', compact('codeBlock'));
+        return response()->json($syntax);
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(CodeBlock $codeBlock)
+    public function edit(CodeBlock $syntax)
     {
-        // Ensure user owns the code block
-        if ($codeBlock->user_id !== Auth::id()) {
+        if ($syntax->changed_by !== Auth::id()) {
             abort(403);
         }
-        return view('admin.code_blocks.edit', compact('codeBlock'));
+        return view('admin.sintaks.edit', compact('codeBlock'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, CodeBlock $codeBlock)
+    public function update(Request $request, CodeBlock $syntax)
     {
-        // Ensure user owns the code block
-        if ($codeBlock->user_id !== Auth::id()) {
-            abort(403);
-        }
-
-        $request->validate([
-            'code_content' => 'required',
-            'language' => 'nullable|string|max:255',
-            'description' => 'nullable|string|max:255',
-        ]);
-
         try {
-            $this->codeBlockService->update($request->all(), $codeBlock);
-            return redirect()->route('code-blocks.index')->with('success', 'Code block updated successfully.');
+            if ($syntax->changed_by !== Auth::id()) {
+                abort(403);
+            }
+            $auth = Auth::user();
+            $data = $this->codeBlockService->update($request->all(), $auth, $syntax);
+            return response()->json([
+                'success' => true,
+                'message' => 'Data berhasil diubah',
+                'data'    => $data,
+            ]);
         } catch (\Throwable $th) {
-            return back()->withInput()->withErrors(['error' => $th->getMessage()]);
+            throw new \ErrorException($th->getMessage());
         }
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(CodeBlock $codeBlock)
+    public function destroy(CodeBlock $syntax)
     {
-        // Ensure user owns the code block
-        if ($codeBlock->user_id !== Auth::id()) {
+        if ($syntax->user_id !== Auth::id()) {
             abort(403);
         }
 
         try {
-            $this->codeBlockService->destroy($codeBlock);
-            return redirect()->route('code-blocks.index')->with('success', 'Code block deleted successfully.');
+            $this->codeBlockService->destroy($syntax);
+            return redirect()->route('syntax.index')->with('success', 'Code block deleted successfully.');
         } catch (\Throwable $th) {
             return back()->withErrors(['error' => $th->getMessage()]);
         }
-    }
-
-    /**
-     * Display the specified resource for API consumption.
-     */
-    public function showApi(CodeBlock $codeBlock)
-    {
-        return response()->json($codeBlock);
     }
 }

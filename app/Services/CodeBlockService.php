@@ -20,39 +20,52 @@ class CodeBlockService
         return $this->model;
     }
 
-    public function paginate(array $filter = [], int $perPage = 10): LengthAwarePaginator
+    public function paginate(array $filter = [], $auth, int $perPage = 10): LengthAwarePaginator
     {
         $search = $filter['search'] ?? null;
-        $userId = $filter['user_id'] ?? null;
-
         return $this->model
-            ->when($userId, function ($query) use ($userId) {
-                $query->where('user_id', $userId);
-            })
+            ->where('changed_by', $auth->id)
             ->when($search, function ($query) use ($search) {
                 $query->where(function ($q) use ($search) {
-                    $q->where('description', 'LIKE', "%{$search}%")
-                      ->orWhere('code_content', 'LIKE', "%{$search}%");
+                    $q->where('code', 'LIKE', "%{$search}%");
                 });
             })
-            ->latest()
+            ->orderByDesc('created_at')
             ->paginate($perPage);
     }
 
     public function store(array $data, $auth)
     {
-        $data['user_id'] = $auth->id;
-        return $this->model->create($data);
+        try {
+            $data['changed_by'] = $auth->id;
+            return $this->model->create($data);
+        } catch (\Throwable $th) {
+            throw new \ErrorException($th->getMessage());
+        }
     }
 
-    public function update(array $data, CodeBlock $codeBlock)
+    public function show(int $id)
     {
-        $codeBlock->update($data);
-        return $codeBlock;
+        return $this->model->find($id);
+    }
+
+    public function update(array $data, $auth, CodeBlock $codeBlock)
+    {
+        try {
+            $data['changed_by'] = $auth->id;
+            $codeBlock->update($data);
+            return $codeBlock;
+        } catch (\Throwable $th) {
+            throw new \ErrorException($th->getMessage());
+        }
     }
 
     public function destroy(CodeBlock $codeBlock): bool
     {
-        return $codeBlock->delete();
+        try {
+            return $codeBlock->delete();
+        } catch (\Throwable $th) {
+            throw new \ErrorException($th->getMessage());
+        }
     }
 }

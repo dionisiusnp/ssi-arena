@@ -43,6 +43,7 @@ Route::prefix('guest')->name('guest.')->group(function () {
     Route::get('/lesson/{lesson}',[GuestLessonController::class, 'show'])->name('lesson.show');
     Route::get('/register',[RegisterController::class, 'index'])->name('register');
     Route::post('/register/store',[RegisterController::class, 'register'])->middleware('throttle:register')->name('register.store');
+    Route::get('/syntax/{syntax}', [AdminCodeBlockController::class,'show'])->name('syntax.show');
 });
 
 // MEMBER
@@ -74,7 +75,7 @@ Route::middleware(['auth', EnsureUserIsLecturer::class])->group(function () {
     Route::get('/admin-panel',[AdminDashboardController::class,'index'])->name('admin-panel');
     Route::resource('lesson', AdminLessonController::class);
     Route::resource('topic', TopicController::class);
-
+    Route::resource('syntax', AdminCodeBlockController::class)->except('show');
 });
 
 // ADMIN
@@ -103,7 +104,6 @@ Route::middleware(['auth', EnsureUserIsLecturer::class, EnsureUserIsNotMember::c
     Route::put('/activity/{activity}/point-plus',[AdminActivityController::class, 'pointPlus'])->name('activity.point.plus');
     Route::put('/activity/{activity}/point-minus',[AdminActivityController::class, 'pointMinus'])->name('activity.point.minus');
     Route::get('/activity-checklist/{activity_checklist}/status', [ActivityChecklistController::class, 'toggleStatus'])->name('activity-checklist.status');
-    Route::resource('code-blocks', AdminCodeBlockController::class);
 });
 
 require __DIR__.'/auth.php';

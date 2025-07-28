@@ -13,11 +13,12 @@ return new class extends Migration
     {
         Schema::create('code_blocks', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('changed_by')->constrained('users');
-            $table->text('code_content');
-            $table->string('language')->nullable(); // e.g., 'php', 'javascript', 'dart'
-            $table->string('description')->nullable(); // Optional description for the code block
+            $table->foreignId('changed_by')->nullable()->constrained('users');
+            $table->text('code');
+            $table->string('language')->nullable();
+            $table->string('description')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

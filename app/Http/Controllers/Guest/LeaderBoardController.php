@@ -24,18 +24,11 @@ class LeaderboardController extends Controller
     public function index(Request $request)
     {
         $seasonId = $request->input('season_id');
-        $winnersCount = Setting::where('group', SettingGroupEnum::GENERAL->value)->where('key','winner_counter')->value('current_value') ?? 0;
+        $winnersCount = 5;
         $topPlayers = $this->userService->getTopPlayers($seasonId, $winnersCount);
-        $topPlayerRanks = [];
-        foreach ($topPlayers as $index => $player) {
-            $topPlayerRanks[$player->id] = $index;
-        }
-        $players = $this->userService->getLeaderboardPlayers($seasonId);
         $seasons = Season::all();
         return view('guest.peringkat.index', compact(
             'topPlayers',
-            'players',
-            'topPlayerRanks',
             'seasonId',
             'seasons',
         ));
