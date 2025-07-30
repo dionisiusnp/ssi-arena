@@ -33,7 +33,7 @@ class LessonController extends Controller
     public function show(Lesson $lesson)
     {
         $auth = Auth::user();
-        $topics = $this->topicService->byLesson($lesson->id);
+        $topics = $this->topicService->byAuthLesson($lesson->id, $auth);
         return view('guest.materi.panduan.index', compact('lesson', 'topics'));
     }
 }
