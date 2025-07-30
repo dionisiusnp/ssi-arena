@@ -27,7 +27,7 @@
                 <div class="card mb-4">
                     <div class="card-body">
                         <div class="form-group mb-3">
-                            <label for="filterLanguage">Filter Bahasa Pemrograman</label>
+                            <label for="filterLanguage">Filter Kode Berdasarkan Bahasa</label>
                             <select id="filterLanguage" class="form-control" onchange="filterCodeblocks()">
                                 <option value="">Pilih Bahasa</option>
                                 @foreach (\App\Enums\StackEnum::cases() as $stack)
@@ -61,7 +61,7 @@
         const lang = $('#filterLanguage').val();
         $('#codeblockList').html('<div class="col-12 text-center py-3">Loading...</div>');
 
-        fetch(`{{ route('syntax.list') }}?language=${lang}`)
+        fetch(`{{ route('code.list') }}?language=${lang}`)
             .then(res => res.json())
             .then(data => {
                 if (data.length === 0) {

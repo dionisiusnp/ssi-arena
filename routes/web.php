@@ -35,8 +35,6 @@ Route::get('/', function () {
 
 @include('select2.php');
 
-Route::get('/syntax/{syntax}', [AdminCodeBlockController::class,'show'])->name('syntax.show');
-
 // GUEST
 Route::prefix('guest')->name('guest.')->group(function () {
     Route::get('/wiki',      [GuideController::class, 'index'])->name('wiki');
@@ -72,13 +70,15 @@ Route::middleware(['auth'])->prefix('member')->name('member.')->group(function (
         Route::get('/schedule',      [MemberDashboardController::class, 'index'])->name('schedule');
 });
 
+Route::get('/syntax/{syntax}', [AdminCodeBlockController::class,'show'])->name('syntax.show');
+
 // LECTURER
 Route::middleware(['auth', EnsureUserIsLecturer::class])->group(function () {
     Route::get('/admin-panel',[AdminDashboardController::class,'index'])->name('admin-panel');
     Route::resource('lesson', AdminLessonController::class);
     Route::resource('topic', TopicController::class);
-    Route::get('/syntax/list', [AdminCodeBlockController::class, 'list'])->name('syntax.list');
-    Route::resource('syntax', AdminCodeBlockController::class)->except('show');
+    Route::resource('syntax', AdminCodeBlockController::class);
+    Route::get('/code/list', [AdminCodeBlockController::class, 'list'])->name('code.list');
 });
 
 // ADMIN

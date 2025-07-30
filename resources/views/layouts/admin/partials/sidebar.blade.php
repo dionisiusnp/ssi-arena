@@ -37,7 +37,7 @@
     <li class="nav-item {{ request()->routeIs('syntax.index') ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('syntax.index') }}">
             <i class="fas fa-fw fa-code"></i>
-            <span>Sintak</span></a>
+            <span>Kode</span></a>
     </li>
     
     <!-- Nav Item - Charts -->
