@@ -64,7 +64,7 @@
                         const id = match[1];
                         const placeholder = match[0];
 
-                        return fetch(`/syntax/${id}`)
+                        return fetch(`/code/detail/${id}`)
                             .then(res => res.json())
                             .then(data => ({
                                 placeholder,
@@ -86,15 +86,15 @@
                                     <button class="btn btn-sm btn-dark position-absolute end-0 mt-1 me-1 copy-btn" data-idx="${idx}">Copy</button>
                                     <pre style="border: 1px solid #ccc; border-radius: 5px; padding: 10px; background-color: #f8f9fa;"><code class="language-${language}" data-idx="${idx}">${escapeHtml(code)}</code></pre>
                                 </div>`;
-                            finalHtml = finalHtml.replace(placeholder, codeBlock);
+                            finalHtml = finalHtml.replaceAll(placeholder, codeBlock);
                         });
                         renderGuideContent(finalHtml, topicName, currentIndex);
                         setupCopyButtons();
-                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                        // window.scrollTo({ top: 0, behavior: 'smooth' });
                     });
                 } else {
                     renderGuideContent(stepsHtml, topicName, currentIndex);
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                    // window.scrollTo({ top: 0, behavior: 'smooth' });
                 }
             });
         });

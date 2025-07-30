@@ -61,7 +61,7 @@
         function filterCodeblocks() {
         const lang = $('#filterLanguage').val();
         $('#codeblockList').html('<div class="col-12 text-center py-3">Loading...</div>');
-        fetch(`{{ route('code.list') }}`)
+        fetch(`{{ route('code.list') }}?language=${lang}`)
             .then(res => res.json())
             .then(data => {
                 if (data.length === 0) {

@@ -21,7 +21,7 @@
                             <!-- Roleplay Filter -->
                             <div class="mb-3">
                                 <button class="btn btn-link d-flex justify-content-between align-items-center w-100 p-0 text-dark fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#filterRoleplay" aria-expanded="true" aria-controls="filterRoleplay">
-                                    Role
+                                    Peran
                                     <i class="fas fa-chevron-down" id="iconRoleplay"></i>
                                 </button>
                                 <div class="collapse show" id="filterRoleplay">
@@ -46,7 +46,7 @@
                             <!-- Language/Stack Filter -->
                             <div class="mb-3">
                                 <button class="btn btn-link d-flex justify-content-between align-items-center w-100 p-0 text-dark fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#filterStack" aria-expanded="true" aria-controls="filterStack">
-                                    Bahasa
+                                    Pembahasan
                                     <i class="fas fa-chevron-down" id="iconStack"></i>
                                 </button>
                                 <div class="collapse show" id="filterStack">

@@ -70,7 +70,7 @@ Route::middleware(['auth'])->prefix('member')->name('member.')->group(function (
         Route::get('/schedule',      [MemberDashboardController::class, 'index'])->name('schedule');
 });
 
-Route::get('/syntax/{syntax}', [AdminCodeBlockController::class,'show'])->name('syntax.show');
+Route::get('/code/detail/{syntax}', [AdminCodeBlockController::class,'show'])->name('code.show');
 
 // LECTURER
 Route::middleware(['auth', EnsureUserIsLecturer::class])->group(function () {

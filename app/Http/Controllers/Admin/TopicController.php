@@ -30,12 +30,10 @@ class TopicController extends Controller
             'search' => $request->query('q') ?? null,
             'visibility' => $request->query('visibility') ?? null,
         ];
-        
+        $lessons = Lesson::where('changed_by', $auth->id)->get();
         if (is_null($filters['lesson_id'])) {
             abort(400, 'Parameter materi tidak ditemukan.');
         }
-
-        $lessons = Lesson::where('changed_by', $auth->id)->get();
         $lesson = null;
         if ($filters['lesson_id']) {
             $lesson = $this->lessonService->model()->find($filters['lesson_id']);

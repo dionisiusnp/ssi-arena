@@ -111,7 +111,7 @@ class CodeBlockController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Schedule $schedule)
+    public function destroy(CodeBlock $syntax)
     {
         // 
     }
