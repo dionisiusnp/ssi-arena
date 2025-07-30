@@ -13,9 +13,9 @@
                 <input type="hidden" name="visibility" id="visibility" value="{{ \App\Enums\VisibilityEnum::DRAFT->value }}">
                 <div class="form-row">
                 <div class="form-group col-md-6">
-                    <label for="role">Kategori Roleplay</label>
+                    <label for="role">Peran</label>
                     <select name="role" id="role" class="form-control">
-                        <option value="">Pilih Roleplay</option>
+                        <option value="">Pilih Peran</option>
                         @foreach (\App\Enums\RoleplayEnum::cases() as $status)
                             <option value="{{ $status->value }}" {{ old('status') === $status->value ? 'selected' : '' }}>
                                 {{ $status->label() }}
@@ -24,9 +24,9 @@
                     </select>
                 </div>
                 <div class="form-group col-md-6">
-                    <label>Bahasa Materi</label>
+                    <label>Pembahasan</label>
                     <select name="language" class="form-control">
-                        <option value="">Pilih Bahasa</option>
+                        <option value="">Pilih Pembahasan</option>
                         @foreach (\App\Enums\StackEnum::cases() as $stack)
                         <option value="{{ $stack->value }}">
                             {{ $stack->label() }}

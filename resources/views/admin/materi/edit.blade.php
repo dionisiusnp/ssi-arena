@@ -14,7 +14,7 @@
                 <input type="hidden" name="visibility" id="visibility" value="{{ $lesson->visibility }}">
                 <div class="form-row">
                     <div class="form-group col-md-6">
-                        <label for="role">Kategori Roleplay</label>
+                        <label for="role">Peran</label>
                         <select name="role" id="role" class="form-control">
                             @php
                                 $enum1 = \App\Enums\RoleplayEnum::tryFrom($lesson->role);
@@ -32,7 +32,7 @@
                         </select>
                     </div>
                     <div class="form-group col-md-6">
-                        <label>Bahasa Materi</label>
+                        <label>Pembahasan</label>
                         <select name="language" class="form-control">
                             @php
                                 $enum2 = \App\Enums\StackEnum::tryFrom($lesson->language);

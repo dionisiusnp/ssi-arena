@@ -20,7 +20,7 @@
             </div>
             <div class="col-md-2">
                 <select name="role" class="form-control">
-                    <option value="">Kategori?</option>
+                    <option value="">Peran?</option>
                     @foreach (\App\Enums\RoleplayEnum::cases() as $role)
                         <option value="{{ $role->value }}" {{ request('role') === $role->value ? 'selected' : '' }}>
                             {{ $role->label() }}
@@ -59,10 +59,10 @@
                             Visibilitas: <strong class="badge badge-{{ $lesson->visibility !== \App\Enums\VisibilityEnum::DRAFT->value ? 'success' : 'danger' }}">{{ strtoupper($lesson->visibility) }}</strong>
                         </p>
                         <p class="card-text mb-1">
-                            Kategori: <strong>{{ strtoupper($lesson->role) ?? '-' }}</strong>
+                            Peran: <strong>{{ strtoupper($lesson->role) ?? '-' }}</strong>
                         </p>
                         <p class="card-text mb-1">
-                            Bahasa: <strong>{{ strtoupper($lesson->language) ?? '-' }}</strong>
+                            Pembahasan: <strong>{{ strtoupper($lesson->language) ?? '-' }}</strong>
                         </p>
                         <p class="card-text mb-1">
                             Topik: <strong>{{ $lesson->topics_count }} Topik</strong>
