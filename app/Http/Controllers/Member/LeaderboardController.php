@@ -27,7 +27,7 @@ class LeaderboardController extends Controller
         $winnersCount = Setting::where('group', SettingGroupEnum::GENERAL->value)->where('key','winner_counter')->value('current_value') ?? 0;
         $topPlayers = $this->userService->getTopPlayers($seasonId, $winnersCount);
 
-        $contextPlayers = collect(); // Default to empty collection
+        $contextPlayers = collect();
         if (Auth::check()) {
             $contextPlayers = $this->userService->getLeaderboardContext($seasonId, Auth::user());
         }
