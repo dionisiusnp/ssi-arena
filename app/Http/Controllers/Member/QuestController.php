@@ -22,7 +22,7 @@ class QuestController extends Controller
         $filters = [
             'search' => $request->query('q') ?? null,
         ];
-        $quests = $this->questDetailService->paginateMember($filters, 10, $auth);
+        $quests = $this->questDetailService->paginateMember($filters, $auth);
         return view('member.tantangan.index', compact('quests'));
     }
 

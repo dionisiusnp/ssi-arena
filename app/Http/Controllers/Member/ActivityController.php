@@ -20,7 +20,7 @@ class ActivityController extends Controller
     public function index(Request $request)
     {
         $auth = Auth::user();
-        $search = $request->input('search');
+        $search = $request->input('q');
         $seasonId = $request->input('season_id');
 
         $activities = Activity::with('detail.season')
@@ -36,7 +36,7 @@ class ActivityController extends Controller
                 )
             )
             ->latest()
-            ->paginate(10);
+            ->get();
         $seasons = Season::all();
         return view('member.aktivitas.index', compact('activities','seasons'));
     }
