@@ -4,19 +4,19 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\CodeBlock;
+use App\Models\Schedule;
 use App\Services\CodeBlockService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class CodeBlockController extends Controller
 {
-    protected $codeBlockService;
+    public $codeBlockService;
 
     public function __construct(CodeBlockService $codeBlockService)
     {
         $this->codeBlockService = $codeBlockService;
     }
-
     /**
      * Display a listing of the resource.
      */
@@ -28,6 +28,16 @@ class CodeBlockController extends Controller
         ];
         $data = $this->codeBlockService->paginate($filters, $auth);
         return view('admin.sintaks.index', compact('data'));
+    }
+
+    public function list(Request $request)
+    {
+        $auth = Auth::user();
+        $query = CodeBlock::query()->where('changed_by', $auth->id);
+        if ($request->filled('language')) {
+            $query->where('language', $request->language);
+        }
+        return response()->json($query->select('id', 'language', 'description')->orderBy('description')->get());
     }
 
     /**
@@ -45,14 +55,17 @@ class CodeBlockController extends Controller
     {
         try {
             $auth = Auth::user();
-            $data = $this->codeBlockService->store($request->all(), $auth);
+            $data = $this->codeBlockService->store($request->toArray(), $auth);
             return response()->json([
                 'success' => true,
                 'message' => 'Data berhasil dibuat',
                 'data'    => $data,
             ]);
-        } catch (\Throwable $th) {            
-            throw new \ErrorException($th->getMessage());
+        } catch (\Throwable $th) {
+            return response()->json([
+                'error' => true,
+                'message' => $th->getMessage(),
+            ], 500);
         }
     }
 
@@ -61,9 +74,6 @@ class CodeBlockController extends Controller
      */
     public function show(CodeBlock $syntax)
     {
-        if ($syntax->changed_by !== Auth::id()) {
-            abort(403);
-        }
         return response()->json($syntax);
     }
 
@@ -72,10 +82,11 @@ class CodeBlockController extends Controller
      */
     public function edit(CodeBlock $syntax)
     {
-        if ($syntax->changed_by !== Auth::id()) {
-            abort(403);
+        $auth = Auth::user();
+        if ($syntax->changed_by !== $auth->id) {
+            abort(403, 'Akses tidak diizinkan untuk kode ini.');
         }
-        return view('admin.sintaks.edit', compact('codeBlock'));
+        return view('admin.sintaks.edit', compact('syntax'));
     }
 
     /**
@@ -84,11 +95,8 @@ class CodeBlockController extends Controller
     public function update(Request $request, CodeBlock $syntax)
     {
         try {
-            if ($syntax->changed_by !== Auth::id()) {
-                abort(403);
-            }
             $auth = Auth::user();
-            $data = $this->codeBlockService->update($request->all(), $auth, $syntax);
+            $data = $this->codeBlockService->update($request->toArray(), $auth, $syntax);
             return response()->json([
                 'success' => true,
                 'message' => 'Data berhasil diubah',
@@ -102,17 +110,8 @@ class CodeBlockController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(CodeBlock $syntax)
+    public function destroy(Schedule $schedule)
     {
-        if ($syntax->user_id !== Auth::id()) {
-            abort(403);
-        }
-
-        try {
-            $this->codeBlockService->destroy($syntax);
-            return redirect()->route('syntax.index')->with('success', 'Code block deleted successfully.');
-        } catch (\Throwable $th) {
-            return back()->withErrors(['error' => $th->getMessage()]);
-        }
+        // 
     }
 }

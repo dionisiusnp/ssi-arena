@@ -24,12 +24,25 @@
                     <textarea name="description" id="description" class="form-control summernote1">{{ $topic->description }}</textarea>
                 </div>
                 <hr>
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <div class="form-group mb-3">
+                            <label for="filterLanguage">Filter Bahasa Pemrograman</label>
+                            <select id="filterLanguage" class="form-control" onchange="filterCodeblocks()">
+                                <option value="">Pilih Bahasa</option>
+                                @foreach (\App\Enums\StackEnum::cases() as $stack)
+                                <option value="{{ $stack->value }}">
+                                    {{ $stack->label() }}
+                                </option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div id="codeblockList" class="row"></div>
+                    </div>
+                </div>
+                <hr>
                 <div class="form-group">
-                    <label for="steps">Panduan Topik
-                        <small class="text-muted ml-2">
-                            Gunakan tombol <strong>&lt;/&gt; Code</strong> untuk menyisipkan kode
-                        </small>
-                    </label>
+                    <label for="steps">Panduan Topik</label>
                     <textarea name="steps" id="steps" class="form-control summernote2">{{ $topic->steps }}</textarea>
                 </div>
                 <div class="mt-4 d-flex justify-content-between">
@@ -44,6 +57,61 @@
 
 @push('scripts')
 <script>
+    function filterCodeblocks() {
+        const lang = $('#filterLanguage').val();
+        $('#codeblockList').html('<div class="col-12 text-center py-3">Loading...</div>');
+
+        fetch(`{{ route('syntax.list') }}?language=${lang}`)
+            .then(res => res.json())
+            .then(data => {
+                if (data.length === 0) {
+                    $('#codeblockList').html('<div class="col-12 text-muted">Tidak ada kode.</div>');
+                    return;
+                }
+
+                const html = data.map(cb => `
+                    <div class="col-md-6 mb-3">
+                        <div class="border p-3 rounded bg-light">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <div><strong>${cb.description}</strong></div>
+                                    <div class="text-muted small">${cb.language}</div>
+                                </div>
+                                <button type="button" class="btn btn-sm btn-outline-primary" onclick="insertCodeblock(${cb.id})">
+                                    Gunakan
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+                $('#codeblockList').html(html);
+            })
+            .catch(() => {
+                $('#codeblockList').html('<div class="col-12 text-danger">Gagal memuat kode.</div>');
+            });
+    }
+
+    function insertCodeblock(id) {
+        const insertText = `%%codeblock:${id}%%`;
+
+        const summernote = $('.summernote2');
+        summernote.summernote('focus');
+
+        // Ambil isi sekarang
+        const currentContent = summernote.summernote('code');
+
+        // Bersihkan jika hanya <p><br></p>
+        const cleanContent = (currentContent.trim() === '<p><br></p>') ? '' : currentContent;
+
+        // Tambahkan kode ke akhir
+        const updatedContent = cleanContent + `<p>${insertText}</p>`;
+
+        // Masukkan kembali ke editor
+        summernote.summernote('code', updatedContent);
+    }
+
+    filterCodeblocks();
+
     $('.summernote1').summernote({
         height: 200,
         placeholder: 'Tuliskan keterangan disini...',
@@ -75,15 +143,6 @@
                         }
                     }
                 }
-
-                e.preventDefault();
-                const text = (e.originalEvent || e).clipboardData.getData('text/plain');
-                const pre = document.createElement('pre');
-                const code = document.createElement('code');
-                code.textContent = text;
-                pre.appendChild(code);
-                $(this).summernote('insertNode', pre);
-                Prism.highlightAll();
             }
         }
     });
@@ -96,94 +155,31 @@
             ['style', ['bold', 'italic', 'underline', 'clear']],
             ['font', ['strikethrough']],
             ['para', ['ul', 'ol', 'paragraph']],
-            ['insert', ['codeBlockBtn']], // New button for inserting code blocks
             ['view', ['fullscreen', 'codeview']],
         ],
-        buttons: {
-            codeBlockBtn: function(context) {
-                const ui = $.summernote.ui;
-                return ui.button({
-                    contents: '<i class="fas fa-code"></i> Insert Code Block',
-                    tooltip: 'Insert Code Block from Library',
-                    click: function () {
-                        // Open the modal to select a code block
-                        $('#selectCodeBlockModal').modal('show');
-                        loadCodeBlocks(); // Load initial code blocks
-                    }
-                }).render();
-            }
-        },
+        buttons: {},
         callbacks: {
-            onImageUpload: function () { return false; },
-            onMediaDelete: function () { return false; },
-            onFileUpload: function () { return false; },
-            // Remove onPaste callback as we are no longer pasting raw code
-        }
-    });
-
-    // Include the modal for selecting code blocks
-    @include('admin.code_blocks.select_modal')
-
-    // JavaScript for handling code block selection modal
-    let currentPage = 1;
-    let lastPage = 1;
-    let currentSearch = '';
-
-    function loadCodeBlocks(page = 1, search = '') {
-        $.ajax({
-            url: '{{ route('code-blocks.index') }}',
-            method: 'GET',
-            data: { page: page, q: search, per_page: 10 },
-            success: function(response) {
-                const codeBlockList = $('#codeBlockList');
-                if (page === 1) {
-                    codeBlockList.empty();
-                }
-                lastPage = response.last_page;
-
-                if (response.data.length === 0 && page === 1) {
-                    codeBlockList.append('<div class="list-group-item">No code blocks found.</div>');
-                } else {
-                    response.data.forEach(block => {
-                        const listItem = `
-                            <a href="#" class="list-group-item list-group-item-action" data-id="${block.id}">
-                                <strong>${block.description || 'No Description'}</strong><br>
-                                <small>Language: ${block.language || 'N/A'}</small><br>
-                                <pre style="white-space: pre-wrap; word-break: break-all;"><code>${block.code_content.substring(0, 100)}...</code></pre>
-                            </a>
-                        `;
-                        codeBlockList.append(listItem);
-                    });
-                }
-
-                if (currentPage < lastPage) {
-                    $('#loadMoreCodeBlocks').show();
-                } else {
-                    $('#loadMoreCodeBlocks').hide();
+            onImageUpload: function () {
+                return false;
+            },
+            onMediaDelete: function () {
+                return false;
+            },
+            onFileUpload: function () {
+                return false;
+            },
+            onPaste: function (e) {
+                const clipboardData = (e.originalEvent || e).clipboardData;
+                if (clipboardData && clipboardData.items) {
+                    for (const item of clipboardData.items) {
+                        if (item.type.indexOf('image') !== -1 || item.type.indexOf('video') !== -1) {
+                            e.preventDefault();
+                            return false;
+                        }
+                    }
                 }
             }
-        });
-    }
-
-    $('#codeBlockSearch').on('keyup', function() {
-        currentSearch = $(this).val();
-        currentPage = 1;
-        loadCodeBlocks(currentPage, currentSearch);
-    });
-
-    $('#loadMoreCodeBlocks').on('click', function() {
-        if (currentPage < lastPage) {
-            currentPage++;
-            loadCodeBlocks(currentPage, currentSearch);
         }
-    });
-
-    $('#codeBlockList').on('click', '.list-group-item', function(e) {
-        e.preventDefault();
-        const codeBlockId = $(this).data('id');
-        const placeholder = `[CODE_BLOCK_ID:${codeBlockId}]`;
-        $('.summernote2').summernote('insertText', placeholder);
-        $('#selectCodeBlockModal').modal('hide');
     });
 
     $('#topicForm').on('submit', function(e) {

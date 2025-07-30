@@ -72,15 +72,6 @@
                         }
                     }
                 }
-
-                e.preventDefault();
-                const text = (e.originalEvent || e).clipboardData.getData('text/plain');
-                const pre = document.createElement('pre');
-                const code = document.createElement('code');
-                code.textContent = text;
-                pre.appendChild(code);
-                $(this).summernote('insertNode', pre);
-                Prism.highlightAll();
             }
         }
     });

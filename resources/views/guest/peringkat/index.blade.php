@@ -28,7 +28,7 @@
 
         {{-- Top Winners Table --}}
         @if (isset($topPlayers) && $topPlayers->count())
-            <h4 class="mb-3 fw-semibold">Pemenang Teratas</h4>
+            <h4 class="mb-3 fw-semibold">Peringkat 5 Teratas</h4>
             <div class="table-responsive mb-1">
                 <table class="table table-hover align-middle">
                     <thead class="table-light">

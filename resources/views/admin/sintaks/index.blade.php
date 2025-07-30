@@ -1,58 +1,90 @@
 @extends('layouts.admin.app')
 
-@section('title', 'Code Blocks')
+@section('title', 'Daftar Kode')
 
 @section('content')
 <div class="container-fluid">
-    <h1 class="h3 mb-3 text-gray-800">Code Blocks</h1>
-
-    <div class="card shadow">
-        <div class="card-header d-flex justify-content-between align-items-center">
-            <h6 class="m-0 font-weight-bold text-primary">List of Code Blocks</h6>
-            <a href="{{ route('syntax.create') }}" class="btn btn-primary btn-sm">Add New Code Block</a>
+    {{-- Header --}}
+    <div class="row mb-4 align-items-center">
+        <div class="col-md-6">
+            <h1 class="h3 text-gray-800">Daftar Kode</h1>
+            <p class="mb-0 text-muted">Kelola data kode topik.</p>
         </div>
-        <div class="card-body">
-            @if (session('success'))
-                <div class="alert alert-success">{{ session('success') }}</div>
-            @endif
-            @if (session('error'))
-                <div class="alert alert-danger">{{ session('error') }}</div>
-            @endif
+        <div class="col-md-6 text-md-end text-start mt-3 mt-md-0">
+            <a href="{{ route('syntax.create') }}" class="btn btn-primary">
+                <i class="fas fa-plus"></i> Tambah Kode
+            </a>
+        </div>
+    </div>
 
+    {{-- Filter --}}
+    <div class="card shadow mb-4">
+        <div class="card-body">
+            <form method="GET">
+                <div class="row g-3 align-items-end">
+                    <div class="col-md-6">
+                        <input type="text" name="q" value="{{ request('q') }}" class="form-control" placeholder="Cari kode...">
+                    </div>
+                    <div class="col-md-3">
+                        <button type="submit" class="btn btn-primary w-100">Filter</button>
+                    </div>
+                    <div class="col-md-3">
+                        <a href="{{ route('syntax.index') }}" class="btn btn-secondary w-100">Reset</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    {{-- Tabel Data --}}
+    <div class="card shadow">
+        <div class="card-body">
             <div class="table-responsive">
-                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <table class="table table-bordered align-middle">
                     <thead>
                         <tr>
-                            <th>ID</th>
-                            <th>Description</th>
-                            <th>Language</th>
-                            <th>Actions</th>
+                            <th style="width: 5%">No.</th>
+                            <th>Bahasa</th>
+                            <th>Keterangan</th>
+                            <th>Diubah</th>
+                            <th>Dibuat</th>
+                            <th style="width: 20%">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @forelse ($data as $codeBlock)
-                        <tr>
-                            <td>{{ $codeBlock->id }}</td>
-                            <td>{{ $codeBlock->description ?? 'N/A' }}</td>
-                            <td>{{ $codeBlock->language ?? 'N/A' }}</td>
-                            <td>
-                                <a href="{{ route('syntax.edit', $codeBlock->id) }}" class="btn btn-warning btn-sm">Edit</a>
-                                <form action="{{ route('syntax.destroy', $codeBlock->id) }}" method="POST" class="d-inline">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')">Delete</button>
-                                </form>
-                            </td>
-                        </tr>
+                        @forelse($data as $index => $syntax)
+                            <tr>
+                                <td class="text-center">{{ $data->firstItem() + $index }}.</td>
+                                <td>
+                                    {{ strtoupper($syntax->language) }}
+                                </td>
+                                <td>
+                                    {{ $syntax->description }}
+                                </td>
+                                <td>{{ $syntax->lastChanger->name }}</td>
+                                <td>{{ $syntax->created_at_formatted }}</td>
+                                <td class="text-nowrap text-center">
+                                    <a href="{{ route('syntax.edit', $syntax->id) }}"
+                                       class="btn btn-sm btn-warning mb-1">
+                                        Ubah
+                                    </a>
+                                </td>
+                            </tr>
                         @empty
-                        <tr>
-                            <td colspan="4" class="text-center">No code blocks found.</td>
-                        </tr>
+                            <tr>
+                                <td colspan="6" class="text-center text-muted">Data kode belum tersedia.</td>
+                            </tr>
                         @endforelse
                     </tbody>
                 </table>
             </div>
-            {{ $data->links() }}
+
+            {{-- Pagination --}}
+            <div class="mt-3 d-flex justify-content-between align-items-center">
+                <div>
+                    {{ $data->withQueryString()->links('pagination::bootstrap-4') }}
+                </div>
+            </div>
         </div>
     </div>
 </div>

@@ -30,7 +30,12 @@ class TopicController extends Controller
             'search' => $request->query('q') ?? null,
             'visibility' => $request->query('visibility') ?? null,
         ];
-        $lessons = Lesson::all();
+        
+        if (is_null($filters['lesson_id'])) {
+            abort(400, 'Parameter materi tidak ditemukan.');
+        }
+
+        $lessons = Lesson::where('changed_by', $auth->id)->get();
         $lesson = null;
         if ($filters['lesson_id']) {
             $lesson = $this->lessonService->model()->find($filters['lesson_id']);
@@ -38,10 +43,10 @@ class TopicController extends Controller
                 abort(404, 'Materi tidak ditemukan.');
             }
             if ($lesson->changed_by !== $auth->id) {
-                abort(403, 'Akses tidak diizinkan untuk lesson ini.');
+                abort(403, 'Akses tidak diizinkan untuk materi ini.');
             }
         }
-        $data = $this->topicService->paginate($filters);
+        $data = $this->topicService->paginate($filters, $auth);
         return view('admin.materi.topik.index', compact('data', 'lesson', 'lessons'));
     }
 
@@ -100,7 +105,7 @@ class TopicController extends Controller
     {
         $auth = Auth::user();
         if ($topic->changed_by !== $auth->id) {
-            abort(403, 'Akses tidak diizinkan untuk lesson ini.');
+            abort(403, 'Akses tidak diizinkan untuk materi ini.');
         }
         return view('admin.materi.topik.detail', compact('topic'));
     }

@@ -11,11 +11,11 @@
             <div class="col-md-4 mb-4">
                 <div class="list-group" id="topicList">
                     @forelse ($topics ?? [] as $index => $topic)
-                        <a href="#" 
+                        <a href="#"
                            class="list-group-item list-group-item-action"
-                           data-topic-id="{{ $topic->id }}" 
+                           data-topic-id="{{ $topic->id }}"
                            data-name="{{ $topic->name }}"
-                           data-steps="{{ $topic->steps }}">
+                           data-steps="{{ htmlentities($topic->steps) }}">
                             {{ $topic->name }}
                         </a>
                     @empty
@@ -41,79 +41,88 @@
         const topicLinks = Array.from(document.querySelectorAll('#topicList a'));
         const guideContent = document.getElementById('guideContent');
 
-        topicLinks.forEach(link => {
+        topicLinks.forEach((link, index) => {
             link.addEventListener('click', function (e) {
                 e.preventDefault();
 
                 topicLinks.forEach(l => l.classList.remove('active'));
                 this.classList.add('active');
 
-                const topicName = this.getAttribute('data-name');
-                const stepsHtml = this.getAttribute('data-steps') || '';
-                const currentIndex = topicLinks.indexOf(this);
+                const topicName = this.dataset.name;
+                const stepsHtml = decodeHtml(this.dataset.steps || '');
+                const currentIndex = index;
 
                 if (!stepsHtml.trim()) {
-                    guideContent.innerHTML = `
-                        <div class="alert alert-info">
-                            Belum ada panduan untuk topik ini.
-                        </div>`;
+                    guideContent.innerHTML = `<div class="alert alert-info">Belum ada panduan untuk topik ini.</div>`;
                     return;
                 }
 
-                // Replace [CODE_BLOCK_ID:X] placeholders with actual code content
-                let processedStepsHtml = stepsHtml;
-                const codeBlockPlaceholders = stepsHtml.match(/[\[]CODE_BLOCK_ID:(\d+)[\]]/g);
+                const matches = [...stepsHtml.matchAll(/%%codeblock:(\d+)%%/g)];
 
-                if (codeBlockPlaceholders) {
-                    const fetchPromises = codeBlockPlaceholders.map(placeholder => {
-                        const codeBlockId = placeholder.match(/\d+/)[0];
-                        return $.ajax({
-                            url: `/code-blocks/${codeBlockId}`,
-                            method: 'GET',
-                            dataType: 'json',
-                        }).then(response => {
-                            return { placeholder: placeholder, code: response.code_content, language: response.language };
-                        }).fail(() => {
-                            return { placeholder: placeholder, code: '<div class="alert alert-danger">Failed to load code block.</div>', language: null };
-                        });
+                if (matches.length > 0) {
+                    const fetches = matches.map(match => {
+                        const id = match[1];
+                        const placeholder = match[0];
+
+                        return fetch(`/syntax/${id}`)
+                            .then(res => res.json())
+                            .then(data => ({
+                                placeholder,
+                                code: data.code || 'Gagal memuat konten.',
+                                language: data.language || 'plaintext'
+                            }))
+                            .catch(() => ({
+                                placeholder,
+                                code: 'Gagal memuat konten.',
+                                language: 'plaintext'
+                            }));
                     });
 
-                    Promise.all(fetchPromises).then(results => {
-                        results.forEach(result => {
-                            const codeTag = result.language ? `<pre><code class="language-${result.language}">${result.code}</code></pre>` : `<pre><code>${result.code}</code></pre>`;
-                            processedStepsHtml = processedStepsHtml.replace(result.placeholder, codeTag);
+                    Promise.all(fetches).then(results => {
+                        let finalHtml = stepsHtml;
+                        results.forEach(({ placeholder, code, language }, idx) => {
+                            const codeBlock = `
+                                <div class="position-relative mb-3">
+                                    <button class="btn btn-sm btn-dark position-absolute end-0 mt-1 me-1 copy-btn" data-idx="${idx}">Copy</button>
+                                    <pre style="border: 1px solid #ccc; border-radius: 5px; padding: 10px; background-color: #f8f9fa;"><code class="language-${language}" data-idx="${idx}">${escapeHtml(code)}</code></pre>
+                                </div>`;
+                            finalHtml = finalHtml.replace(placeholder, codeBlock);
                         });
-
-                        renderGuideContent(processedStepsHtml);
+                        renderGuideContent(finalHtml, topicName, currentIndex);
+                        setupCopyButtons();
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
                     });
                 } else {
-                    renderGuideContent(processedStepsHtml);
-                }
-
-                function renderGuideContent(htmlContent) {
-                    guideContent.innerHTML = `
-                        <div class="card">
-                            <div class="card-body">
-                                <h4 class="mb-3">${topicName}</h4>
-                                <div>${htmlContent}</div>
-                                <div class="d-flex justify-content-between mt-4">
-                                    <button id="prevTopic" class="btn btn-secondary">&laquo; Sebelumnya</button>
-                                    <button id="nextTopic" class="btn btn-secondary">Berikutnya &raquo;</button>
-                                </div>
-                            </div>
-                        </div>`;
-
-                    const btnPrev = document.getElementById('prevTopic');
-                    const btnNext = document.getElementById('nextTopic');
-
-                    btnPrev.style.visibility = currentIndex > 0 ? 'visible' : 'hidden';
-                    btnNext.style.visibility = currentIndex < topicLinks.length - 1 ? 'visible' : 'hidden';
-
-                    btnPrev?.addEventListener('click', () => topicLinks[currentIndex - 1]?.click());
-                    btnNext?.addEventListener('click', () => topicLinks[currentIndex + 1]?.click());
+                    renderGuideContent(stepsHtml, topicName, currentIndex);
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
                 }
             });
         });
+
+        function renderGuideContent(html, topicName, index) {
+            guideContent.innerHTML = `
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="mb-3">${topicName}</h4>
+                        <div>${html}</div>
+                        <div class="d-flex justify-content-between mt-4">
+                            <button id="prevTopic" class="btn btn-secondary">&laquo; Sebelumnya</button>
+                            <button id="nextTopic" class="btn btn-secondary">Berikutnya &raquo;</button>
+                        </div>
+                    </div>
+                </div>`;
+
+            document.getElementById('prevTopic')?.addEventListener('click', () => {
+                if (index > 0) topicLinks[index - 1]?.click();
+            });
+
+            document.getElementById('nextTopic')?.addEventListener('click', () => {
+                if (index < topicLinks.length - 1) topicLinks[index + 1]?.click();
+            });
+
+            document.getElementById('prevTopic').style.visibility = index > 0 ? 'visible' : 'hidden';
+            document.getElementById('nextTopic').style.visibility = index < topicLinks.length - 1 ? 'visible' : 'hidden';
+        }
 
         function decodeHtml(html) {
             const txt = document.createElement('textarea');
@@ -121,28 +130,29 @@
             return txt.value;
         }
 
-        // No longer need escapeHtml as content is already escaped on paste
-        // function escapeHtml(text) {
-        //     return text.replace(/[&<>"]/g, function (char) {
-        //         const escapeMap = {
-        //             '&': '&amp;',
-        //             '<': '&lt;',
-        //             '>': '&gt;',
-        //             '"': '&quot;',
-        //             "'": '&#039;',
-        //         };
-        //         return escapeMap[char];
-        //     });
-        // }
+        function escapeHtml(str) {
+            return String(str)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+        }
 
-        // parseCodeBlocks is no longer needed as we are directly replacing placeholders
-        // function parseCodeBlocks(html) {
-        //     return html
-        //         .replace(/<br\s*\/?>/gi, '\n') // replace <br> with newline
-        //         .replace(/%%([\s\S]*?)%%/g, (_, code) => {
-        //             return `<pre><code>${escapeHtml(code.trim())}</code></pre>`;
-        //         });
-        // }
+        function setupCopyButtons() {
+            document.querySelectorAll('.copy-btn').forEach(btn => {
+                btn.addEventListener('click', function () {
+                    const idx = this.dataset.idx;
+                    const code = document.querySelector(`code[data-idx="${idx}"]`);
+                    if (code) {
+                        navigator.clipboard.writeText(code.innerText).then(() => {
+                            this.textContent = 'Copied!';
+                            setTimeout(() => this.textContent = 'Copy', 1500);
+                        });
+                    }
+                });
+            });
+        }
     });
 </script>
 @endpush

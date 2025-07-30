@@ -37,13 +37,14 @@ class TopicService
         return $data;
     }
 
-    public function paginate(array $filter = [], int $perPage = 10): LengthAwarePaginator
+    public function paginate(array $filter = [], $auth, int $perPage = 10): LengthAwarePaginator
     {
         $search = $filter['search'] ?? null;
         $lessonId = $filter['lesson_id'] ?? null;
         $visibility = $filter['visibility'] ?? null;
 
         return $this->model
+            ->where('changed_by', $auth->id)
             ->when($lessonId, function ($query) use ($lessonId) {
                 $query->where('lesson_id', $lessonId);
             })

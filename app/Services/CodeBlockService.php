@@ -27,7 +27,7 @@ class CodeBlockService
             ->where('changed_by', $auth->id)
             ->when($search, function ($query) use ($search) {
                 $query->where(function ($q) use ($search) {
-                    $q->where('code', 'LIKE', "%{$search}%");
+                    $q->where('description', 'LIKE', "%{$search}%");
                 });
             })
             ->orderByDesc('created_at')

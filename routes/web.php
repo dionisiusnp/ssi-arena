@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\ActivityChecklistController;
 use App\Http\Controllers\Admin\ActivityController as AdminActivityController;
+use App\Http\Controllers\Admin\CodeBlockController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\LessonController as AdminLessonController;
 use App\Http\Controllers\Admin\QuestDetailController;
@@ -34,6 +35,8 @@ Route::get('/', function () {
 
 @include('select2.php');
 
+Route::get('/syntax/{syntax}', [AdminCodeBlockController::class,'show'])->name('syntax.show');
+
 // GUEST
 Route::prefix('guest')->name('guest.')->group(function () {
     Route::get('/wiki',      [GuideController::class, 'index'])->name('wiki');
@@ -43,7 +46,6 @@ Route::prefix('guest')->name('guest.')->group(function () {
     Route::get('/lesson/{lesson}',[GuestLessonController::class, 'show'])->name('lesson.show');
     Route::get('/register',[RegisterController::class, 'index'])->name('register');
     Route::post('/register/store',[RegisterController::class, 'register'])->middleware('throttle:register')->name('register.store');
-    Route::get('/syntax/{syntax}', [AdminCodeBlockController::class,'show'])->name('syntax.show');
 });
 
 // MEMBER
@@ -75,6 +77,7 @@ Route::middleware(['auth', EnsureUserIsLecturer::class])->group(function () {
     Route::get('/admin-panel',[AdminDashboardController::class,'index'])->name('admin-panel');
     Route::resource('lesson', AdminLessonController::class);
     Route::resource('topic', TopicController::class);
+    Route::get('/syntax/list', [AdminCodeBlockController::class, 'list'])->name('syntax.list');
     Route::resource('syntax', AdminCodeBlockController::class)->except('show');
 });
 
