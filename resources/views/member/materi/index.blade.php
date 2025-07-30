@@ -85,6 +85,7 @@
                                     <span class="badge bg-primary mb-2">{{ strtoupper($lesson->language) ?? '-' }}</span>
                                     <h5 class="card-title">{{ $lesson->name }}</h5>
                                     <p class="mb-1"><strong>Pemateri:</strong> {{ $lesson->lastChanger->name ?? '-' }}</p>
+                                    <p class="mb-1"><i class="fas fa-user me-1"></i> {{ strtoupper($lesson->role) ?? '-' }}</p>
                                     <p class="mb-1"><i class="fas fa-layer-group me-1"></i> {{ $lesson->topics_count }} Topik</p>
                                     <p class="mb-3 text-muted"><i class="far fa-calendar-alt me-1"></i> {{ $lesson->created_at_formatted }}</p>
                                     <a href="{{ auth()->check() ? route('member.lesson.show', $lesson->id) : route('guest.lesson.show', $lesson->id) }}" class="btn btn-sm btn-outline-primary mt-auto">Lihat Topik</a>
