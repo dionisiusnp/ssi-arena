@@ -113,6 +113,14 @@ class CodeBlockController extends Controller
      */
     public function destroy(CodeBlock $syntax)
     {
-        // 
+        try {
+            $this->codeBlockService->destroy($syntax);
+            return response()->json([
+                'success' => true,
+                'message' => 'Data berhasil dihapus',
+            ]);
+        } catch (\Throwable $th) {
+            throw new \ErrorException($th->getMessage());
+        }
     }
 }
