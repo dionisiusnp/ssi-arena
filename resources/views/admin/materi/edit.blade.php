@@ -14,7 +14,7 @@
                 <input type="hidden" name="visibility" id="visibility" value="{{ $lesson->visibility }}">
                 <div class="form-row">
                     <div class="form-group col-md-6">
-                        <label for="role">Kategori Roleplay</label>
+                        <label for="role">Peran</label>
                         <select name="role" id="role" class="form-control">
                             @php
                                 $enum1 = \App\Enums\RoleplayEnum::tryFrom($lesson->role);
@@ -32,7 +32,7 @@
                         </select>
                     </div>
                     <div class="form-group col-md-6">
-                        <label>Bahasa Materi</label>
+                        <label>Pembahasan</label>
                         <select name="language" class="form-control">
                             @php
                                 $enum2 = \App\Enums\StackEnum::tryFrom($lesson->language);
@@ -80,24 +80,9 @@
             ['style', ['bold', 'italic', 'underline', 'clear']],
             ['font', ['strikethrough']],
             ['para', ['ul', 'ol', 'paragraph']],
-            ['insert', ['codeblock']],
             ['view', ['fullscreen', 'codeview']],
         ],
-        buttons: {
-            codeblock: function(context) {
-                const ui = $.summernote.ui;
-                return ui.button({
-                    contents: '<i class="fas fa-code"></i> <b>Code</b>',
-                    tooltip: 'Insert Code Block',
-                    click: function () {
-                        const range = context.invoke('editor.createRange');
-                        const selectedText = range.toString() || 'masukkan kodemu disini';
-                        const codeBlock = '%%\n' + selectedText + '\n%%';
-                        context.invoke('editor.insertText', codeBlock);
-                    }
-                }).render();
-            }
-        },
+        buttons: {},
         callbacks: {
             onImageUpload: function () {
                 return false;

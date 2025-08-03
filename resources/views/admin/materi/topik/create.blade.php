@@ -25,12 +25,25 @@
                     <textarea name="description" id="description" class="form-control summernote1"></textarea>
                 </div>
                 <hr>
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <div class="form-group mb-3">
+                            <label for="filterLanguage">Filter Kode Berdasarkan Bahasa</label>
+                            <select id="filterLanguage" class="form-control" onchange="filterCodeblocks()">
+                                <option value="">Pilih Bahasa</option>
+                                @foreach (\App\Enums\StackEnum::cases() as $stack)
+                                <option value="{{ $stack->value }}">
+                                    {{ $stack->label() }}
+                                </option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div id="codeblockList" class="row"></div>
+                    </div>
+                </div>
+                <hr>
                 <div class="form-group">
-                    <label for="steps">Panduan Topik
-                        <small class="text-muted ml-2">
-                            Gunakan tombol <strong>&lt;/&gt; Code</strong> untuk menyisipkan kode
-                        </small>
-                    </label>
+                    <label for="steps">Panduan Topik</label>
                     <textarea name="steps" id="steps" class="form-control summernote2"></textarea>
                 </div>
                 <div class="mt-4 d-flex justify-content-between">
@@ -45,6 +58,60 @@
 
 @push('scripts')
 <script>
+        function filterCodeblocks() {
+        const lang = $('#filterLanguage').val();
+        $('#codeblockList').html('<div class="col-12 text-center py-3">Loading...</div>');
+        fetch(`{{ route('code.list') }}?language=${lang}`)
+            .then(res => res.json())
+            .then(data => {
+                if (data.length === 0) {
+                    $('#codeblockList').html('<div class="col-12 text-muted">Tidak ada kode.</div>');
+                    return;
+                }
+
+                const html = data.map(cb => `
+                    <div class="col-md-6 mb-3">
+                        <div class="border p-3 rounded bg-light">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <div><strong>${cb.description}</strong></div>
+                                    <div class="text-muted small">${cb.language}</div>
+                                </div>
+                                <button type="button" class="btn btn-sm btn-outline-primary" onclick="insertCodeblock(${cb.id})">
+                                    Gunakan
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+                $('#codeblockList').html(html);
+            })
+            .catch(() => {
+                $('#codeblockList').html('<div class="col-12 text-danger">Gagal memuat kode.</div>');
+            });
+    }
+
+    function insertCodeblock(id) {
+        const insertText = `%%codeblock:${id}%%`;
+
+        const summernote = $('.summernote2');
+        summernote.summernote('focus');
+
+        // Ambil isi sekarang
+        const currentContent = summernote.summernote('code');
+
+        // Bersihkan jika hanya <p><br></p>
+        const cleanContent = (currentContent.trim() === '<p><br></p>') ? '' : currentContent;
+
+        // Tambahkan kode ke akhir
+        const updatedContent = cleanContent + `<p>${insertText}</p>`;
+
+        // Masukkan kembali ke editor
+        summernote.summernote('code', updatedContent);
+    }
+
+    filterCodeblocks();
+
     $('.summernote1').summernote({
         height: 200,
         placeholder: 'Tuliskan keterangan disini...',
@@ -53,7 +120,6 @@
             ['style', ['bold', 'italic', 'underline', 'clear']],
             ['font', ['strikethrough']],
             ['para', ['ul', 'ol', 'paragraph']],
-            ['insert', ['codeblock']],
             ['view', ['fullscreen', 'codeview']],
         ],
         buttons: {
@@ -103,24 +169,9 @@
             ['style', ['bold', 'italic', 'underline', 'clear']],
             ['font', ['strikethrough']],
             ['para', ['ul', 'ol', 'paragraph']],
-            ['insert', ['codeblock']],
             ['view', ['fullscreen', 'codeview']],
         ],
-        buttons: {
-            codeblock: function(context) {
-                const ui = $.summernote.ui;
-                return ui.button({
-                    contents: '<i class="fas fa-code"></i> <b>Code</b>',
-                    tooltip: 'Insert Code Block',
-                    click: function () {
-                        const range = context.invoke('editor.createRange');
-                        const selectedText = range.toString() || 'masukkan kodemu disini';
-                        const codeBlock = '%%\n' + selectedText + '\n%%';
-                        context.invoke('editor.insertText', codeBlock);
-                    }
-                }).render();
-            }
-        },
+        buttons: {},
         callbacks: {
             onImageUpload: function () {
                 return false;

@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Enums\VisibilityEnum;
 use App\Models\Topic;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -37,13 +38,14 @@ class TopicService
         return $data;
     }
 
-    public function paginate(array $filter = [], int $perPage = 10): LengthAwarePaginator
+    public function paginate(array $filter = [], $auth, int $perPage = 10): LengthAwarePaginator
     {
         $search = $filter['search'] ?? null;
         $lessonId = $filter['lesson_id'] ?? null;
         $visibility = $filter['visibility'] ?? null;
 
         return $this->model
+            ->where('changed_by', $auth->id)
             ->when($lessonId, function ($query) use ($lessonId) {
                 $query->where('lesson_id', $lessonId);
             })
@@ -64,6 +66,28 @@ class TopicService
     {
         try {
             return $this->model
+            ->where('lesson_id',$lessonId)
+            ->orderBy('sequence')->get();
+        } catch (\Throwable $th) {
+            throw new \ErrorException($th->getMessage());
+        }
+    }
+
+    public function byAuthLesson($lessonId, $auth)
+    {
+        try {
+            if ($auth) {
+                $notInClausa = [
+                    VisibilityEnum::DRAFT->value,
+                ];
+            } else {
+                $notInClausa = [
+                    VisibilityEnum::DRAFT->value,
+                    VisibilityEnum::PUBLISHED->value,
+                ];
+            }
+            return $this->model
+            ->whereNotIn('visibility', $notInClausa)
             ->where('lesson_id',$lessonId)
             ->orderBy('sequence')->get();
         } catch (\Throwable $th) {

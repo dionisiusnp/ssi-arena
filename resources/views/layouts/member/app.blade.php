@@ -13,6 +13,7 @@
         @yield('content')
     </div>
 
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <!-- Bootstrap core JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
     <!-- Core theme JS -->
@@ -77,7 +78,7 @@
             opacity: 0;
         }
 
-        @media (max-width: 576px) {
+        /* @media (max-width: 576px) { */
             .floating-btn-group {
                 visibility: hidden;
                 opacity: 0;
@@ -87,12 +88,12 @@
                 visibility: visible;
                 opacity: 1;
             }
-        }
+        /* } */
     </style>
 
     <div class="floating-wrapper d-flex flex-column-reverse align-items-end gap-2">
-        <!-- Mobile Toggle -->
-        <button type="button" class="btn btn-dark shadow-sm d-sm-none floating-btn" onclick="toggleFloatingButtons()">
+        <!-- Mobile Toggle (d-sm-none) -->
+        <button type="button" class="btn btn-dark shadow-sm floating-btn" onclick="toggleFloatingButtons()">
             <i class="fas fa-cogs"></i>
         </button>
 
@@ -110,10 +111,14 @@
                 <i class="fab fa-whatsapp"></i>
                 <span class="btn-label">Hubungi Admin</span>
             </a>
-            <a href="{{ route('guest.wiki') }}" class="btn btn-primary shadow-sm floating-btn">
+            <a href="{{ route('guest.wiki') }}" class="btn btn-warning shadow-sm floating-btn">
                 <i class="fas fa-book"></i>
                 <span class="btn-label">Wiki SSI Arena</span>
             </a>
+            <button onclick="scrollToTop()" class="btn btn-primary shadow-sm floating-btn">
+                <i class="fas fa-arrow-up"></i>
+                <span class="btn-label">Kembali ke Atas</span>
+            </button>
         </div>
     </div>
 
@@ -121,6 +126,15 @@
         function toggleFloatingButtons() {
             const group = document.getElementById('floatingBtnGroup');
             group.classList.toggle('show');
+        }
+
+        function toggleFloatingButtons() {
+            const group = document.getElementById('floatingBtnGroup');
+            group.classList.toggle('show');
+        }
+
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
     </script>
 </body>

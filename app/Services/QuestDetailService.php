@@ -58,11 +58,39 @@ class QuestDetailService
             ->paginate($perPage);
     }
 
-    public function paginateMember(array $filter = [], int $perPage = 10, $auth): LengthAwarePaginator
+    public function paginateMember(array $filter = [], $auth)
     {
+        // $search = $filter['search'] ?? null;
+        // $userId = $auth->id;
+        // return $this->model
+        //     ->with('requirements')
+        //     ->where('is_editable', false)
+        //     ->when($search, function ($query) use ($search) {
+        //         $query->where(function ($q) use ($search) {
+        //             $q->where('name', 'LIKE', "%{$search}%")
+        //             ->orWhere('description', 'LIKE', "%{$search}%");
+        //         });
+        //     })
+        //     ->where(function ($query) use ($userId) {
+        //         $query->whereNull('claimable_by')
+        //             ->orWhereJsonContains('claimable_by', (string) $userId);
+        //     })
+        //     ->when($userId, function ($query) use ($userId) {
+        //         $query->whereDoesntHave('activities', function ($q) use ($userId) {
+        //             $q->where('claimed_by', $userId);
+        //         });
+        //     })
+        //     ->orderByDesc('created_at')
+        //     ->paginate($perPage)
+        //     ->through(function ($item) {
+        //         // Ambil setting current_value berdasarkan quest_level_id
+        //         $settingKey = 'ql_' . $item->quest_level_id;
+        //         $item->minimum_level_setting = \App\Models\Setting::where('key', $settingKey)->value('current_value') ?? 0;
+        //         return $item;
+        //     });
         $search = $filter['search'] ?? null;
         $userId = $auth->id;
-        return $this->model
+        $query = $this->model
             ->with('requirements')
             ->where('is_editable', false)
             ->when($search, function ($query) use ($search) {
@@ -80,14 +108,14 @@ class QuestDetailService
                     $q->where('claimed_by', $userId);
                 });
             })
-            ->orderByDesc('created_at')
-            ->paginate($perPage)
-            ->through(function ($item) {
-                // Ambil setting current_value berdasarkan quest_level_id
-                $settingKey = 'ql_' . $item->quest_level_id;
-                $item->minimum_level_setting = \App\Models\Setting::where('key', $settingKey)->value('current_value') ?? 0;
-                return $item;
-            });
+            ->orderByDesc('created_at');
+        $data = $query->get();
+        foreach ($data as $item) {
+            $settingKey = 'ql_' . $item->quest_level_id;
+            $item->minimum_level_setting = \App\Models\Setting::where('key', $settingKey)->value('current_value') ?? 0;
+        }
+
+        return $data;
     }
 
     public function store(array $data, array $reqs, $auth)

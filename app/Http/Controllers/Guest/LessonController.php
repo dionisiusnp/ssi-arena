@@ -27,13 +27,13 @@ class LessonController extends Controller
             'language' => $request->query('language') ?? null,
         ];
         $lessons = $this->lessonService->paginateMember($auth,$filters);
-        return view('member.materi.index', compact('lessons'));
+        return view('guest.materi.index', compact('lessons'));
     }
 
     public function show(Lesson $lesson)
     {
         $auth = Auth::user();
-        $topics = $this->topicService->byLesson($lesson->id);
-        return view('member.materi.panduan.index', compact('lesson', 'topics'));
+        $topics = $this->topicService->byAuthLesson($lesson->id, $auth);
+        return view('guest.materi.panduan.index', compact('lesson', 'topics'));
     }
 }

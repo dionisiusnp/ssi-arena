@@ -26,83 +26,91 @@
             </div>
         </form>
 
-        <div class="row">
-            <!-- Column 4: Info Player Login -->
-            <div class="col-md-4 mb-4">
-                @if (auth()->check())
-                    <div class="card shadow-sm border-0 text-center bg-primary text-white">
-                        <div class="card-body py-4">
-                            <h6 class="text-uppercase fw-bold text-white mb-3">PERINGKATMU</h6>
-                            <div class="mb-3">
-                                @php $shortName = strtok(auth()->user()->name, ' '); @endphp
-                                <img src="{{ Avatar::create($shortName)->toBase64() }}" alt="{{ auth()->user()->name }}" class="rounded-circle shadow" width="80" height="80">
-                            </div>
-                            <h5 class="card-title fw-bold mb-1">{{ $shortName }}</h5>
-                            <small class="text-white d-block mb-2 text-truncate">{{ auth()->user()->masked_email }}</small>
-                            <hr class="my-3">
-                            <p class="mb-1"><strong>Level:</strong> {{ auth()->user()->current_level }}</p>
-                            <p class="mb-1"><strong>Poin:</strong> {{ $player->total_point ?? 0 }}</p>
-                            <p class="mb-0"><strong>Peringkat:</strong>
-                                <span class="badge bg-dark">#{{ $player->rank ?? '-' }}</span>
-                            </p>
-                        </div>
-                    </div>
-                @else
-                    <div class="card shadow-sm border-0 text-center h-100 d-flex align-items-center justify-content-center">
-                        <div class="card-body">
-                            <p class="text-muted">Silakan masuk untuk melihat peringkat Anda.</p>
-                            <a href="{{ route('login') }}" class="btn btn-primary">Masuk</a>
-                        </div>
-                    </div>
-                @endif
+        {{-- Top Winners Table --}}
+        @if (isset($topPlayers) && $topPlayers->count())
+            <h4 class="mb-3 fw-semibold">Pemenang Teratas</h4>
+            <div class="table-responsive mb-1">
+                <table class="table table-hover align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Pemain</th>
+                            <th scope="col">Level</th>
+                            <th scope="col">Poin</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($topPlayers as $index => $player)
+                            <tr class="bg-warning text-dark">
+                                <td><span class="badge bg-dark">#{{ $index + 1 }}</span></td>
+                                <td>
+                                    <strong>{{ strtok($player->name, ' ') }}</strong><br>
+                                    <small class="text-dark text-truncate d-block" style="max-width: 150px;">{{ $player->masked_email }}</small>
+                                </td>
+                                <td><strong>{{ $player->current_level }}</strong></td>
+                                <td><strong>{{ $player->total_point ?? 0 }}</strong></td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
             </div>
+        @endif
 
-            <!-- Column 8: Leaderboard -->
-            <div class="col-md-8 mb-4">
-                @if (isset($players) && $players->count())
-                    <div class="table-responsive">
-                        <table class="table table-striped table-hover align-middle">
-                            <thead class="table-light">
-                                <tr>
-                                    <th scope="col">#</th>
-                                    <th scope="col">Pemain</th>
-                                    <th scope="col">Level</th>
-                                    <th scope="col">Poin</th>
+        {{-- Divider and Your Ranking section --}}
+        @if (auth()->check() && isset($contextPlayers) && $contextPlayers->count())
+            <hr class="my-4">
+            <h4 class="mb-3 fw-semibold">Peringkat Anda</h4>
+            <div class="table-responsive">
+                <table class="table table-striped table-hover align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Pemain</th>
+                            <th scope="col">Level</th>
+                            <th scope="col">Poin</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($contextPlayers as $player)
+                            @php
+                                $isLoggedInUser = auth()->id() == $player->id;
+                            @endphp
+
+                            @if ($isLoggedInUser)
+                                {{-- Definitive fix: Use a separate HTML block with `bg-primary` and `text-white` to force override --}}
+                                <tr class="bg-primary text-white">
+                                    <td><span class="badge bg-dark">#{{ $player->rank }}</span></td>
+                                    <td>
+                                        <strong>{{ strtok($player->name, ' ') }}</strong><br>
+                                        <small class="text-white text-truncate d-block" style="max-width: 150px;">{{ $player->masked_email }}</small>
+                                    </td>
+                                    <td><strong>{{ $player->current_level }}</strong></td>
+                                    <td><strong>{{ $player->total_point ?? 0 }}</strong></td>
                                 </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($players as $index => $player)
-                                    @php
-                                        $globalRank = $index + 1 + ($players->currentPage() - 1) * $players->perPage();
-                                        $isTopPlayer = array_key_exists($player->id, $topPlayerRanks);
-                                        $isChampion = $isTopPlayer && $topPlayerRanks[$player->id] < 3;
-                                        $rowColor = $isChampion ? 'bg-warning text-dark' : '';
-                                    @endphp
-                                    <tr class="{{ $rowColor }}">
-                                        <td>
-                                            <span class="badge bg-dark text-white">
-                                                #{{ $globalRank }}
-                                            </span>
-                                        </td>
-                                        <td>
-                                            <strong>{{ strtok($player->name, ' ') }}</strong><br>
-                                            <small class="text-muted text-truncate d-block" style="max-width: 150px;">{{ $player->masked_email }}</small>
-                                        </td>
-                                        <td><strong>{{ $player->current_level }}</strong></td>
-                                        <td><strong>{{ $player->total_point ?? 0 }}</strong></td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="d-flex justify-content-center mt-4">
-                        {{ $players->withQueryString()->links('pagination::bootstrap-4') }}
-                    </div>
-                @else
-                    <div class="alert alert-info">Belum ada data pemain tersedia.</div>
-                @endif
+                            @else
+                                {{-- Row for other players --}}
+                                <tr>
+                                    <td><span class="badge bg-dark">#{{ $player->rank }}</span></td>
+                                    <td>
+                                        <strong>{{ strtok($player->name, ' ') }}</strong><br>
+                                        <small class="text-muted text-truncate d-block" style="max-width: 150px;">{{ $player->masked_email }}</small>
+                                    </td>
+                                    <td><strong>{{ $player->current_level }}</strong></td>
+                                    <td><strong>{{ $player->total_point ?? 0 }}</strong></td>
+                                </tr>
+                            @endif
+                        @endforeach
+                    </tbody>
+                </table>
             </div>
-        </div>
+        @elseif (auth()->check())
+             <div class="alert alert-info">Peringkat Anda tidak tersedia untuk musim ini.</div>
+        @endif
+
+        @if (!isset($topPlayers) || $topPlayers->count() === 0)
+            <div class="alert alert-info">Belum ada data pemain tersedia untuk musim ini.</div>
+        @endif
+
     </div>
 </section>
 @endsection

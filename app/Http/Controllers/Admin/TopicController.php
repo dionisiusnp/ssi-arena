@@ -30,18 +30,21 @@ class TopicController extends Controller
             'search' => $request->query('q') ?? null,
             'visibility' => $request->query('visibility') ?? null,
         ];
-        $lessons = Lesson::all();
+        $lessons = Lesson::where('changed_by', $auth->id)->get();
+        if (is_null($filters['lesson_id'])) {
+            abort(400, 'Parameter materi tidak ditemukan.');
+        }
         $lesson = null;
         if ($filters['lesson_id']) {
             $lesson = $this->lessonService->model()->find($filters['lesson_id']);
             if (!$lesson) {
-                abort(404, 'Lesson not found');
+                abort(404, 'Materi tidak ditemukan.');
             }
             if ($lesson->changed_by !== $auth->id) {
-                abort(403, 'Unauthorized access to lesson');
+                abort(403, 'Akses tidak diizinkan untuk materi ini.');
             }
         }
-        $data = $this->topicService->paginate($filters);
+        $data = $this->topicService->paginate($filters, $auth);
         return view('admin.materi.topik.index', compact('data', 'lesson', 'lessons'));
     }
 
@@ -54,16 +57,16 @@ class TopicController extends Controller
         $lessonId = $request->query('lesson_id');
 
         if (!$lessonId) {
-            abort(400, 'Parameter lesson_id dibutuhkan.');
+            abort(400, 'Parameter materi dibutuhkan.');
         }
 
         $lesson = $this->lessonService->model()->find($lessonId);
         if (!$lesson) {
-            abort(404, 'Lesson tidak ditemukan.');
+            abort(404, 'Materi tidak ditemukan.');
         }
 
         if ($lesson->changed_by !== $auth->id) {
-            abort(403, 'Akses tidak diizinkan untuk lesson ini.');
+            abort(403, 'Akses tidak diizinkan untuk materi ini.');
         }
 
         $getSequence = $this->topicService->byLesson($lessonId);
@@ -98,6 +101,10 @@ class TopicController extends Controller
      */
     public function show(Topic $topic)
     {
+        $auth = Auth::user();
+        if ($topic->changed_by !== $auth->id) {
+            abort(403, 'Akses tidak diizinkan untuk materi ini.');
+        }
         return view('admin.materi.topik.detail', compact('topic'));
     }
 
@@ -108,7 +115,7 @@ class TopicController extends Controller
     {
         $auth = Auth::user();
         if ($topic->changed_by !== $auth->id) {
-            abort(403, 'Akses tidak diizinkan untuk lesson ini.');
+            abort(403, 'Akses tidak diizinkan untuk materi ini.');
         }
         $getSequence = $this->topicService->byLesson($topic->lesson_id);
         $recentSequence = $getSequence->count() + 1;

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\ActivityChecklistController;
 use App\Http\Controllers\Admin\ActivityController as AdminActivityController;
+use App\Http\Controllers\Admin\CodeBlockController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\LessonController as AdminLessonController;
 use App\Http\Controllers\Admin\QuestDetailController;
@@ -12,6 +13,7 @@ use App\Http\Controllers\Admin\SeasonController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\TopicController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\CodeBlockController as AdminCodeBlockController;
 use App\Http\Controllers\Member\DashboardController as MemberDashboardController;
 use App\Http\Controllers\Member\LeaderboardController as MemberLeaderboardController;
 use App\Http\Controllers\Member\QuestController;
@@ -68,12 +70,15 @@ Route::middleware(['auth'])->prefix('member')->name('member.')->group(function (
         Route::get('/schedule',      [MemberDashboardController::class, 'index'])->name('schedule');
 });
 
+Route::get('/code/detail/{syntax}', [AdminCodeBlockController::class,'show'])->name('code.show');
+
 // LECTURER
 Route::middleware(['auth', EnsureUserIsLecturer::class])->group(function () {
     Route::get('/admin-panel',[AdminDashboardController::class,'index'])->name('admin-panel');
     Route::resource('lesson', AdminLessonController::class);
     Route::resource('topic', TopicController::class);
-
+    Route::resource('syntax', AdminCodeBlockController::class);
+    Route::get('/code/list', [AdminCodeBlockController::class, 'list'])->name('code.list');
 });
 
 // ADMIN

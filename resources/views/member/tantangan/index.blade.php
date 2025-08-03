@@ -13,7 +13,7 @@
 
         <!-- Search Form -->
         <form method="GET" action="{{ route('member.quest') }}" class="input-group mb-4">
-            <input type="text" name="search" class="form-control" placeholder="Cari tantangan..." value="{{ request('search') }}">
+            <input type="text" name="q" class="form-control" placeholder="Cari tantangan..." value="{{ request('q') }}">
             <button class="btn btn-primary text-white" type="submit">Cari</button>
             <a href="{{ route('member.quest') }}" class="btn btn-secondary text-white">Reset</a>
         </form>
