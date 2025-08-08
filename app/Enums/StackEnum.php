@@ -4,28 +4,32 @@ namespace App\Enums;
 
 enum StackEnum: string
 {
+    case AI = 'ai';
     case FLUTTER = 'flutter';
-    case JAVA = 'java';
+    case GENERAL = 'general';
     case GO = 'go';
+    case JAVA = 'java';
     case LARAVEL = 'laravel';
     case LINUX = 'linux';
     case MACOS = 'macos';
+    case NEXT = 'next';
     case PYTHON = 'python';
     case WINDOWS = 'windows';
-    case NEXT = 'next';
 
     public function label(): string
     {
         return match($this) {
+            self::AI => 'AI',
             self::FLUTTER => 'Flutter',
-            self::JAVA => 'Java',
+            self::GENERAL => 'General',
             self::GO => 'Go',
+            self::JAVA => 'Java',
             self::LARAVEL => 'Laravel',
             self::LINUX => 'Linux',
             self::MACOS => 'macOS',
+            self::NEXT => 'Next',
             self::PYTHON => 'Python',
             self::WINDOWS => 'Windows',
-            self::NEXT => 'Next',
         };
     }
 

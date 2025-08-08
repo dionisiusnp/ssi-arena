@@ -20,7 +20,7 @@ class ResetRewardLogs extends Command
      *
      * @var string
      */
-    protected $description = 'Truncate reward_logs table and set all claimed activity statuses to "testing".';
+    protected $description = 'Truncate reward_logs table and set all plus-minus activity statuses to testing.';
 
     /**
      * Execute the console command.
@@ -35,17 +35,25 @@ class ResetRewardLogs extends Command
             $this->info('Auto increment reward_logs has been reset.');
 
             DB::table('activities')
-                ->where('status', QuestEnum::PLUS->value)
+                ->whereIn('status',[QuestEnum::PLUS->value, QuestEnum::MINUS->value])
                 ->update(['status' => QuestEnum::TESTING->value]);
-            $this->info('All plus activities status have been set to "testing".');
+            $this->info('All plus-minus activities status have been set to testing.');
 
+            DB::table('users')
+                ->where('is_active', true)
+                ->update([
+                'current_level' => 1,
+                'current_point' => 0,
+                'season_level' => 0,
+                'season_point' => 0,
+            ]);
+            $this->info('Reset level and point of all users.');
         } catch (\Throwable $e) {
             $this->error("Error: " . $e->getMessage());
             return self::FAILURE;
         } finally {
             DB::statement('SET FOREIGN_KEY_CHECKS=1');
         }
-
         return self::SUCCESS;
     }
 }

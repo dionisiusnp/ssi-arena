@@ -19,7 +19,7 @@
                     <div class="card-body">
                         <h5 class="card-title">Pendaftaran</h5>
                         <p class="card-text">
-                            Untuk mendaftar di SSI Arena, klik tombol <strong>Tamu Arena</strong> di halaman awal. Setelah itu pilih <strong>Daftar</strong> dari sidebar, isi formulir dengan lengkap, lalu simpan. Setelah berhasil, kamu akan diarahkan ke halaman masuk.
+                            Untuk mendaftar di SSI Arena, klik tombol <strong>Daftar</strong> di halaman awal. Setelah itu pilih <strong>Daftar</strong> dari sidebar, isi formulir dengan lengkap, lalu simpan. Setelah berhasil, kamu akan diarahkan ke halaman masuk.
                         </p>
                     </div>
                 </div>

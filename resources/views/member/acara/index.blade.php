@@ -11,7 +11,7 @@
             <div class="row g-3 align-items-end">
                 <div class="col-md-6">
                     <div class="input-group">
-                        <input type="text" name="q" class="form-control" placeholder="Cari kegiatan..." value="{{ request('q') }}">
+                        <input type="text" name="q" class="form-control" placeholder="Cari acara..." value="{{ request('q') }}">
                         <button class="btn btn-primary text-white" type="submit">Cari</button>
                         <a href="{{ route('member.schedule') }}" class="btn btn-secondary text-white">Reset</a>
                     </div>

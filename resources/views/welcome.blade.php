@@ -38,7 +38,7 @@
             @else
                 <a href="{{ route('login') }}" class="px-6 py-3 bg-white text-black rounded-full font-semibold hover:bg-gray-200 transition">Masuk</a>
             @endauth
-            <a href="{{ route('guest.schedule') }}" class="px-6 py-3 border border-white text-white rounded-full font-semibold hover:bg-white hover:text-black transition">Tamu Arena</a>
+            <a href="{{ route('guest.register') }}" class="px-6 py-3 border border-white text-white rounded-full font-semibold hover:bg-white hover:text-black transition">Daftar</a>
         </div>
     </div>
 </div>
