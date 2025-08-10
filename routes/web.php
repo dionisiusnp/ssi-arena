@@ -2,9 +2,9 @@
 
 use App\Http\Controllers\Admin\ActivityChecklistController;
 use App\Http\Controllers\Admin\ActivityController as AdminActivityController;
-use App\Http\Controllers\Admin\CodeBlockController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\LessonController as AdminLessonController;
+use App\Http\Controllers\Admin\LessonRatingController as AdminLessonRatingController;
 use App\Http\Controllers\Admin\QuestDetailController;
 use App\Http\Controllers\Admin\QuestLevelController;
 use App\Http\Controllers\Admin\QuestTypeController;
@@ -34,6 +34,10 @@ Route::get('/', function () {
 });
 
 @include('select2.php');
+
+// GENERAL
+Route::get('/code/detail/{syntax}', [AdminCodeBlockController::class,'show'])->name('code.show');
+Route::resource('lesson-rating', AdminLessonRatingController::class)->only(['store', 'destroy']);
 
 // GUEST
 Route::prefix('guest')->name('guest.')->group(function () {
@@ -69,8 +73,6 @@ Route::middleware(['auth'])->prefix('member')->name('member.')->group(function (
 
         Route::get('/schedule',      [MemberDashboardController::class, 'index'])->name('schedule');
 });
-
-Route::get('/code/detail/{syntax}', [AdminCodeBlockController::class,'show'])->name('code.show');
 
 // LECTURER
 Route::middleware(['auth', EnsureUserIsLecturer::class])->group(function () {
