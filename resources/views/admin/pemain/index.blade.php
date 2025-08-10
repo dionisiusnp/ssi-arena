@@ -50,6 +50,11 @@
             <div class="col-md-4 mb-4">
                 <div class="card shadow h-100 position-relative">
                     <div class="card-body text-center">
+
+                        <div class="position-absolute" style="top: 10px; left: 10px;">
+                            <span class="badge badge-secondary">{{ $user->id }}</span>
+                        </div>
+
                         {{-- Avatar --}}
                         <div class="mb-3">
                             <img src="{{ Avatar::create($user->name)->toBase64() }}" alt="{{ $user->name }}">
