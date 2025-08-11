@@ -119,7 +119,7 @@
                                         @endauth
 
                                         @guest
-                                            <a href="{{ route('login') }}" class="btn p-0 text-secondary" title="Login untuk menyukai">
+                                            <a href="{{ route('login') }}" class="btn p-0 text-secondary" title="Masuk untuk menyukai">
                                                 <i class="far fa-heart"></i> <span class="ms-1">{{ $lesson->ratings->count() }}</span>
                                             </a>
                                         @endguest
