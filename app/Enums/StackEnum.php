@@ -26,7 +26,7 @@ enum StackEnum: string
             self::JAVA => 'Java',
             self::LARAVEL => 'Laravel',
             self::LINUX => 'Linux',
-            self::MACOS => 'macOS',
+            self::MACOS => 'MacOS',
             self::NEXT => 'Next',
             self::PYTHON => 'Python',
             self::WINDOWS => 'Windows',
