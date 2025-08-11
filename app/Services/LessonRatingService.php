@@ -22,8 +22,18 @@ class LessonRatingService
     public function store(array $data, $auth)
     {
         try {
-            $data['rating_by'] = $auth->id;
-            return $this->model->create($data);
+            $check = $this->model->withTrashed()
+                ->where('lesson_id', $data['lesson_id'])
+                ->where('rating_by', $auth->id)
+                ->first();
+
+            if ($check) {
+                $check->restore();
+                return $check;
+            } else {
+                $data['rating_by'] = $auth->id;
+                return $this->model->create($data);
+            }
         } catch (\Throwable $th) {
             throw new \ErrorException($th->getMessage());
         }

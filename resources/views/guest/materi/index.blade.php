@@ -88,7 +88,42 @@
                                     <p class="mb-1"><i class="fas fa-user me-1"></i> {{ strtoupper($lesson->role) ?? '-' }}</p>
                                     <p class="mb-1"><i class="fas fa-layer-group me-1"></i> {{ $lesson->topics_count }} Topik</p>
                                     <p class="mb-3 text-muted"><i class="far fa-calendar-alt me-1"></i> {{ $lesson->created_at_formatted }}</p>
-                                    <a href="{{ auth()->check() ? route('member.lesson.show', $lesson->id) : route('guest.lesson.show', $lesson->id) }}" class="btn btn-sm btn-outline-primary mt-auto">Lihat Topik</a>
+                                    {{-- <a href="{{ auth()->check() ? route('member.lesson.show', $lesson->id) : route('guest.lesson.show', $lesson->id) }}" class="btn btn-sm btn-outline-primary mt-auto">Lihat Topik</a> --}}
+                                    <div class="mt-auto d-flex justify-content-between align-items-center">
+                                        <a href="{{ auth()->check() ? route('member.lesson.show', $lesson->id) : route('guest.lesson.show', $lesson->id) }}" class="btn btn-sm btn-outline-primary">
+                                            Lihat Topik
+                                        </a>
+                                        @auth
+                                            @php
+                                                $likeCount = $lesson->ratings->count();
+                                                $userRating = $lesson->ratings->where('rating_by', auth()->id())->first();
+                                            @endphp
+
+                                            @if($userRating)
+                                                <form action="{{ route('lesson-rating.destroy', $userRating->id) }}" method="POST" class="m-0 p-0">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="btn p-0 text-danger" title="Batal Suka">
+                                                        <i class="fas fa-heart"></i> <span class="ms-1">{{ $likeCount }}</span>
+                                                    </button>
+                                                </form>
+                                            @else
+                                                <form action="{{ route('lesson-rating.store') }}" method="POST" class="m-0 p-0">
+                                                    @csrf
+                                                    <input type="hidden" name="lesson_id" value="{{ $lesson->id }}">
+                                                    <button type="submit" class="btn p-0 text-secondary" title="Suka">
+                                                        <i class="far fa-heart"></i> <span class="ms-1">{{ $likeCount }}</span>
+                                                    </button>
+                                                </form>
+                                            @endif
+                                        @endauth
+
+                                        @guest
+                                            <a href="{{ route('login') }}" class="btn p-0 text-secondary" title="Login untuk menyukai">
+                                                <i class="far fa-heart"></i> <span class="ms-1">{{ $lesson->ratings->count() }}</span>
+                                            </a>
+                                        @endguest
+                                    </div>
                                 </div>
                             </div>
                         </div>
