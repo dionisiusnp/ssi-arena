@@ -4,20 +4,26 @@ namespace App\Enums;
 
 enum RoleplayEnum: string
 {
-    case FULLSTACK = 'fullstack';
+    case AIENGINEER = 'aiengineer';
     case BACKEND = 'backend';
-    case FRONTEND = 'frontend';
     case DEVOPS = 'devops';
-    case MOBILE = 'mobile';
+    case FRONTEND = 'frontend';
+    case FULLSTACK = 'fullstack';
+    case LEGAL = 'legal';
+    case MARKETING = 'marketing';
+    case STAKEHOLDER = 'stakeholder';
 
     public function label(): string
     {
         return match($this) {
-            self::FULLSTACK => 'FullStack',
+            self::AIENGINEER => 'AI Engineer',
             self::BACKEND => 'BackEnd',
-            self::FRONTEND => 'FrontEnd',
             self::DEVOPS => 'DevOps',
-            self::MOBILE => 'Mobile',
+            self::FRONTEND => 'FrontEnd',
+            self::FULLSTACK => 'FullStack',
+            self::LEGAL => 'Legal',
+            self::MARKETING => 'Marketing',
+            self::STAKEHOLDER => 'Stakeholder',
         };
     }
 

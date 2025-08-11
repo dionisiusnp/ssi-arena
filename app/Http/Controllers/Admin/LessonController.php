@@ -88,6 +88,9 @@ class LessonController extends Controller
     {
         try {
             $auth = Auth::user();
+            if ($lesson->changed_by !== $auth->id) {
+                abort(403, 'Akses tidak diizinkan untuk materi ini.');
+            }
             $data = $this->lessonService->update($request->toArray(),$auth, $lesson);
             return response()->json([
                 'success' => true,

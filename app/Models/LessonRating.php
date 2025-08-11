@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Lesson extends Model
+class LessonRating extends Model
 {
     use HasFactory, SoftDeletes;
     protected $guarded = ['id', 'created_at', 'updated_at', 'deleted_at'];
@@ -25,18 +25,13 @@ class Lesson extends Model
             ->translatedFormat("d F Y H:i");
     }
 
-    public function lastChanger()
+    public function lesson()
     {
-        return $this->belongsTo(User::class,'changed_by');
+        return $this->belongsTo(Lesson::class,'lesson_id');
     }
 
-    public function topics()
+    public function reviewer()
     {
-        return $this->hasMany(Topic::class,'lesson_id');
-    }
-
-    public function ratings()
-    {
-        return $this->hasMany(LessonRating::class,'lesson_id');
+        return $this->belongsTo(User::class,'rating_by');
     }
 }

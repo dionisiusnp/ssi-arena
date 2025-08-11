@@ -39,71 +39,63 @@ class RewardLogService
     public function levelAndPoint($questDetailId, $activityId, $userId, $status)
     {
         DB::beginTransaction();
-
         try {
             $user = User::findOrFail($userId);
             $questDetail = QuestDetail::findOrFail($questDetailId);
             $getPoint = $questDetail->point_total;
             $seasonId = $questDetail->season_id;
-
-            // POINT: current_point (global)
-            $newPoint = $status === QuestEnum::PLUS->value
+            // 1. Prepare new point values
+            $newCurrentPoint = $status === QuestEnum::PLUS->value
                 ? $user->current_point + $getPoint
                 : max(0, $user->current_point - $getPoint);
-
-            $updateData = ['current_point' => $newPoint];
-
-            $level = Setting::where('group', SettingGroupEnum::LEVEL->value)
-                ->where('current_value', '<=', $newPoint)
-                ->orderByDesc('current_value')
-                ->first();
-
-            if ($level) {
-                $updateData['current_level'] = (int) str_replace('level_', '', $level->key);
-            }
-
-            // POINT: season_point (jika ada season)
-            $updateRankData = [];
-            $levelRankNumber = $user->season_level;
-            $newRankPoint = $user->season_point;
-
+            $newSeasonPoint = $user->season_point;
             if ($seasonId) {
-                $newRankPoint = $status === QuestEnum::PLUS->value
+                $newSeasonPoint = $status === QuestEnum::PLUS->value
                     ? $user->season_point + $getPoint
                     : max(0, $user->season_point - $getPoint);
-
-                $updateRankData['season_point'] = $newRankPoint;
-
-                $rank = Setting::where('group', SettingGroupEnum::RANKED->value)
-                    ->where('current_value', '<=', $newRankPoint)
-                    ->orderByDesc('current_value')
+            }
+            // 2. Determine new levels based on new points
+            $newCurrentLevel = $user->current_level;
+            $levelSetting = Setting::where('group', SettingGroupEnum::LEVEL->value)
+                ->where('current_value', '<=', $newCurrentPoint)
+                ->orderByRaw('CAST(current_value AS UNSIGNED) DESC')
+                ->first();
+            if ($levelSetting) {
+                $newCurrentLevel = (int) str_replace('level_', '', $levelSetting->key);
+            }
+            $newSeasonLevel = $user->season_level;
+            if ($seasonId) {
+                $rankSetting = Setting::where('group', SettingGroupEnum::RANKED->value)
+                    ->where('current_value', '<=', $newSeasonPoint)
+                    ->orderByRaw('CAST(current_value AS UNSIGNED) DESC')
                     ->first();
-
-                if ($rank) {
-                    $levelRankNumber = (int) str_replace('rank_', '', $rank->key);
-                    $updateRankData['season_level'] = $levelRankNumber;
+                if ($rankSetting) {
+                    $newSeasonLevel = (int) str_replace('rank_', '', $rankSetting->key);
                 }
             }
-
-            // Gabungkan semua update dan simpan hanya sekali
-            $user->update(array_merge($updateData, $updateRankData));
-
-            // Simpan log
+            // 3. Consolidate all data for update
+            $updatePayload = [
+                'current_point' => $newCurrentPoint,
+                'current_level' => $newCurrentLevel,
+                'season_point'  => $newSeasonPoint,
+                'season_level'  => $newSeasonLevel,
+            ];
+            // 4. Perform a single update on the user
+            $user->update($updatePayload);
+            // 5. Create a consistent log entry
             RewardLog::create([
                 'season_id'       => $seasonId,
                 'quest_detail_id' => $questDetailId,
                 'activity_id'     => $activityId,
                 'user_id'         => $userId,
-                'season_level'    => $updateRankData['season_level'] ?? $user->season_level,
-                'season_point'    => $newRankPoint,
-                'current_level'   => $updateData['current_level'] ?? $user->current_level,
-                'current_point'   => $newPoint,
                 'get_point'       => $getPoint,
                 'status'          => $status,
+                'current_point'   => $updatePayload['current_point'],
+                'current_level'   => $updatePayload['current_level'],
+                'season_point'    => $updatePayload['season_point'],
+                'season_level'    => $updatePayload['season_level'],
             ]);
-
             DB::commit();
-
         } catch (\Throwable $th) {
             DB::rollBack();
             throw $th;
