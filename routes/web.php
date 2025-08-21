@@ -4,7 +4,6 @@ use App\Http\Controllers\Admin\ActivityChecklistController;
 use App\Http\Controllers\Admin\ActivityController as AdminActivityController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\LessonController as AdminLessonController;
-use App\Http\Controllers\Admin\LessonRatingController as AdminLessonRatingController;
 use App\Http\Controllers\Admin\QuestDetailController;
 use App\Http\Controllers\Admin\QuestLevelController;
 use App\Http\Controllers\Admin\QuestTypeController;
@@ -18,6 +17,7 @@ use App\Http\Controllers\Member\DashboardController as MemberDashboardController
 use App\Http\Controllers\Member\LeaderboardController as MemberLeaderboardController;
 use App\Http\Controllers\Member\QuestController;
 use App\Http\Controllers\Member\LessonController as MemberLessonController;
+use App\Http\Controllers\Member\LessonRatingController as MemberLessonRatingController;
 use App\Http\Controllers\Member\MemberController;
 use App\Http\Controllers\Member\ActivityController as MemberActivityController;
 use App\Http\Controllers\Guest\GuideController;
@@ -37,7 +37,7 @@ Route::get('/', function () {
 
 // GENERAL
 Route::get('/code/detail/{syntax}', [AdminCodeBlockController::class,'show'])->name('code.show');
-Route::resource('lesson-rating', AdminLessonRatingController::class)->only(['store', 'destroy']);
+Route::resource('lesson-rating', MemberLessonRatingController::class)->only(['store', 'destroy']);
 
 // GUEST
 Route::prefix('guest')->name('guest.')->group(function () {

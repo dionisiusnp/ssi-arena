@@ -23,6 +23,6 @@ class DashboardController extends Controller
         ];
         $schedules = $this->scheduleService->paginateMember($filters);
         $availableYears = $this->scheduleService->getAvailableYears();
-        return view('member.acara.index', compact('schedules', 'availableYears'));
+        return view('guest.acara.index', compact('schedules', 'availableYears'));
     }
 }

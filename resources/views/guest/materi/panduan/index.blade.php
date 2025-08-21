@@ -90,11 +90,9 @@
                         });
                         renderGuideContent(finalHtml, topicName, currentIndex);
                         setupCopyButtons();
-                        // window.scrollTo({ top: 0, behavior: 'smooth' });
                     });
                 } else {
                     renderGuideContent(stepsHtml, topicName, currentIndex);
-                    // window.scrollTo({ top: 0, behavior: 'smooth' });
                 }
             });
         });

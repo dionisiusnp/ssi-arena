@@ -82,7 +82,6 @@
                     </div>
                 @endforeach
             </div>
-
             {{ $activities->withQueryString()->links('pagination::bootstrap-4') }}
         @else
             <div class="alert alert-info">Belum ada misi yang diambil.</div>

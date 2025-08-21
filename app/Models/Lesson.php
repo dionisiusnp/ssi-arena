@@ -39,4 +39,10 @@ class Lesson extends Model
     {
         return $this->hasMany(LessonRating::class,'lesson_id');
     }
+
+    public function getIsLikedAttribute()
+    {
+        if (!auth()->check()) return false;
+        return $this->ratings->where('rating_by', auth()->id())->isNotEmpty();
+    }
 }

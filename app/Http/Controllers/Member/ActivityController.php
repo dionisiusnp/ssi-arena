@@ -36,7 +36,7 @@ class ActivityController extends Controller
                 )
             )
             ->latest()
-            ->get();
+            ->paginate(6);
         $seasons = Season::all();
         return view('member.aktivitas.index', compact('activities','seasons'));
     }

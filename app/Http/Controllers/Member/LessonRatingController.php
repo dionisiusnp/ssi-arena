@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Member;
 
 use App\Http\Controllers\Controller;
 use App\Models\LessonRating;
@@ -40,16 +40,9 @@ class LessonRatingController extends Controller
         try {
             $auth = Auth::user();
             $data = $this->lessonRatingService->store($request->toArray(),$auth);
-            return response()->json([
-                'success' => true,
-                'message' => 'Rating berhasil disimpan',
-                'data'    => $data,
-            ]);
+            return redirect()->back()->with('success', 'Rating berhasil disimpan');
         } catch (\Throwable $th) {
-            return response()->json([
-                'error' => true,
-                'message' => $th->getMessage(),
-            ], 500);
+            return redirect()->back()->with('error', $th->getMessage());
         }
     }
 
@@ -84,12 +77,9 @@ class LessonRatingController extends Controller
     {
         try {
             $this->lessonRatingService->destroy($lesson_rating);
-            return response()->json([
-                'success' => true,
-                'message' => 'Rating berhasil dibatalkan',
-            ]);
+            return redirect()->back()->with('success', 'Rating berhasil dibatalkan');
         } catch (\Throwable $th) {
-            throw new \ErrorException($th->getMessage());
+            return redirect()->back()->with('error', $th->getMessage());
         }
     }
 }
