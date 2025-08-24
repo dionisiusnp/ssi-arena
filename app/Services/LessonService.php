@@ -57,10 +57,18 @@ class LessonService
                 });
             })
             ->when($role, function ($query) use ($role) {
-                $query->where('role', $role);
+                if (is_array($role)) {
+                    $query->whereIn('role', $role);
+                } else {
+                    $query->where('role', $role);
+                }
             })
             ->when($language, function ($query) use ($language) {
-                $query->where('language', $language);
+                if (is_array($language)) {
+                    $query->whereIn('language', $language);
+                } else {
+                    $query->where('language', $language);
+                }
             })
             ->when($visibility, function ($query) use ($visibility) {
                 $query->where('visibility', $visibility);
@@ -95,10 +103,18 @@ class LessonService
                 });
             })
             ->when($role, function ($query) use ($role) {
-                $query->where('role', $role);
+                if (is_array($role)) {
+                    $query->whereIn('role', $role);
+                } else {
+                    $query->where('role', $role);
+                }
             })
             ->when($language, function ($query) use ($language) {
-                $query->where('language', $language);
+                if (is_array($language)) {
+                    $query->whereIn('language', $language);
+                } else {
+                    $query->where('language', $language);
+                }
             })
             ->withCount('topics')
             ->orderByDesc('created_at')
