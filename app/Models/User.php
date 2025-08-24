@@ -3,6 +3,8 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -21,6 +23,14 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'nim',
+        'is_member',
+        'is_lecturer',
+        'is_active',
+        'current_level',
+        'current_point',
+        'season_level',
+        'season_point',
     ];
 
     /**
@@ -45,4 +55,46 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function getCreatedAtFormattedAttribute(): string
+    {
+        return Carbon::parse($this->attributes['created_at'])
+            ->locale('id')
+            ->translatedFormat("d F Y");
+    }
+
+    public function getUpdatedAtFormattedAttribute(): string
+    {
+        return Carbon::parse($this->attributes['updated_at'])
+            ->locale('id')
+            ->translatedFormat("d F Y");
+    }
+
+    public function activities()
+    {
+        return $this->hasMany(Activity::class, 'claimed_by');
+    }
+
+    public function getMaskedEmailAttribute(): string
+    {
+        $email = $this->attributes['email'];
+        $parts = explode('@', $email);
+
+        $localPart = $parts[0];
+        $domainPart = $parts[1] ?? '';
+
+        if (strlen($localPart) <= 2) {
+            $maskedLocal = str_repeat('*', strlen($localPart));
+        } else {
+            $maskedLocal = substr($localPart, 0, 2) . str_repeat('*', strlen($localPart) - 2);
+        }
+
+        return $maskedLocal . '@' . $domainPart;
+    }
+
+    public function getEmailWithoutDomainAttribute(): string
+    {
+        return strstr($this->attributes['email'], '@', true);
+    }
+
 }
