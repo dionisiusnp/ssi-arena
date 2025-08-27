@@ -5,7 +5,7 @@
 @section('content')
 <section class="resume-section" id="wiki">
     <div class="resume-section-content">
-        <h2 class="mb-4">📘 Wiki SSI Arena</h2>
+        <h2 class="mb-4">📘 Wiki SSI Arena <span class="small text-muted">v{{ config('app.version') }}</span></h2>
 
         <div class="mb-4">
             <input type="text" id="wikiSearch" class="form-control" placeholder="🔍 Cari topik wiki...">
