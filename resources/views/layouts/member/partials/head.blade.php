@@ -3,7 +3,7 @@
 <meta name="description" content="" />
 <meta name="author" content="" />
 <title>@yield('title') | SSI Arena</title>
-<link rel="icon" type="image/x-icon" href="assets/img/favicon.ico" />
+<link rel="icon" type="image/x-icon" href="{{asset('assets/member/img/favicon.ico')}}" />
 <!-- Font Awesome icons (free version)-->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css">
 <!-- Google fonts-->

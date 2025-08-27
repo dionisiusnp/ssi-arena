@@ -11,9 +11,9 @@
                 <form id="syntaxForm" action="{{ route('syntax.store') }}" method="POST">
                     @csrf
                     <div class="form-group">
-                        <label>Bahasa Kode</label>
+                        <label>Pembahasan</label>
                         <select name="language" class="form-control">
-                            <option value="">Pilih Bahasa</option>
+                            <option value="">Pilih Pembahasan</option>
                             @foreach (\App\Enums\StackEnum::cases() as $stack)
                             <option value="{{ $stack->value }}">
                                 {{ $stack->label() }}

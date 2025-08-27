@@ -37,7 +37,7 @@ class CodeBlockController extends Controller
         if ($request->filled('language')) {
             $query->where('language', $request->language);
         }
-        $data = $query->select('id', 'language', 'description')->orderBy('description')->get();
+        $data = $query->select('id', 'language', 'code')->orderByDesc('created_at')->get();
         return response()->json($data);
     }
 

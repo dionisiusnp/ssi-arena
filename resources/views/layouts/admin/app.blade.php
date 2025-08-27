@@ -60,8 +60,8 @@
     <script src="{{asset('assets/admin/vendor/chart.js/Chart.min.js')}}"></script>
 
     <!-- Page level custom scripts -->
-    <script src="{{asset('assets/admin/js/demo/chart-area-demo.js')}}"></script>
-    <script src="{{asset('assets/admin/js/demo/chart-pie-demo.js')}}"></script>
+    {{-- <script src="{{asset('assets/admin/js/demo/chart-area-demo.js')}}"></script>
+    <script src="{{asset('assets/admin/js/demo/chart-pie-demo.js')}}"></script> --}}
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>

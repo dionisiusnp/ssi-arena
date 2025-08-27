@@ -12,7 +12,7 @@
                     @csrf
                     @method('PUT')
                     <div class="form-group">
-                        <label>Bahasa Kode</label>
+                        <label>Pembahasan</label>
                         <select name="language" class="form-control">
                             @php
                                 $enum2 = \App\Enums\StackEnum::tryFrom($syntax->language);
