@@ -43,8 +43,8 @@
                 <table class="table table-bordered align-middle">
                     <thead>
                         <tr>
-                            <th style="width: 5%">No.</th>
-                            <th>Bahasa</th>
+                            <th style="width: 5%">Kode</th>
+                            <th>Pembahasan</th>
                             <th>Keterangan</th>
                             <th>Diubah</th>
                             <th>Dibuat</th>
@@ -54,12 +54,12 @@
                     <tbody>
                         @forelse($data as $index => $syntax)
                             <tr>
-                                <td class="text-center">{{ $data->firstItem() + $index }}.</td>
+                                <td class="text-center">%%codeblock:{{ $syntax->id }}%%</td>
                                 <td>
                                     {{ strtoupper($syntax->language) }}
                                 </td>
                                 <td>
-                                    {{ $syntax->description }}
+                                    {{ \Illuminate\Support\Str::limit($syntax->code, 25, '...') }}
                                 </td>
                                 <td>{{ $syntax->lastChanger->name }}</td>
                                 <td>{{ $syntax->created_at_formatted }}</td>

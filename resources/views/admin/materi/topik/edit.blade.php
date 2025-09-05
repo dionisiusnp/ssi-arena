@@ -60,7 +60,6 @@
     function filterCodeblocks() {
         const lang = $('#filterLanguage').val();
         $('#codeblockList').html('<div class="col-12 text-center py-3">Loading...</div>');
-
         fetch(`{{ route('code.list') }}?language=${lang}`)
             .then(res => res.json())
             .then(data => {
@@ -68,22 +67,28 @@
                     $('#codeblockList').html('<div class="col-12 text-muted">Tidak ada kode.</div>');
                     return;
                 }
+                const html = data.map(cb => {
+                    let desc;
+                    const code = cb.code || '';
+                    desc = code.length > 25 ? code.substring(0, 25) + '...' : code;
+                    const language = cb.language ?? '';
 
-                const html = data.map(cb => `
-                    <div class="col-md-6 mb-3">
-                        <div class="border p-3 rounded bg-light">
-                            <div class="d-flex justify-content-between align-items-start">
-                                <div>
-                                    <div><strong>${cb.description}</strong></div>
-                                    <div class="text-muted small">${cb.language}</div>
+                    return `
+                        <div class="col-md-6 mb-3">
+                            <div class="border p-3 rounded bg-light">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div>
+                                        <div><strong>${desc}</strong></div>
+                                        <div class="text-muted small">${language}</div>
+                                    </div>
+                                    <button type="button" class="btn btn-sm btn-outline-primary" onclick="insertCodeblock(${cb.id})">
+                                        Gunakan
+                                    </button>
                                 </div>
-                                <button type="button" class="btn btn-sm btn-outline-primary" onclick="insertCodeblock(${cb.id})">
-                                    Gunakan
-                                </button>
                             </div>
                         </div>
-                    </div>
-                `).join('');
+                    `;
+                }).join('');
                 $('#codeblockList').html(html);
             })
             .catch(() => {
